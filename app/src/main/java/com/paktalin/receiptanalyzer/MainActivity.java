@@ -15,15 +15,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.text.Text;
-import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.File;
@@ -46,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.button);
         scanResults = findViewById(R.id.results);
+        DirectoryManager.setUpAppDir(MainActivity.this);
+
         if (savedInstanceState != null) {
             imageUri = Uri.parse(savedInstanceState.getString(SAVED_INSTANCE_URI));
             scanResults.setText(savedInstanceState.getString(SAVED_INSTANCE_RESULT));
@@ -80,37 +78,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Bitmap bitmap = decodeBitmapUri(this, imageUri);
                 if (detector.isOperational() && bitmap != null) {
-                    Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-                    SparseArray<TextBlock> textBlocks = detector.detect(frame);
-                    String blocks = "";
-                    String lines = "";
-                    String words = "";
-                    for (int index = 0; index < textBlocks.size(); index++) {
-                        //extract scanned text blocks here
-                        TextBlock tBlock = textBlocks.valueAt(index);
-                        blocks = blocks + tBlock.getValue() + "\n" + "\n";
-                        for (Text line : tBlock.getComponents()) {
-                            //extract scanned text lines here
-                            lines = lines + line.getValue() + "\n";
-                            for (Text element : line.getComponents()) {
-                                //extract scanned text words here
-                                words = words + element.getValue() + ", ";
-                            }
-                        }
-                    }
-                    if (textBlocks.size() == 0) {
-                        scanResults.setText("Scan Failed: Found nothing to scan");
-                    } else {
-                        scanResults.setText(scanResults.getText() + "Blocks: " + "\n");
-                        scanResults.setText(scanResults.getText() + blocks + "\n");
-                        scanResults.setText(scanResults.getText() + "---------" + "\n");
-                        scanResults.setText(scanResults.getText() + "Lines: " + "\n");
-                        scanResults.setText(scanResults.getText() + lines + "\n");
-                        scanResults.setText(scanResults.getText() + "---------" + "\n");
-                        scanResults.setText(scanResults.getText() + "Words: " + "\n");
-                        scanResults.setText(scanResults.getText() + words + "\n");
-                        scanResults.setText(scanResults.getText() + "---------" + "\n");
-                    }
+                    Recognizer.recognize(bitmap, detector);
                 } else {
                     scanResults.setText("Could not set up the detector!");
                 }
