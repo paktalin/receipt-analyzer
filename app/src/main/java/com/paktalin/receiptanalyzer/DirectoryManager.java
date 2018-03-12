@@ -22,16 +22,7 @@ class DirectoryManager {
     private static String externalDirPath = Environment.getExternalStorageDirectory() + "";
     private static String appDirPath;
 
-    private static File create(String dirPath, String name) {
-        File dir = new File(dirPath + "/" + name);
-        if(ifExists(dir)) {
-            return dir;
-        } else {
-            return null;
-        }
-    }
-
-    private static boolean ifExists(File dir) {
+    private static boolean exists(File dir) {
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 Log.d(TAG, "Couldn't create the directory");
@@ -44,16 +35,15 @@ class DirectoryManager {
 
     static void setUpAppDir(Context context) {
         PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity)context);
-
-        File appDir = DirectoryManager.create(externalDirPath, context.getString(R.string.app_name));
-        if (appDir != null) {
+        File appDir = new File(externalDirPath, context.getString(R.string.app_name));
+        if(exists(appDir)) {
             appDirPath = appDir.getAbsolutePath();
         }
     }
 
     private static void saveBitmap(Bitmap bitmap, String path) {
         File bitmapFile = new File(path);
-        if(ifExists(bitmapFile)) {
+        if(exists(bitmapFile)) {
             FileOutputStream out = null;
             try {
                 out = new FileOutputStream(path + "/processed.png");
@@ -82,10 +72,10 @@ class DirectoryManager {
     static void saveTextFile(String name, String data) {
         File scannedDir = new File(appDirPath + "/ScannedText");
 
-        if(ifExists(scannedDir)) {
+        if(exists(scannedDir)) {
             File file = new File(scannedDir, name);
             try {
-                if(ifExists(file)) {
+                if(exists(file)) {
                     FileOutputStream fOut = new FileOutputStream(file);
                     OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
                     myOutWriter.append(data);
@@ -104,5 +94,4 @@ class DirectoryManager {
             }
         }
     }
-
 }

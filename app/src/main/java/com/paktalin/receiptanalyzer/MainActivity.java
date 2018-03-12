@@ -17,7 +17,6 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.text.TextRecognizer;
@@ -27,28 +26,18 @@ import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = "Text API";
-    private static final int PHOTO_REQUEST = 10;
-    private TextView scanResults;
-    private Uri imageUri;
-    private TextRecognizer detector;
+    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_WRITE_PERMISSION = 20;
-    private static final String SAVED_INSTANCE_URI = "uri";
-    private static final String SAVED_INSTANCE_RESULT = "result";
+    private static final int REQUEST_PHOTO = 10;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.button);
-        scanResults = findViewById(R.id.results);
         DirectoryManager.setUpAppDir(MainActivity.this);
 
-        if (savedInstanceState != null) {
-            imageUri = Uri.parse(savedInstanceState.getString(SAVED_INSTANCE_URI));
-            scanResults.setText(savedInstanceState.getString(SAVED_INSTANCE_RESULT));
-        }
-        detector = new TextRecognizer.Builder(getApplicationContext()).build();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,20 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PHOTO_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_PHOTO && resultCode == RESULT_OK) {
             launchMediaScanIntent();
-            try {
-                Bitmap bitmap = decodeBitmapUri(this, imageUri);
-                if (detector.isOperational() && bitmap != null) {
-                    Recognizer.recognize(bitmap, detector);
-                } else {
-                    scanResults.setText("Could not set up the detector!");
-                }
-            } catch (Exception e) {
-                Toast.makeText(this, "Failed to load Image", Toast.LENGTH_SHORT)
-                        .show();
-                Log.e(LOG_TAG, e.toString());
-            }
+            Recognizer.recognize(MainActivity.this, imageUri);
         }
     }
 
@@ -96,38 +74,12 @@ public class MainActivity extends AppCompatActivity {
         imageUri = FileProvider.getUriForFile(MainActivity.this,
                 BuildConfig.APPLICATION_ID + ".provider", photo);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent, PHOTO_REQUEST);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (imageUri != null) {
-            outState.putString(SAVED_INSTANCE_URI, imageUri.toString());
-            outState.putString(SAVED_INSTANCE_RESULT, scanResults.getText().toString());
-        }
-        super.onSaveInstanceState(outState);
+        startActivityForResult(intent, REQUEST_PHOTO);
     }
 
     private void launchMediaScanIntent() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(imageUri);
         this.sendBroadcast(mediaScanIntent);
-    }
-
-    private Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
-        int targetW = 600;
-        int targetH = 600;
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri), null, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-        return BitmapFactory.decodeStream(ctx.getContentResolver()
-                .openInputStream(uri), null, bmOptions);
     }
 }
