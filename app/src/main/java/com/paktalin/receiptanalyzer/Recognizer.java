@@ -2,9 +2,6 @@ package com.paktalin.receiptanalyzer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -13,8 +10,6 @@ import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
-import java.io.FileNotFoundException;
-
 /**
  * Created by Paktalin on 12.03.2018.
  */
@@ -22,7 +17,9 @@ import java.io.FileNotFoundException;
 public class Recognizer {
     private static final String TAG = Recognizer.class.getSimpleName();
 
-    static void recognize(Context context, Bitmap bitmap) {
+    static void recognize(Context context) {
+        Bitmap bitmap = FileManager.getBitmap();
+
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
@@ -48,31 +45,11 @@ public class Recognizer {
                     }
                 }
             }
-            DirectoryManager.saveTextFile("blocks.txt", blocks);
-            DirectoryManager.saveTextFile("lines.txt", lines);
-            DirectoryManager.saveTextFile("words.txt", words);
+            FileManager.saveTextFile("blocks.txt", blocks);
+            FileManager.saveTextFile("lines.txt", lines);
+            FileManager.saveTextFile("words.txt", words);
         }else {
             Log.d(TAG, "Could not set up the detector!");
         }
-    }
-
-    static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
-        int targetW = 600;
-        int targetH = 600;
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri), null, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-        Bitmap bitmap = BitmapFactory.decodeStream(ctx.getContentResolver()
-                .openInputStream(uri), null, bmOptions);
-        DirectoryManager.saveBitmap(bitmap);
-
-        return bitmap;
     }
 }

@@ -18,14 +18,13 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * Created by Paktalin on 21.02.2018.
  */
 
-class DirectoryManager {
-    private static final String TAG = DirectoryManager.class.getSimpleName();
-    private static String externalDirPath = Environment.getExternalStorageDirectory() + "";
+class FileManager {
+    private static final String TAG = FileManager.class.getSimpleName();
     private static String appDirPath;
 
     static void setUpAppDir(Context context) {
         PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity)context);
-        File appDir = new File(externalDirPath, context.getString(R.string.app_name));
+        File appDir = new File(Environment.getExternalStorageDirectory(), context.getString(R.string.app_name));
         if(created(appDir)) {
             appDirPath = appDir.getAbsolutePath();
         }
