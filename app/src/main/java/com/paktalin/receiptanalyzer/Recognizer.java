@@ -10,6 +10,8 @@ import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
+import java.io.IOException;
+
 /**
  * Created by Paktalin on 12.03.2018.
  */
@@ -23,6 +25,10 @@ public class Recognizer {
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+
+            Bitmap bitmapFrame = frame.getBitmap();
+            FileManager.saveBitmap(bitmapFrame, "frame.jpg");
+
             SparseArray<TextBlock> textBlocks = null;
             if (frame != null) {
                 textBlocks = detector.detect(frame);
@@ -45,9 +51,13 @@ public class Recognizer {
                     }
                 }
             }
-            FileManager.saveTextFile("blocks.txt", blocks);
-            FileManager.saveTextFile("lines.txt", lines);
-            FileManager.saveTextFile("words.txt", words);
+            try {
+                FileManager.saveTextFile("blocks.txt", blocks);
+                FileManager.saveTextFile("lines.txt", lines);
+                FileManager.saveTextFile("words.txt", words);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }else {
             Log.d(TAG, "Could not set up the detector!");
         }

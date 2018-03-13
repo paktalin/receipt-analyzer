@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -41,12 +42,12 @@ class FileManager {
         return true;
     }
 
-    private static void saveBitmap(Bitmap bitmap, String path) {
-        File bitmapFile = new File(path);
+    static void saveBitmap(Bitmap bitmap, String name) {
+        File bitmapFile = new File(appDirPath + "/Pictures");
         if(created(bitmapFile)) {
             FileOutputStream out = null;
             try {
-                out = new FileOutputStream(path + "/processed.png");
+                out = new FileOutputStream(appDirPath + "/Pictures/" + name);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -63,35 +64,19 @@ class FileManager {
             Log.d(TAG, "Couldn't save bitmap, because the directory doesn't exists");
         }
     }
-    static void saveBitmap(Bitmap bitmap) {
-        saveBitmap(bitmap, appDirPath + "/Pictures");
-    }
 
-    static void saveTextFile(String name, String data) {
-        File scannedDir = new File(appDirPath + "/ScannedText");
-
-        if(created(scannedDir)) {
-            File file = new File(scannedDir, name);
-            try {
-                if(created(file)) {
-                    FileOutputStream fOut = new FileOutputStream(file);
-                    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-                    myOutWriter.append(data);
-
-                    myOutWriter.close();
-
-                    fOut.flush();
-                    fOut.close();
-                } else {
-                    Log.d(TAG, "Couldn't create the text file");
-                }
-
-            }
-            catch (IOException e) {
-                Log.e("Exception", "File write failed: " + e.toString());
-            }
+    static void saveTextFile(String name, String data) throws IOException {
+        String scannedDirPath = appDirPath + "/ScannedText/";
+        if(created(new File(scannedDirPath))) {
+            FileOutputStream fOut = new FileOutputStream(scannedDirPath + name);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            myOutWriter.append(data);
+            myOutWriter.close();
+            fOut.flush();
+            fOut.close();
         }
     }
+
 
     static Bitmap getBitmap() {
         String bitmapFilePath = appDirPath + "/Pictures/processed.png";

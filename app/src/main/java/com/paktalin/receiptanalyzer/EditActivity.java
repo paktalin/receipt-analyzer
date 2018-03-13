@@ -76,14 +76,13 @@ public class EditActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            FileManager.saveBitmap(bitmap);
+            FileManager.saveBitmap(bitmap, "processed.png");
 
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             mediaScanIntent.setData(imageUri);
             sendBroadcast(mediaScanIntent);
 
-            Intent okIntent = new Intent();
-            setResult(Activity.RESULT_OK, okIntent);
+            setResult(Activity.RESULT_OK);
             finish();
         }
     };
@@ -103,9 +102,5 @@ public class EditActivity extends AppCompatActivity {
 
         return BitmapFactory.decodeStream(ctx.getContentResolver()
                 .openInputStream(uri), null, bmOptions);
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
     }
 }
