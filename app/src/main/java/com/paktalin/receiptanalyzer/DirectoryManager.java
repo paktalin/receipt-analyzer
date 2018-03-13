@@ -3,6 +3,7 @@ package com.paktalin.receiptanalyzer;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
@@ -22,8 +23,16 @@ class DirectoryManager {
     private static String externalDirPath = Environment.getExternalStorageDirectory() + "";
     private static String appDirPath;
 
-    private static boolean exists(File dir) {
-        if (!dir.exists()) {
+    static void setUpAppDir(Context context) {
+        PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity)context);
+        File appDir = new File(externalDirPath, context.getString(R.string.app_name));
+        if(created(appDir)) {
+            appDirPath = appDir.getAbsolutePath();
+        }
+    }
+
+    private static boolean created(File dir) {
+        if(!dir.exists()) {
             if (!dir.mkdirs()) {
                 Log.d(TAG, "Couldn't create the directory");
                 return false;
@@ -33,17 +42,9 @@ class DirectoryManager {
         return true;
     }
 
-    static void setUpAppDir(Context context) {
-        PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity)context);
-        File appDir = new File(externalDirPath, context.getString(R.string.app_name));
-        if(exists(appDir)) {
-            appDirPath = appDir.getAbsolutePath();
-        }
-    }
-
     private static void saveBitmap(Bitmap bitmap, String path) {
         File bitmapFile = new File(path);
-        if(exists(bitmapFile)) {
+        if(created(bitmapFile)) {
             FileOutputStream out = null;
             try {
                 out = new FileOutputStream(path + "/processed.png");
@@ -60,11 +61,9 @@ class DirectoryManager {
                 }
             }
         } else {
-            Log.d(TAG, "Couldn't save bitmap, because the directory doesn't exist");
+            Log.d(TAG, "Couldn't save bitmap, because the directory doesn't exists");
         }
     }
-
-    //save by default
     static void saveBitmap(Bitmap bitmap) {
         saveBitmap(bitmap, appDirPath + "/Pictures");
     }
@@ -72,10 +71,10 @@ class DirectoryManager {
     static void saveTextFile(String name, String data) {
         File scannedDir = new File(appDirPath + "/ScannedText");
 
-        if(exists(scannedDir)) {
+        if(created(scannedDir)) {
             File file = new File(scannedDir, name);
             try {
-                if(exists(file)) {
+                if(created(file)) {
                     FileOutputStream fOut = new FileOutputStream(file);
                     OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
                     myOutWriter.append(data);
@@ -92,6 +91,16 @@ class DirectoryManager {
             catch (IOException e) {
                 Log.e("Exception", "File write failed: " + e.toString());
             }
+        }
+    }
+
+    static Bitmap getBitmap() {
+        String bitmapFilePath = appDirPath + "/Pictures/processed.png";
+        if((new File(bitmapFilePath).exists())) {
+            return BitmapFactory.decodeFile(bitmapFilePath);
+        } else {
+            Log.d(TAG, "Couldn't find the bitmap");
+            return null;
         }
     }
 }

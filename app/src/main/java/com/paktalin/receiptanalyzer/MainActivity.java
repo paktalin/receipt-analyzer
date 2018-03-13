@@ -27,8 +27,8 @@ import java.io.FileNotFoundException;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int REQUEST_WRITE_PERMISSION = 20;
     private static final int REQUEST_PHOTO = 10;
+    private static final int REQUEST_WRITE_PERMISSION = 20;
     private Uri imageUri;
 
     @Override
@@ -63,8 +63,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_PHOTO && resultCode == RESULT_OK) {
-            launchMediaScanIntent();
-            Recognizer.recognize(MainActivity.this, imageUri);
+            try {
+                Recognizer.decodeBitmapUri(MainActivity.this, imageUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            Intent editIntent = new Intent(MainActivity.this, EditActivity.class);
+            startActivity(editIntent);
+
+            //launchMediaScanIntent();
+            //Recognizer.recognize(MainActivity.this, imageUri);
         }
     }
 

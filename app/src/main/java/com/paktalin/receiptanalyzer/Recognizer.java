@@ -22,17 +22,9 @@ import java.io.FileNotFoundException;
 public class Recognizer {
     private static final String TAG = Recognizer.class.getSimpleName();
 
-    static void recognize(Context context, Uri imageUri) {
+    static void recognize(Context context, Bitmap bitmap) {
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
-        Bitmap bitmap = null;
-        try {
-            bitmap = decodeBitmapUri(context, imageUri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         if (detector.isOperational() && bitmap != null) {
-            DirectoryManager.saveBitmap(bitmap);
-
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
             SparseArray<TextBlock> textBlocks = null;
             if (frame != null) {
@@ -64,7 +56,7 @@ public class Recognizer {
         }
     }
 
-    private static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
+    static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
         int targetW = 600;
         int targetH = 600;
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -77,7 +69,10 @@ public class Recognizer {
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
 
-        return BitmapFactory.decodeStream(ctx.getContentResolver()
+        Bitmap bitmap = BitmapFactory.decodeStream(ctx.getContentResolver()
                 .openInputStream(uri), null, bmOptions);
+        DirectoryManager.saveBitmap(bitmap);
+
+        return bitmap;
     }
 }
