@@ -12,19 +12,35 @@ import java.util.ArrayList;
  */
 
 public class MyTextBlock {
-    int top, bottom, left , right, height;
-    ArrayList<String> lines;
+    private int top;
+    private int left;
+    private int height;
+    private ArrayList<String> lines;
 
     MyTextBlock(TextBlock textBlock) {
         RectF rect = new RectF(textBlock.getBoundingBox());
         top = (int)rect.top;
-        bottom = (int)rect.bottom;
+        int bottom = (int) rect.bottom;
         left = (int)rect.left;
-        right = (int)rect.right;
         height = bottom - top;
         for (Text line : textBlock.getComponents()) {
             lines.add(line.getValue());
         }
     }
 
+    public int getTop() {
+        return top;
+    }
+
+    public int getLeft() {
+        return left;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public ArrayList<String> getLines() {
+        return lines;
+    }
 }
