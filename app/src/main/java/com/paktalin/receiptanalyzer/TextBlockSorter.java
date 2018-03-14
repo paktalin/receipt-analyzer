@@ -1,15 +1,10 @@
 package com.paktalin.receiptanalyzer;
 
-import android.graphics.RectF;
 import android.util.SparseArray;
 
-import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Stack;
-import java.util.TreeMap;
 
 /**
  * Created by Paktalin on 14.03.2018.
@@ -46,7 +41,7 @@ public class TextBlockSorter {
         return minHeight;
     }
 
-    private void clueLines() {
+    private void glueLines() {
         int height = getMinHeight();
         for(int i = 0; i < size-1; i++) {
             MyTextBlock block1 = myTextBlocks[i];
@@ -54,15 +49,16 @@ public class TextBlockSorter {
 
             if((block2.getTop() - block1.getTop()) < height/2) {
                 if(block2.getLeft() > block1.getLeft()) {
-                    clue(block1.getLines(), block2.getLines());
+                    glue(block1.getLines(), block2.getLines());
                 } else {
-                    clue(block2.getLines(), block1.getLines());
+                    glue(block2.getLines(), block1.getLines());
                 }
             }
         }
     }
 
-    private void clue(ArrayList<String> leftList, ArrayList<String> rightList) {
-
+    private void glue(ArrayList<String> leftList, ArrayList<String> rightList) {
+        /*TODO count number of lines in each block
+        TODO consider gluing lines at different heights*/
     }
 }

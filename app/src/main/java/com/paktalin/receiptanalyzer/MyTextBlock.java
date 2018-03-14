@@ -11,36 +11,34 @@ import java.util.ArrayList;
  * Created by Paktalin on 14.03.2018.
  */
 
-public class MyTextBlock {
-    private int top;
-    private int left;
-    private int height;
+class MyTextBlock {
+    private int top, left, height;
     private ArrayList<String> lines;
 
     MyTextBlock(TextBlock textBlock) {
         RectF rect = new RectF(textBlock.getBoundingBox());
+        lines = new ArrayList<>();
         top = (int)rect.top;
-        int bottom = (int) rect.bottom;
         left = (int)rect.left;
-        height = bottom - top;
+        height = (int) rect.bottom - top;
         for (Text line : textBlock.getComponents()) {
             lines.add(line.getValue());
         }
     }
 
-    public int getTop() {
+    int getTop() {
         return top;
     }
 
-    public int getLeft() {
+    int getLeft() {
         return left;
     }
 
-    public int getHeight() {
+    int getHeight() {
         return height;
     }
 
-    public ArrayList<String> getLines() {
+    ArrayList<String> getLines() {
         return lines;
     }
 }
