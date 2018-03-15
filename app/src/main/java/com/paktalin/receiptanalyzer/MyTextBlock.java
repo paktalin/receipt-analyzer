@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer;
 
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
@@ -21,7 +22,10 @@ class MyTextBlock {
         top = (int)rect.top;
         left = (int)rect.left;
         height = (int) rect.bottom - top;
+        Log.d("Block: ", String.valueOf(rect.height()));
         for (Text line : textBlock.getComponents()) {
+            RectF rectLine = new RectF(line.getBoundingBox());
+            Log.d("Lines: ", String.valueOf(rectLine.height()));
             lines.add(line.getValue());
         }
     }

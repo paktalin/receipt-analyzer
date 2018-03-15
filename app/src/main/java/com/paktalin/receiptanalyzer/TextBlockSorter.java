@@ -1,64 +1,84 @@
 package com.paktalin.receiptanalyzer;
 
+import android.util.Log;
 import android.util.SparseArray;
 
+import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Paktalin on 14.03.2018.
  */
 
-public class TextBlockSorter {
+class TextBlockSorter {
     private int size;
-    private MyTextBlock[] myTextBlocks;
+    private ArrayList<Line> lines;
 
-    public TextBlockSorter(SparseArray<TextBlock> textBlocks) {
-        myTextBlocks = extractData(textBlocks);
+    TextBlockSorter(SparseArray<TextBlock> textBlocks) {
         size = textBlocks.size();
+        lines = new ArrayList<>();
+        lines = sortLines(textBlocks);
+        glue();
     }
 
-    private MyTextBlock[] extractData(SparseArray<TextBlock> textBlocks) {
-        MyTextBlock[] myTextBlocks = new MyTextBlock[size];
+    private ArrayList<Line> extractData(SparseArray<TextBlock> textBlocks) {
+        TextBlock textBlock;
         for (int i = 0; i < size; i++) {
-            myTextBlocks[i] = new MyTextBlock(textBlocks.valueAt(i));
-        }
-        return myTextBlocks;
-    }
-
-    private int getMinHeight() {
-        int minHeight = -1;
-        if(size != 0) {
-            minHeight = myTextBlocks[0].getHeight();
-        }
-        for (int i = 1; i < size; i++) {
-            int height = myTextBlocks[i].getHeight();
-            if(height < minHeight) {
-                minHeight = height;
+            textBlock = textBlocks.valueAt(i);
+            for (Text line : textBlock.getComponents()) {
+                lines.add(new Line(line));
             }
         }
-        return minHeight;
+        return lines;
     }
 
-    private void glueLines() {
-        int height = getMinHeight();
-        for(int i = 0; i < size-1; i++) {
-            MyTextBlock block1 = myTextBlocks[i];
-            MyTextBlock block2 = myTextBlocks[i+1];
+    private ArrayList<Line> sortLines(SparseArray<TextBlock> textBlocks) {
+        ArrayList<Line> lines = extractData(textBlocks);
+        TreeMap<Integer, Line> treeMap = new TreeMap<>();
+        for(Line line : lines) {
+            treeMap.put(line.getTop(), line);
+        }
+        lines.clear();
+        for(Map.Entry entry : treeMap.entrySet()) {
+            lines.add((Line)entry.getValue());
+        }
+        return lines;
+    }
 
-            if((block2.getTop() - block1.getTop()) < height/2) {
-                if(block2.getLeft() > block1.getLeft()) {
-                    glue(block1.getLines(), block2.getLines());
+    private int getMeanHeight() {
+        int sum = 0;
+        int number = lines.size();
+        for(Line line : lines) {
+            sum += line.getHeight();
+        }
+        return sum/number;
+    }
+
+    private void glue() {
+        int height = getMeanHeight();
+        for(int i = 0; i < lines.size()-1; i++) {
+            Line line1 = lines.get(i);
+            Line line2 = lines.get(i+1);
+            if ((line2.getTop() - line1.getTop()) < height/2) {
+                if(line2.getLeft() > line1.getLeft()) {
+                    line1.setFilling(line1.getFilling() + " " + line2.getFilling());
                 } else {
-                    glue(block2.getLines(), block1.getLines());
+                    line1.setFilling(line2.getFilling() + " " + line1.getFilling());
+                    line1.setLeft(line2.getLeft());
                 }
+                line1.setHeight((line1.getHeight() + line2.getHeight())/2);
+                line1.setTop((line1.getTop() + line2.getTop())/2);
+                lines.set(i, line1);
+                lines.remove(line2);
+                i--;
             }
         }
-    }
-
-    private void glue(ArrayList<String> leftList, ArrayList<String> rightList) {
-        /*TODO count number of lines in each block
-        TODO consider gluing lines at different heights*/
+        for (Line line : lines) {
+            Log.d("GLUE", line.getFilling());
+        }
     }
 }
