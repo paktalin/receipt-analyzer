@@ -25,6 +25,7 @@ class Recognizer {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
             ArrayList<String> lines = TextBlockSorter.getStrings(detector.detect(frame));
             Log.d(TAG, lines.toString());
+            Filter filter = new Filter(lines);
             try {
                 FileManager.saveTextFile("formatted.txt", lines);
             } catch (IOException e) {

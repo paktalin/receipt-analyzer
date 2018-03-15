@@ -63,7 +63,7 @@ class TextBlockSorter {
         for(int i = 0; i < lines.size()-1; i++) {
             Line line1 = lines.get(i);
             Line line2 = lines.get(i+1);
-            if ((line2.getTop() - line1.getTop()) < height/2) {
+            if ((line2.getTop() - line1.getTop()) < height/1.5) {
                 if(line2.getLeft() > line1.getLeft()) {
                     line1.setFilling(line1.getFilling() + " " + line2.getFilling());
                 } else {
