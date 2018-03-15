@@ -1,63 +1,52 @@
 package com.paktalin.receiptanalyzer;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.ArrayList;
-
 /**
  * Created by Paktalin on 15.03.2018.
  */
 
 class StringFilter {
-    private static final String TAG = StringFilter.class.getSimpleName();
-    private ArrayList<String> lines;
+    private static StringBuilder sb;
 
-    private String data;
-
-    StringFilter(ArrayList<String> lines) {
-        this.lines = lines;
-        removeSpaces();
+    static String filter(String str) {
+        String string = str.toLowerCase();
+        sb = new StringBuilder(string);
+        sb = filterCharSet();
+        return removeSpaces();
     }
 
-   private void removeSpaces() {
-       for (int j = 0; j < lines.size(); j++) {
-           lines.set(j, lines.get(j).toLowerCase());
-           StringBuilder sb = new StringBuilder(lines.get(j));
-           sb = filterCharSet(sb);
-           for(int i = 1; i < sb.length() - 1; i++) {
-               char left = sb.charAt(i-1);
-               char middle = sb.charAt(i);
-               char right = sb.charAt(i+1);
-               if((middle == ' ') && Character.isLetter(left) && Character.isLetter(right)) {
-                   sb.deleteCharAt(i);
-                   i--;
-               }
+   private static String removeSpaces() {
+       for(int i = 1; i < sb.length() - 1; i++) {
+           char left = sb.charAt(i-1);
+           char middle = sb.charAt(i);
+           char right = sb.charAt(i+1);
+           if((middle == ' ') && Character.isLetter(left) && Character.isLetter(right)) {
+               sb.deleteCharAt(i);
+               i--;
            }
-           lines.set(j, sb.toString());
        }
+       return sb.toString();
    }
 
-   private StringBuilder filterCharSet(StringBuilder stringBuilder) {
+   private static StringBuilder filterCharSet() {
         String charSet = "abcdefghijklmnopqrstuvwxyz0123456789. ";
-        for(int i = 0; i < stringBuilder.length(); i++) {
-            char c = stringBuilder.charAt(i);
+        for(int i = 0; i < sb.length(); i++) {
+            char c = sb.charAt(i);
             //if out of charset
             if (charSet.indexOf(c) == -1) {
                 char replacement = tryToReplace(c);
                 //if couldn't find replacement, then delete the char
                 if(c == replacement) {
-                    stringBuilder.deleteCharAt(i);
+                    sb.deleteCharAt(i);
                     i--;
                 } else {
-                    stringBuilder.setCharAt(i, replacement);
+                    sb.setCharAt(i, replacement);
                 }
             }
         }
-        return stringBuilder;
+        return sb;
    }
 
-   private char tryToReplace(char c) {
+   private static char tryToReplace(char c) {
         byte NO = -1;
         String toO = "òóôõö";
         String toA = "àáâãäåāă";
@@ -78,14 +67,5 @@ class StringFilter {
         if(toDot.indexOf(c) != NO)
             return '.';
         else return c;
-    }
-
-    private void save() {
-        String name = new SimpleDateFormat("HH.mm.ss").format(new Date()) + ".txt";
-        try {
-            FileManager.saveTextFile(name, lines);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

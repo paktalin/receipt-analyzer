@@ -11,7 +11,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -42,7 +43,8 @@ class FileManager {
         return true;
     }
 
-    static void saveBitmap(Bitmap bitmap, String name) {
+    static void saveBitmap(Bitmap bitmap) {
+        String name = "processed.png";
         File bitmapFile = new File(appDirPath + "/Pictures");
         if(created(bitmapFile)) {
             FileOutputStream out = null;
@@ -77,12 +79,8 @@ class FileManager {
         }
     }
 
-    static void saveTextFile(String name, ArrayList<String> data) throws IOException {
-        String output = "";
-        for(String line: data) {
-            output += line + "\n";
-        }
-        saveTextFile(name, output);
+    static void saveTextFile(String data) throws IOException {
+        saveTextFile(makeName(), data);
     }
 
     static Bitmap getBitmap() {
@@ -93,5 +91,9 @@ class FileManager {
             Log.d(TAG, "Couldn't find the bitmap");
             return null;
         }
+    }
+
+    private static String makeName() {
+        return new SimpleDateFormat("HHmmss").format(new Date()) + ".txt";
     }
 }

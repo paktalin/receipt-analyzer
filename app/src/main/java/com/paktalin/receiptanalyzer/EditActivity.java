@@ -76,7 +76,7 @@ public class EditActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            FileManager.saveBitmap(bitmap, "processed.png");
+            FileManager.saveBitmap(bitmap);
 
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             mediaScanIntent.setData(imageUri);

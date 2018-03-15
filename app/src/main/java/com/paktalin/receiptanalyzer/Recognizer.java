@@ -22,11 +22,15 @@ class Recognizer {
 
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            String lines = LineOrganizer.getString(detector.detect(frame));
-            Log.d(TAG, lines.toString());
-            //StringFilter stringFilter = new StringFilter(lines);
+            String string = LineOrganizer.getString(detector.detect(frame));
+            string = StringFilter.filter(string);
             try {
-                FileManager.saveTextFile("formatted.txt", lines);
+                FileManager.saveTextFile(string);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                FileManager.saveTextFile("formatted.txt", string);
             } catch (IOException e) {
                 e.printStackTrace();
             }
