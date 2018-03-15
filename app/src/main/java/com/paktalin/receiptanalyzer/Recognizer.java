@@ -7,7 +7,6 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by Paktalin on 12.03.2018.
@@ -23,9 +22,9 @@ class Recognizer {
 
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            ArrayList<String> lines = TextBlockSorter.getStrings(detector.detect(frame));
+            String lines = LineOrganizer.getString(detector.detect(frame));
             Log.d(TAG, lines.toString());
-            Filter filter = new Filter(lines);
+            //StringFilter stringFilter = new StringFilter(lines);
             try {
                 FileManager.saveTextFile("formatted.txt", lines);
             } catch (IOException e) {

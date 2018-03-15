@@ -1,6 +1,5 @@
 package com.paktalin.receiptanalyzer;
 
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.text.Text;
@@ -14,13 +13,17 @@ import java.util.TreeMap;
  * Created by Paktalin on 14.03.2018.
  */
 
-class TextBlockSorter {
+class LineOrganizer {
     private static ArrayList<Line> lines;
 
-    static ArrayList<String> getStrings(SparseArray<TextBlock> textBlocks) {
+    static String getString(SparseArray<TextBlock> textBlocks) {
         lines = extractData(textBlocks);
         lines = sortLines();
-        return glue();
+        StringBuilder result = new StringBuilder();
+        for(String line: gluedLines()) {
+            result.append(line).append("\n");
+        }
+        return result.toString();
     }
 
     static private ArrayList<Line> extractData(SparseArray<TextBlock> textBlocks) {
@@ -57,7 +60,7 @@ class TextBlockSorter {
         return sum/number;
     }
 
-    static private ArrayList<String> glue() {
+    static private ArrayList<String> gluedLines() {
         int height = getMeanHeight();
         ArrayList<String> strings = new ArrayList<>();
         for(int i = 0; i < lines.size()-1; i++) {
