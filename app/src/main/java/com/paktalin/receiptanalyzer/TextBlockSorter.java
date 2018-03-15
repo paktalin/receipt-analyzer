@@ -15,18 +15,18 @@ import java.util.TreeMap;
  */
 
 class TextBlockSorter {
-    private int size;
-    private ArrayList<Line> lines;
+    private static ArrayList<Line> lines;
 
-    TextBlockSorter(SparseArray<TextBlock> textBlocks) {
-        size = textBlocks.size();
-        lines = new ArrayList<>();
-        lines = sortLines(textBlocks);
-        glue();
+    static ArrayList<String> getStrings(SparseArray<TextBlock> textBlocks) {
+        lines = extractData(textBlocks);
+        lines = sortLines();
+        return glue();
     }
 
-    private ArrayList<Line> extractData(SparseArray<TextBlock> textBlocks) {
+    static private ArrayList<Line> extractData(SparseArray<TextBlock> textBlocks) {
         TextBlock textBlock;
+        ArrayList<Line> lines = new ArrayList<>();
+        int size = textBlocks.size();
         for (int i = 0; i < size; i++) {
             textBlock = textBlocks.valueAt(i);
             for (Text line : textBlock.getComponents()) {
@@ -36,8 +36,7 @@ class TextBlockSorter {
         return lines;
     }
 
-    private ArrayList<Line> sortLines(SparseArray<TextBlock> textBlocks) {
-        ArrayList<Line> lines = extractData(textBlocks);
+    static private ArrayList<Line> sortLines() {
         TreeMap<Integer, Line> treeMap = new TreeMap<>();
         for(Line line : lines) {
             treeMap.put(line.getTop(), line);
@@ -49,7 +48,7 @@ class TextBlockSorter {
         return lines;
     }
 
-    private int getMeanHeight() {
+    static private int getMeanHeight() {
         int sum = 0;
         int number = lines.size();
         for(Line line : lines) {
@@ -58,8 +57,9 @@ class TextBlockSorter {
         return sum/number;
     }
 
-    private void glue() {
+    static private ArrayList<String> glue() {
         int height = getMeanHeight();
+        ArrayList<String> strings = new ArrayList<>();
         for(int i = 0; i < lines.size()-1; i++) {
             Line line1 = lines.get(i);
             Line line2 = lines.get(i+1);
@@ -78,7 +78,8 @@ class TextBlockSorter {
             }
         }
         for (Line line : lines) {
-            Log.d("GLUE", line.getFilling());
+            strings.add(line.getFilling());
         }
+        return strings;
     }
 }

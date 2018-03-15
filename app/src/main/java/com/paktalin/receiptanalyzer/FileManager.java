@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -76,6 +77,13 @@ class FileManager {
         }
     }
 
+    static void saveTextFile(String name, ArrayList<String> data) throws IOException {
+        String output = "";
+        for(String line: data) {
+            output += line + "\n";
+        }
+        saveTextFile(name, output);
+    }
 
     static Bitmap getBitmap() {
         String bitmapFilePath = appDirPath + "/Pictures/processed.png";

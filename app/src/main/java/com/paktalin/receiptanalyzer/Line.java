@@ -7,7 +7,7 @@ import com.google.android.gms.vision.text.Text;
  * Created by Paktalin on 15.03.2018.
  */
 
-public class Line {
+class Line {
     private int top, left, height;
     private String filling;
 
