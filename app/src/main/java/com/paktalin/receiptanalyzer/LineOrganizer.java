@@ -1,5 +1,6 @@
 package com.paktalin.receiptanalyzer;
 
+import android.graphics.Rect;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -63,7 +64,6 @@ class LineOrganizer {
         ArrayList<Line> toOneLine = new ArrayList<>();
         ArrayList<String> stringLines = new ArrayList<>();
         toOneLine.add(lines.get(0));
-        Log.d(TAG, "toOneLine " + toStr(toOneLine));
 
         for(int i = 1; i < lines.size(); i++) {
             Line line = lines.get(i);
@@ -87,11 +87,32 @@ class LineOrganizer {
         return (top2 - top1) < height/1.6;
     }
 
-    static String toStr(ArrayList<Line> lines) {
-        String result = "";
-        for(Line line : lines) {
-            result += " " + line.getFilling();
+    static int[][] getCropCoordinates(SparseArray<TextBlock> textBlocks) {
+        Rect rect = textBlocks.valueAt(0).getBoundingBox();
+        int[] leftTop = {rect.left, rect.top};
+        int[] rightTop = {rect.right, rect.top};
+        int[] leftBottom = {rect.left, rect.bottom};
+        int[] rightBottom = {rect.right, rect.bottom};
+
+        for (int i = 1; i < textBlocks.size(); i++) {
+            rect = textBlocks.valueAt(i).getBoundingBox();
+            if ((rect.left < leftTop[0]) && (rect.top < leftTop[1])) {
+                leftTop[0] = rect.left;
+                leftTop[1] = rect.top;
+            }
+            if ((rect.right < rightTop[0]) && (rect.top < rightTop[1])) {
+                rightTop[0] = rect.right;
+                rightTop[1] = rect.top;
+            }
+            if ((rect.left < leftBottom[0]) && (rect.bottom < leftBottom[1])) {
+                leftBottom[0] = rect.left;
+                leftBottom[1] = rect.bottom;
+            }
+            if ((rect.right < rightBottom[0]) && (rect.bottom < rightBottom[1])) {
+                rightBottom[0] = rect.right;
+                rightBottom[1] = rect.bottom;
+            }
         }
-        return result;
+        return new int[][]{leftTop, rightTop, leftBottom, rightBottom};
     }
 }
