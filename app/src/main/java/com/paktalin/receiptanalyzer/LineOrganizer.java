@@ -7,6 +7,8 @@ import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -19,17 +21,12 @@ class LineOrganizer {
     private static ArrayList<Line> lines;
     private static int height;
 
-
     static String getString(SparseArray<TextBlock> textBlocks) {
         lines = extractData(textBlocks);
         lines = sortLines();
-        for(Line line : lines){
-            Log.d(TAG, line.getFilling());
-        }
         StringBuilder result = new StringBuilder();
-        glueLines();
-        for(Line line: lines) {
-            result.append(line.getFilling()).append("\n");
+        for(String stringLine: glueLines()) {
+            result.append(stringLine).append("\n");
         }
         return result.toString();
     }
@@ -49,9 +46,12 @@ class LineOrganizer {
 
     static private ArrayList<Line> sortLines() {
         TreeMap<Float, Line> treeMap = new TreeMap<>();
+        int sumHeights = 0;
         for(Line line : lines) {
+            sumHeights += line.getHeight();
             treeMap.put(createKey(line.getTop(), line.getLeft()), line);
         }
+        height = sumHeights/lines.size();
         lines.clear();
         for(Map.Entry entry : treeMap.entrySet()) {
             lines.add((Line)entry.getValue());
@@ -59,39 +59,23 @@ class LineOrganizer {
         return lines;
     }
 
-    static private int getMeanHeight() {
-        int sum = 0;
-        int number = lines.size();
-        for(Line line : lines) {
-            sum += line.getHeight();
-        }
-        return sum/number;
-    }
+    static private ArrayList<String> glueLines() {
+        ArrayList<Line> toOneLine = new ArrayList<>();
+        ArrayList<String> stringLines = new ArrayList<>();
+        toOneLine.add(lines.get(0));
+        Log.d(TAG, "toOneLine " + toStr(toOneLine));
 
-    static private void glueLines() {
-        height = getMeanHeight();
-        ArrayList<String> toOneLine = new ArrayList<>();
-        for(int i = 0; i < lines.size()-1; i++) {
-            Line line1 = lines.get(i);
-            Line line2 = lines.get(i+1);
-
-            if (close(line1.getTop(), line2.getTop())) {
-                if(line2.getLeft() > line1.getLeft()) {
-                    line1.setFilling(line1.getFilling() + " " + line2.getFilling());
-                } else {
-                    line1.setFilling(line2.getFilling() + " " + line1.getFilling());
-                    line1.setLeft(line2.getLeft());
-                }
-                line1.setHeight((line1.getHeight() + line2.getHeight())/2);
-                line1.setTop((line1.getTop() + line2.getTop())/2);
-                lines.set(i, line1);
-                lines.remove(line2);
-                i--;
+        for(int i = 1; i < lines.size(); i++) {
+            Line line = lines.get(i);
+            if (close(Line.getMeanTop(toOneLine), line.getTop())) {
+                toOneLine.add(line);
             } else{
-                //join(toOneLine);
+                stringLines.add(Line.join(toOneLine));
                 toOneLine.clear();
+                toOneLine.add(line);
             }
         }
+        return stringLines;
     }
 
     //generates a unique key gluing top and left coordinates
@@ -103,7 +87,11 @@ class LineOrganizer {
         return (top2 - top1) < height/1.6;
     }
 
-    /*private static ArrayList<String> fromLeftToRight() {
-
-    }*/
+    static String toStr(ArrayList<Line> lines) {
+        String result = "";
+        for(Line line : lines) {
+            result += " " + line.getFilling();
+        }
+        return result;
+    }
 }
