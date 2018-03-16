@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * Created by Paktalin on 10.03.2018.
  */
 
-public class StoreName {
+class StoreName {
 
     String regCode;
     String initialName; //the name read from the receipt

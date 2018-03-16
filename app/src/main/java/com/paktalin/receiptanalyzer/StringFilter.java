@@ -28,7 +28,7 @@ class StringFilter {
    }
 
    private static StringBuilder filterCharSet() {
-        String charSet = "abcdefghijklmnopqrstuvwxyz0123456789. ";
+        String charSet = "abcdefghijklmnopqrstuvwxyz0123456789. \n";
         for(int i = 0; i < sb.length(); i++) {
             char c = sb.charAt(i);
             //if out of charset

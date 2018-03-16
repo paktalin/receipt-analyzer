@@ -6,14 +6,13 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_scan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Scan Text" />
-
-    <TextView
-        android:id="@+id/results"
-
+    <Button
+        android:id="@+id/button_upload"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Upload Image" />
 </LinearLayout>

@@ -53,7 +53,7 @@ public class EditActivity extends AppCompatActivity {
             Button buttonOk = findViewById(R.id.button_ok);
 
             try {
-                bitmap = decodeBitmapUri(EditActivity.this, imageUri);
+                bitmap = Recognizer.decodeBitmapUri(EditActivity.this, imageUri);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -86,21 +86,4 @@ public class EditActivity extends AppCompatActivity {
             finish();
         }
     };
-
-    static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
-        int targetW = 600;
-        int targetH = 600;
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri), null, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-        return BitmapFactory.decodeStream(ctx.getContentResolver()
-                .openInputStream(uri), null, bmOptions);
-    }
 }

@@ -6,7 +6,7 @@ import com.paktalin.receiptanalyzer.similarity.CharacterSubstitutionInterface;
  * Created by Paktalin on 15.03.2018.
  */
 
-public class SearchForSimilarities {
+class SearchForSimilarities {
 
     private CharacterSubstitutionInterface substitute = new CharacterSubstitutionInterface() {
         /**in case of Tall1nn:
