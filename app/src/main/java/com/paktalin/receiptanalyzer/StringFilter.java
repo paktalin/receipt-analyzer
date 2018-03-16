@@ -53,6 +53,7 @@ class StringFilter {
         String toU = "ùúûü";
         String toI = "ìíîïĩīĭ";
         String toS = "śŝş";
+        String to8 = "&";
         String toDot = ",‚";
         if(toO.indexOf(c) != NO)
             return 'o';
@@ -66,6 +67,8 @@ class StringFilter {
             return 's';
         if(toDot.indexOf(c) != NO)
             return '.';
+       if(to8.indexOf(c) != NO)
+           return '8';
         else return c;
     }
 }

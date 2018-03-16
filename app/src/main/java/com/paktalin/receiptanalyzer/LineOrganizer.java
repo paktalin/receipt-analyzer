@@ -1,5 +1,6 @@
 package com.paktalin.receiptanalyzer;
 
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.text.Text;
@@ -14,14 +15,21 @@ import java.util.TreeMap;
  */
 
 class LineOrganizer {
+    private static final String TAG = LineOrganizer.class.getSimpleName();
     private static ArrayList<Line> lines;
+    private static int height;
+
 
     static String getString(SparseArray<TextBlock> textBlocks) {
         lines = extractData(textBlocks);
         lines = sortLines();
+        for(Line line : lines){
+            Log.d(TAG, line.getFilling());
+        }
         StringBuilder result = new StringBuilder();
-        for(String line: gluedLines()) {
-            result.append(line).append("\n");
+        glueLines();
+        for(Line line: lines) {
+            result.append(line.getFilling()).append("\n");
         }
         return result.toString();
     }
@@ -40,9 +48,9 @@ class LineOrganizer {
     }
 
     static private ArrayList<Line> sortLines() {
-        TreeMap<Integer, Line> treeMap = new TreeMap<>();
+        TreeMap<Float, Line> treeMap = new TreeMap<>();
         for(Line line : lines) {
-            treeMap.put(line.getTop(), line);
+            treeMap.put(createKey(line.getTop(), line.getLeft()), line);
         }
         lines.clear();
         for(Map.Entry entry : treeMap.entrySet()) {
@@ -60,13 +68,14 @@ class LineOrganizer {
         return sum/number;
     }
 
-    static private ArrayList<String> gluedLines() {
-        int height = getMeanHeight();
-        ArrayList<String> strings = new ArrayList<>();
+    static private void glueLines() {
+        height = getMeanHeight();
+        ArrayList<String> toOneLine = new ArrayList<>();
         for(int i = 0; i < lines.size()-1; i++) {
             Line line1 = lines.get(i);
             Line line2 = lines.get(i+1);
-            if ((line2.getTop() - line1.getTop()) < height/1.5) {
+
+            if (close(line1.getTop(), line2.getTop())) {
                 if(line2.getLeft() > line1.getLeft()) {
                     line1.setFilling(line1.getFilling() + " " + line2.getFilling());
                 } else {
@@ -78,11 +87,23 @@ class LineOrganizer {
                 lines.set(i, line1);
                 lines.remove(line2);
                 i--;
+            } else{
+                //join(toOneLine);
+                toOneLine.clear();
             }
         }
-        for (Line line : lines) {
-            strings.add(line.getFilling());
-        }
-        return strings;
     }
+
+    //generates a unique key gluing top and left coordinates
+    static private Float createKey(int top, int left) {
+        return Float.parseFloat(top + "." + left);
+    }
+
+    private static boolean close(int top1, int top2) {
+        return (top2 - top1) < height/1.6;
+    }
+
+    /*private static ArrayList<String> fromLeftToRight() {
+
+    }*/
 }
