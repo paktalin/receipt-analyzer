@@ -23,12 +23,14 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 class FileManager {
     private static final String TAG = FileManager.class.getSimpleName();
     private static String appDirPath;
+    private static String picturesDirPath;
 
     static void setUpAppDir(Context context) {
         PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity)context);
         File appDir = new File(Environment.getExternalStorageDirectory(), context.getString(R.string.app_name));
         if(created(appDir)) {
             appDirPath = appDir.getAbsolutePath();
+            picturesDirPath = appDir + "/Pictures";
         }
     }
 
@@ -43,13 +45,12 @@ class FileManager {
         return true;
     }
 
-    static void saveBitmap(Bitmap bitmap) {
-        String name = "processed.png";
-        File bitmapFile = new File(appDirPath + "/Pictures");
+    static void saveBitmap(Bitmap bitmap, String name) {
+        File bitmapFile = new File(picturesDirPath);
         if(created(bitmapFile)) {
             FileOutputStream out = null;
             try {
-                out = new FileOutputStream(appDirPath + "/Pictures/" + name);
+                out = new FileOutputStream(picturesDirPath + name);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -65,6 +66,10 @@ class FileManager {
         } else {
             Log.d(TAG, "Couldn't save bitmap, because the directory doesn't exists");
         }
+    }
+    static void saveBitmap(Bitmap bitmap) {
+        String name = "/processed.jpg";
+        saveBitmap(bitmap, name);
     }
 
     static void saveTextFile(String name, String data) throws IOException {
@@ -83,17 +88,11 @@ class FileManager {
         saveTextFile(makeName(), data);
     }
 
-    static Bitmap getBitmap() {
-        String bitmapFilePath = appDirPath + "/Pictures/processed.png";
-        if((new File(bitmapFilePath).exists())) {
-            return BitmapFactory.decodeFile(bitmapFilePath);
-        } else {
-            Log.d(TAG, "Couldn't find the bitmap");
-            return null;
-        }
-    }
-
     private static String makeName() {
         return new SimpleDateFormat("HHmmss").format(new Date()) + ".txt";
+    }
+
+    static String getPictureDirPath() {
+        return picturesDirPath;
     }
 }

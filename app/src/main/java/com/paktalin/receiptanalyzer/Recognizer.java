@@ -18,22 +18,14 @@ import java.io.IOException;
 class Recognizer {
     private static final String TAG = Recognizer.class.getSimpleName();
 
-    static void recognize(Context context) {
-        Bitmap bitmap = FileManager.getBitmap();
-
+    static void recognize(Context context, Bitmap bitmap) {
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
-
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
             String string = LineOrganizer.getString(detector.detect(frame));
             string = StringFilter.filter(string);
             try {
                 FileManager.saveTextFile(string);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                FileManager.saveTextFile("formatted.txt", string);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -55,9 +47,7 @@ class Recognizer {
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
 
-        Bitmap bitmap = BitmapFactory.decodeStream(ctx.getContentResolver()
+        return BitmapFactory.decodeStream(ctx.getContentResolver()
                 .openInputStream(uri), null, bmOptions);
-        FileManager.saveBitmap(bitmap);
-        return bitmap;
     }
 }
