@@ -1,15 +1,10 @@
 package com.paktalin.receiptanalyzer;
 
-import android.graphics.Rect;
 import android.util.Log;
 import android.util.SparseArray;
-
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -23,11 +18,20 @@ class LineOrganizer {
     private static int height;
 
     static String getString(SparseArray<TextBlock> textBlocks) {
+        boolean firstLinePassed = false;
         lines = extractData(textBlocks);
         lines = sortLines();
         StringBuilder result = new StringBuilder();
         for(String stringLine: glueLines()) {
-            result.append(stringLine).append("\n");
+            //remove first crashed strings which could be detected from the supermarket's logo
+            if (!firstLinePassed) {
+                if (stringLine.length() > 9) {
+                    firstLinePassed = true;
+                    result.append(stringLine).append("\n");
+                }
+            }else {
+                result.append(stringLine).append("\n");
+            }
         }
         return result.toString();
     }
@@ -85,34 +89,5 @@ class LineOrganizer {
 
     private static boolean close(int top1, int top2) {
         return (top2 - top1) < height/1.6;
-    }
-
-    static int[][] getCropCoordinates(SparseArray<TextBlock> textBlocks) {
-        Rect rect = textBlocks.valueAt(0).getBoundingBox();
-        int[] leftTop = {rect.left, rect.top};
-        int[] rightTop = {rect.right, rect.top};
-        int[] leftBottom = {rect.left, rect.bottom};
-        int[] rightBottom = {rect.right, rect.bottom};
-
-        for (int i = 1; i < textBlocks.size(); i++) {
-            rect = textBlocks.valueAt(i).getBoundingBox();
-            if ((rect.left < leftTop[0]) && (rect.top < leftTop[1])) {
-                leftTop[0] = rect.left;
-                leftTop[1] = rect.top;
-            }
-            if ((rect.right < rightTop[0]) && (rect.top < rightTop[1])) {
-                rightTop[0] = rect.right;
-                rightTop[1] = rect.top;
-            }
-            if ((rect.left < leftBottom[0]) && (rect.bottom < leftBottom[1])) {
-                leftBottom[0] = rect.left;
-                leftBottom[1] = rect.bottom;
-            }
-            if ((rect.right < rightBottom[0]) && (rect.bottom < rightBottom[1])) {
-                rightBottom[0] = rect.right;
-                rightBottom[1] = rect.bottom;
-            }
-        }
-        return new int[][]{leftTop, rightTop, leftBottom, rightBottom};
     }
 }

@@ -1,20 +1,26 @@
 package com.paktalin.receiptanalyzer;
 
+import android.util.Log;
+
 /**
  * Created by Paktalin on 15.03.2018.
  */
 
 class StringFilter {
     private static StringBuilder sb;
+    private static final String TAG = StringFilter.class.getSimpleName();
 
     static String filter(String str) {
         String string = str.toLowerCase();
         sb = new StringBuilder(string);
-        sb = filterCharSet();
-        return removeSpaces();
+        filterCharSet();
+        removeSpaces();
+        String first = getFirstString(sb.toString());
+        Log.d(TAG, StoreName.getSupermarket(first));
+        return sb.toString();
     }
 
-   private static String removeSpaces() {
+   private static void removeSpaces() {
        for(int i = 1; i < sb.length() - 1; i++) {
            char left = sb.charAt(i-1);
            char middle = sb.charAt(i);
@@ -24,10 +30,9 @@ class StringFilter {
                i--;
            }
        }
-       return sb.toString();
    }
 
-   private static StringBuilder filterCharSet() {
+   private static void filterCharSet() {
         String charSet = "abcdefghijklmnopqrstuvwxyz0123456789. \n";
         for(int i = 0; i < sb.length(); i++) {
             char c = sb.charAt(i);
@@ -43,7 +48,6 @@ class StringFilter {
                 }
             }
         }
-        return sb;
    }
 
    private static char tryToReplace(char c) {
@@ -70,5 +74,20 @@ class StringFilter {
        if(to8.indexOf(c) != NO)
            return '8';
         else return c;
+    }
+
+    private static String getFirstString(String string) {
+        int index = string.indexOf('\n');
+        return string.substring(0, index);
+    }
+
+    static String getRegCode(String string) {
+        //check if contains numbers
+        if (string.matches(".*\\d+.*")) {
+            int index = string.length() - 8 - 1;
+            return string.substring(index, string.length()-1);
+        }
+        Log.d(TAG, "Couldn't extract register code");
+        return null;
     }
 }

@@ -22,11 +22,6 @@ class Recognizer {
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            int[] coord = LineOrganizer.getCropRect(detector.detect(frame));
-            Bitmap croppedBmp = Bitmap.createBitmap(bitmap,
-                    coord[0], coord[1], coord[2]-coord[0], coord[3]-coord[1]);
-            FileManager.saveBitmap(croppedBmp, "/cropped.jpg");
-
             String string = LineOrganizer.getString(detector.detect(frame));
             string = StringFilter.filter(string);
             try {
@@ -55,6 +50,4 @@ class Recognizer {
         return BitmapFactory.decodeStream(ctx.getContentResolver()
                 .openInputStream(uri), null, bmOptions);
     }
-
-
 }
