@@ -10,6 +10,7 @@ import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Paktalin on 12.03.2018.
@@ -22,13 +23,15 @@ class Recognizer {
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            String string = LineOrganizer.getString(detector.detect(frame));
-            string = StringFilter.filter(string);
+            ArrayList<String> lines = LineOrganizer.toTextLines(detector.detect(frame));
+            String filtered = StringFilter.filter(lines);
             try {
-                FileManager.saveTextFile(string);
+                FileManager.saveTextFile(filtered);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            StoreName.analyzeFirstString(filtered);
+
         }else {
             Log.d(TAG, "Could not set up the detector!");
         }

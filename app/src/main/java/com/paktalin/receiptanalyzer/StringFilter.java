@@ -1,32 +1,56 @@
 package com.paktalin.receiptanalyzer;
 
 import android.util.Log;
+import java.util.ArrayList;
 
 /**
  * Created by Paktalin on 15.03.2018.
+ * Second step.
+ * This class filters the lines, performing:
+ * - empty [crashed] strings removal
+ * - simplifying the charset, keeping only standard english letters + numbers
+ * - removing spaces between words [only] for simplicity
  */
 
 class StringFilter {
-    private static StringBuilder sb;
+    private static StringBuilder builder;
     private static final String TAG = StringFilter.class.getSimpleName();
 
-    static String filter(String str) {
-        String string = str.toLowerCase();
-        sb = new StringBuilder(string);
+    static String filter(ArrayList<String> list) {
+        builder = new StringBuilder(toString(list));
         filterCharSet();
         removeSpaces();
-        String first = getFirstString(sb.toString());
-        Log.d(TAG, StoreName.getSupermarket(first));
-        return sb.toString();
+        return builder.toString();
+    }
+
+    private static String toString(ArrayList<String> list) {
+        boolean firstLinePassed = false;
+        String result = "";
+        for(int i = 0; i < list.size(); i++) {
+            String string = list.get(i);
+            //remove first crashed strings which could be detected from the supermarket's logo
+            if (!firstLinePassed) {
+                if (string.length() > 10) {
+                    result += string + "\n";
+                    firstLinePassed = true;
+                } else {
+                    list.remove(string);
+                    i--;
+                }
+            } else {
+                result += string + "\n";
+            }
+        }
+       return result;
     }
 
    private static void removeSpaces() {
-       for(int i = 1; i < sb.length() - 1; i++) {
-           char left = sb.charAt(i-1);
-           char middle = sb.charAt(i);
-           char right = sb.charAt(i+1);
+       for(int i = 1; i < builder.length() - 1; i++) {
+           char left = builder.charAt(i-1);
+           char middle = builder.charAt(i);
+           char right = builder.charAt(i+1);
            if((middle == ' ') && Character.isLetter(left) && Character.isLetter(right)) {
-               sb.deleteCharAt(i);
+               builder.deleteCharAt(i);
                i--;
            }
        }
@@ -34,17 +58,17 @@ class StringFilter {
 
    private static void filterCharSet() {
         String charSet = "abcdefghijklmnopqrstuvwxyz0123456789. \n";
-        for(int i = 0; i < sb.length(); i++) {
-            char c = sb.charAt(i);
+        for(int i = 0; i < builder.length(); i++) {
+            char c = builder.charAt(i);
             //if out of charset
             if (charSet.indexOf(c) == -1) {
                 char replacement = tryToReplace(c);
                 //if couldn't find replacement, then delete the char
                 if(c == replacement) {
-                    sb.deleteCharAt(i);
+                    builder.deleteCharAt(i);
                     i--;
                 } else {
-                    sb.setCharAt(i, replacement);
+                    builder.setCharAt(i, replacement);
                 }
             }
         }
@@ -74,20 +98,5 @@ class StringFilter {
        if(to8.indexOf(c) != NO)
            return '8';
         else return c;
-    }
-
-    private static String getFirstString(String string) {
-        int index = string.indexOf('\n');
-        return string.substring(0, index);
-    }
-
-    static String getRegCode(String string) {
-        //check if contains numbers
-        if (string.matches(".*\\d+.*")) {
-            int index = string.length() - 8 - 1;
-            return string.substring(index, string.length()-1);
-        }
-        Log.d(TAG, "Couldn't extract register code");
-        return null;
     }
 }

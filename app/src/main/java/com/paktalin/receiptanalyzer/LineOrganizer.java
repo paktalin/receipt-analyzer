@@ -1,6 +1,5 @@
 package com.paktalin.receiptanalyzer;
 
-import android.util.Log;
 import android.util.SparseArray;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
@@ -10,6 +9,8 @@ import java.util.TreeMap;
 
 /**
  * Created by Paktalin on 14.03.2018.
+ * First step after recognition.
+ * Here we organize the scanned data in lines like they were initially located in the receipt
  */
 
 class LineOrganizer {
@@ -17,23 +18,10 @@ class LineOrganizer {
     private static ArrayList<Line> lines;
     private static int height;
 
-    static String getString(SparseArray<TextBlock> textBlocks) {
-        boolean firstLinePassed = false;
+    static ArrayList<String> toTextLines(SparseArray<TextBlock> textBlocks) {
         lines = extractData(textBlocks);
         lines = sortLines();
-        StringBuilder result = new StringBuilder();
-        for(String stringLine: glueLines()) {
-            //remove first crashed strings which could be detected from the supermarket's logo
-            if (!firstLinePassed) {
-                if (stringLine.length() > 9) {
-                    firstLinePassed = true;
-                    result.append(stringLine).append("\n");
-                }
-            }else {
-                result.append(stringLine).append("\n");
-            }
-        }
-        return result.toString();
+        return gluedLines();
     }
 
     static private ArrayList<Line> extractData(SparseArray<TextBlock> textBlocks) {
@@ -64,7 +52,7 @@ class LineOrganizer {
         return lines;
     }
 
-    static private ArrayList<String> glueLines() {
+    static private ArrayList<String> gluedLines() {
         ArrayList<Line> toOneLine = new ArrayList<>();
         ArrayList<String> stringLines = new ArrayList<>();
         toOneLine.add(lines.get(0));

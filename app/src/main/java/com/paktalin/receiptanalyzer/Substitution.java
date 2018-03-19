@@ -6,16 +6,15 @@ import com.paktalin.receiptanalyzer.similarity.CharacterSubstitutionInterface;
  * Created by Paktalin on 15.03.2018.
  */
 
-class SearchForSimilarities {
+class Substitution {
 
-    private CharacterSubstitutionInterface substitute = new CharacterSubstitutionInterface() {
-        /**in case of Tall1nn:
-         * 1 is c1
-         * i is c2
-         * */
+    /**in case of Tall1nn:
+     * 1 is c1
+     * i is c2
+     * */
 
-        @Override
-        public double cost(char c1, char c2) {
+    static CharacterSubstitutionInterface getInterface() {
+        return (c1, c2) -> {
             double possible = 0.5;
             double impossible = 1;
             if((c1 == '|' && c2 == 'l') ||
@@ -33,6 +32,6 @@ class SearchForSimilarities {
                 return possible;
             else
                 return impossible;
-        }
-    };
+        };
+    }
 }
