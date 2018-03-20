@@ -1,73 +1,38 @@
 package com.paktalin.receiptanalyzer;
 
-import android.util.Log;
 import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
 import java.util.ArrayList;
 
 /**
- * Created by Paktalin on 15.03.2018.
- * Second step.
- * This class filters the lines, performing:
- * - empty [crashed] strings removal
- * - simplifying the charset, keeping only standard english letters + numbers
- * - removing spaces between words [only] for simplicity
+ * Created by Paktalin on 20-Mar-18.
  */
 
 class StringFilter {
-    private static StringBuilder builder;
     private static final String TAG = StringFilter.class.getSimpleName();
+
+    private static StringBuilder builder;
 
     static String filter(ArrayList<String> list) {
         String string = toString(list);
         string = string.toLowerCase();
+
         builder = new StringBuilder(string);
         filterCharSet();
         removeSpaces();
-        return builder.toString();
+        removeWrecks();
+        string = builder.toString();
+        return string;
     }
 
     private static String toString(ArrayList<String> list) {
-        boolean firstLinePassed = false;
         String result = "";
-        for(int i = 0; i < list.size(); i++) {
-            String string = list.get(i);
-            //remove first crashed strings which could be detected from the supermarket's logo
-            if (!firstLinePassed) {
-                String withoutSpaces = string.replaceAll(" ", "");
-                result += string + "\n";
-                if (withoutSpaces.length() > 7) {
-                    firstLinePassed = true;
-                    if(!rimiLogo(withoutSpaces)){
-                        result += string + "\n";
-                        firstLinePassed = true;
-                    } else {
-                        list.remove(string);
-                        i--;
-                    }
-                } else {
-                    list.remove(string);
-                    i--;
-                }
-            } else {
-                result += string + "\n";
-            }
+        for(String string : list) {
+            result += string + "\n";
         }
-       return result;
+        return result;
     }
 
-   private static void removeSpaces() {
-       for(int i = 1; i < builder.length() - 1; i++) {
-           char left = builder.charAt(i-1);
-           char middle = builder.charAt(i);
-           char right = builder.charAt(i+1);
-           if((middle == ' ') && Character.isLetter(left) && Character.isLetter(right)) {
-               builder.deleteCharAt(i);
-               i--;
-           }
-       }
-   }
-
-   private static void filterCharSet() {
+    private static void filterCharSet() {
         String charSet = "abcdefghijklmnopqrstuvwxyz0123456789. \n";
         for(int i = 0; i < builder.length(); i++) {
             char c = builder.charAt(i);
@@ -83,9 +48,9 @@ class StringFilter {
                 }
             }
         }
-   }
+    }
 
-   private static char tryToReplace(char c) {
+    private static char tryToReplace(char c) {
         byte NO = -1;
         String toO = "òóôõö";
         String toA = "àáâãäåāă";
@@ -106,17 +71,40 @@ class StringFilter {
             return 's';
         if(toDot.indexOf(c) != NO)
             return '.';
-       if(to8.indexOf(c) != NO)
-           return '8';
+        if(to8.indexOf(c) != NO)
+            return '8';
         else return c;
-   }
+    }
 
-   private static boolean rimiLogo(String string) {
+    private static void removeSpaces() {
+        for(int i = 1; i < builder.length() - 1; i++) {
+            char left = builder.charAt(i-1);
+            char middle = builder.charAt(i);
+            char right = builder.charAt(i+1);
+            if((middle == ' ') && Character.isLetter(left) && Character.isLetter(right)) {
+                builder.deleteCharAt(i);
+                i--;
+            }
+        }
+    }
+
+    private static void removeWrecks() {
+        boolean firstLinePassed = false;
+        while (!firstLinePassed) {
+            int endIndex = builder.indexOf("\n");
+            String first = builder.substring(0, endIndex);
+            if((first.length() > 5) && !rimiLogo(first)) {
+                firstLinePassed = true;
+            } else {
+                builder.delete(0, endIndex + 1);
+            }
+        }
+    }
+
+    private static boolean rimiLogo(String string) {
         String pattern = "supermarket";
         JaroWinkler jaro = new JaroWinkler();
         double distance = jaro.distance(string, pattern);
-        Log.d(TAG, string);
-        Log.d(TAG, "distance: " + distance);
         return distance < 0.3;
     }
 }
