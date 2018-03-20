@@ -1,8 +1,8 @@
 package com.paktalin.receiptanalyzer;
 
-import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
 import android.util.Log;
 
+import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
 
 /**
  * Created by Paktalin on 10.03.2018.
@@ -10,24 +10,34 @@ import android.util.Log;
 
 class StoreName {
     private static final String TAG = StoreName.class.getSimpleName();
+    private static JaroWinkler jaro = new JaroWinkler();
 
     static String analyzeFirstString(String string) {
         string = getFirstString(string);
-        string = removeNumbers(string);
+        string = clean(string);
 
-        String[] supermarkets = {"maximaeestiou", "rimieestifoodas", "selver", "harjutarbijateuhistu"};
-        JaroWinkler jaro = new JaroWinkler();
-        for (String supermarket : supermarkets) {
-            double distanceJ = jaro.distance(string, supermarket);
-            Log.d(TAG, string + " " + distanceJ);
+        String[][] supermarkets = {
+                StringArrays.getSupermarketTitles(),
+                StringArrays.getSupermarketNames()};
+        for(int i = 0; i < supermarkets[0].length; i++){
+            String supermarket = supermarkets[0][i];
+            double distance = jaro.distance(string, supermarket);
+            Log.d(TAG, supermarket + " distance: " + distance);
+            if (distance < 0.15){
+                return supermarkets[1][i];
+            }
         }
+        double prismaDistance = minDistance(string, 0);
+        double selverDistance = minDistance(string, 1);
+        Log.d(TAG, "PRISMA: " + prismaDistance + "; SELVER: " + selverDistance);
+
+
         return null;
     }
 
-    private static String removeNumbers(String string) {
+    private static String clean(String string) {
         string = string.replaceAll(" ", "");
         string = string.replaceAll("\\.", "");
-        string = string.replaceAll("regnr", "");
         string = string.replaceAll("\\d","");
         return string;
     }
@@ -37,44 +47,26 @@ class StoreName {
         return string.substring(0, index);
     }
 
-
-
-
-
-
-    /*private static final String TAG = StoreName.class.getSimpleName();
-    private static String[] supermarkets = {"maxima", "rimi", "selver", "konsum", "comarket"};
-
-    static String getSupermarket(String string) {
-        firstString(string);
-        for (String supermarket : supermarkets)
-            if (string.contains(supermarket))
-                return supermarket;
-        String code = StringFilter.getRegCode(string);
-        return getNameByCode(code);
-    }
-
-    private static String getNameByCode(String code) {
-        String[][] codes = {
-                {"10765896", "10263574", "10379733"},
-                supermarkets};
-        for(int i = 0; i < codes[0].length; i ++) {
-            String storeCode = codes[0][i];
-            if (code != null)
-                if (code.equals(storeCode))
-                    return codes[1][i];
+    private static double minDistance(String string, int supermarket) {
+        double minDistance = 1;
+        String[] titles = null;
+        switch (supermarket){
+            case 0:
+                titles = StringArrays.getPrismaTitles();
+                break;
+            case 1:
+                titles = StringArrays.getSelverTitles();
+                break;
         }
-        return "Couldn't find the name registered";
-    }
-
-    static void firstString(String string) {
-        String[] supermarkets = {"maximaeestiou", "rimieestifoodas", "selver", "harjutarbijateuhistu"};
-        CharacterSubstitutionInterface substitutionalInterface = Substitution.substitute;
-        WeightedLevenshtein levenshtein = new WeightedLevenshtein(substitutionalInterface);
-        for (String supermarket : supermarkets) {
-            double distance = levenshtein.distance(string, supermarket);
-            Log.d(TAG, string + " " + distance);
+        if(titles != null){
+            for (String title : titles) {
+                double distance = jaro.distance(string, title);
+                if(distance < minDistance)
+                    minDistance = distance;
+            }
+        } else {
+            Log.d(TAG, "Null titles object!");
         }
-    }*/
-
+        return minDistance;
+    }
 }
