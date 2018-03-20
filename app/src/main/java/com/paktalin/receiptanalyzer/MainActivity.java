@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     View.OnClickListener buttonRotateListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

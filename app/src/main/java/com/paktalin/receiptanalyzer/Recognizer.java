@@ -30,7 +30,7 @@ class Recognizer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            StoreName.analyzeFirstString(filtered);
+            Log.d(TAG, StoreName.getStore(filtered));
 
         }else {
             Log.d(TAG, "Could not set up the detector!");

@@ -11,26 +11,30 @@ import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
 class StoreName {
     private static final String TAG = StoreName.class.getSimpleName();
     private static JaroWinkler jaro = new JaroWinkler();
+    private static final double SMALL_DISTANCE = 0.1;
 
-    static String analyzeFirstString(String string) {
+    static String getStore(String string) {
         string = getFirstString(string);
         string = clean(string);
+        int PRISMA_CODE = 0, SELVER_CODE = 1;
 
-        String[][] supermarkets = {
-                StringArrays.getSupermarketTitles(),
-                StringArrays.getSupermarketNames()};
-        for(int i = 0; i < supermarkets[0].length; i++){
-            String supermarket = supermarkets[0][i];
-            double distance = jaro.distance(string, supermarket);
-            Log.d(TAG, supermarket + " distance: " + distance);
-            if (distance < 0.15){
-                return supermarkets[1][i];
-            }
+        String[] supermarketTitles = StringArrays.getSupermarketTitles();
+        for (int i = 0; i < supermarketTitles.length; i++) {
+            String supermarketTitle = supermarketTitles[i];
+            double distance = jaro.distance(string, supermarketTitle);
+            if (distance < SMALL_DISTANCE)
+                return StringArrays.getNameByIndex(i);
         }
-        String prismaDistance = minDistance(string, 0);
-        String selverDistance = minDistance(string, 1);
+        String prismaDistance = calculateDistance(string, PRISMA_CODE);
+        if(prismaDistance == null) {
+            String selverDistance = calculateDistance(string, SELVER_CODE);
+            if(selverDistance == null)
+                Log.d(TAG, "Couldn't identify the supermarket");
+            else
+                return selverDistance;
 
-        Log.d(TAG, "PRISMA: " + prismaDistance + "; SELVER: " + selverDistance);
+        } else
+            return prismaDistance;
         return null;
     }
 
@@ -46,7 +50,7 @@ class StoreName {
         return string.substring(0, index);
     }
 
-    private static String minDistance(String string, int supermarket) {
+    private static String calculateDistance(String string, int supermarket) {
         double minDistance = 1;
         int minIndex = -1;
         String[] titles = null;
@@ -71,7 +75,7 @@ class StoreName {
             Log.d(TAG, "Null titles object!");
         }
         Log.d(TAG, minDistance + "");
-        if (minDistance < 0.1)
+        if (minDistance < SMALL_DISTANCE)
             return titles[minIndex];
         else
             return null;

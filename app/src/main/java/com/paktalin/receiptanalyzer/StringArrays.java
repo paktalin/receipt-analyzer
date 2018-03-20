@@ -86,12 +86,12 @@ class StringArrays {
         return array;
     }
 
-    static String[] getSupermarketNames() {
+    static String getNameByIndex(int index) {
         String[] array = {
                 "Maxima",
                 "Rimi",
                 "Konsum"
         };
-        return array;
+        return array[index];
     }
 }
