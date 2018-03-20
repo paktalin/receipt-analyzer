@@ -20,8 +20,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * Created by Paktalin on 21.02.2018.
  */
 
-//test
-// //test4
 class FileManager {
     private static final String TAG = FileManager.class.getSimpleName();
     private static String appDirPath;
