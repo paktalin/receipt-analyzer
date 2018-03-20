@@ -27,11 +27,10 @@ class StoreName {
                 return supermarkets[1][i];
             }
         }
-        double prismaDistance = minDistance(string, 0);
-        double selverDistance = minDistance(string, 1);
+        String prismaDistance = minDistance(string, 0);
+        String selverDistance = minDistance(string, 1);
+
         Log.d(TAG, "PRISMA: " + prismaDistance + "; SELVER: " + selverDistance);
-
-
         return null;
     }
 
@@ -47,8 +46,9 @@ class StoreName {
         return string.substring(0, index);
     }
 
-    private static double minDistance(String string, int supermarket) {
+    private static String minDistance(String string, int supermarket) {
         double minDistance = 1;
+        int minIndex = -1;
         String[] titles = null;
         switch (supermarket){
             case 0:
@@ -59,14 +59,21 @@ class StoreName {
                 break;
         }
         if(titles != null){
-            for (String title : titles) {
+            for (int i = 0; i < titles.length; i++) {
+                String title = titles[i];
                 double distance = jaro.distance(string, title);
-                if(distance < minDistance)
+                if(distance < minDistance) {
                     minDistance = distance;
+                    minIndex = i;
+                }
             }
         } else {
             Log.d(TAG, "Null titles object!");
         }
-        return minDistance;
+        Log.d(TAG, minDistance + "");
+        if (minDistance < 0.1)
+            return titles[minIndex];
+        else
+            return null;
     }
 }

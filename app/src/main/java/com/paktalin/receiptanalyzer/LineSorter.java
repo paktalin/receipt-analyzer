@@ -13,8 +13,8 @@ import java.util.TreeMap;
  * Here we organize the scanned data in lines like they were initially located in the receipt
  */
 
-class LineOrganizer {
-    private static final String TAG = LineOrganizer.class.getSimpleName();
+class LineSorter {
+    private static final String TAG = LineSorter.class.getSimpleName();
     private static ArrayList<Line> lines;
     private static int height;
 

@@ -23,7 +23,7 @@ class Recognizer {
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            ArrayList<String> lines = LineOrganizer.toTextLines(detector.detect(frame));
+            ArrayList<String> lines = LineSorter.toTextLines(detector.detect(frame));
             String filtered = StringFilter.filter(lines);
             try {
                 FileManager.saveTextFile(filtered);
