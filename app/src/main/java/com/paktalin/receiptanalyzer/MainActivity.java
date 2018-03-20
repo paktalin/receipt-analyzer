@@ -78,8 +78,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             FileManager.saveBitmap(bitmap);
-            Recognizer.recognize(MainActivity.this, bitmap);
+            Thread thread = new Thread(null, recognition,
+                    "Background");
+            thread.start();
             image.setVisibility(View.INVISIBLE);
+        }
+    };
+
+    private Runnable recognition = new Runnable() {
+        public void run() {
+            Recognizer.recognize(MainActivity.this, bitmap);
         }
     };
 
