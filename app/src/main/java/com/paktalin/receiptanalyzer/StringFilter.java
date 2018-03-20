@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer;
 
 import android.util.Log;
+import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +18,9 @@ class StringFilter {
     private static final String TAG = StringFilter.class.getSimpleName();
 
     static String filter(ArrayList<String> list) {
-        builder = new StringBuilder(toString(list));
+        String string = toString(list);
+        string = string.toLowerCase();
+        builder = new StringBuilder(string);
         filterCharSet();
         removeSpaces();
         return builder.toString();
@@ -30,9 +33,17 @@ class StringFilter {
             String string = list.get(i);
             //remove first crashed strings which could be detected from the supermarket's logo
             if (!firstLinePassed) {
-                if (string.length() > 10) {
-                    result += string + "\n";
+                String withoutSpaces = string.replaceAll(" ", "");
+                result += string + "\n";
+                if (withoutSpaces.length() > 7) {
                     firstLinePassed = true;
+                    if(!rimiLogo(withoutSpaces)){
+                        result += string + "\n";
+                        firstLinePassed = true;
+                    } else {
+                        list.remove(string);
+                        i--;
+                    }
                 } else {
                     list.remove(string);
                     i--;
@@ -98,5 +109,14 @@ class StringFilter {
        if(to8.indexOf(c) != NO)
            return '8';
         else return c;
+   }
+
+   private static boolean rimiLogo(String string) {
+        String pattern = "supermarket";
+        JaroWinkler jaro = new JaroWinkler();
+        double distance = jaro.distance(string, pattern);
+        Log.d(TAG, string);
+        Log.d(TAG, "distance: " + distance);
+        return distance < 0.3;
     }
 }

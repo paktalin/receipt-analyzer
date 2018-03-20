@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by Paktalin on 15.03.2018.
  */
 
-interface StringDistance extends Serializable {
+public interface StringDistance extends Serializable {
 
     /**
      * Compute and return a measure of distance.

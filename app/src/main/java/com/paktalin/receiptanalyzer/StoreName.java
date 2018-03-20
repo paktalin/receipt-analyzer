@@ -1,9 +1,8 @@
 package com.paktalin.receiptanalyzer;
 
-
+import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
 import android.util.Log;
 
-import com.paktalin.receiptanalyzer.similarity.WeightedLevenshtein;
 
 /**
  * Created by Paktalin on 10.03.2018.
@@ -17,18 +16,20 @@ class StoreName {
         string = removeNumbers(string);
 
         String[] supermarkets = {"maximaeestiou", "rimieestifoodas", "selver", "harjutarbijateuhistu"};
-        WeightedLevenshtein levenshtein = new WeightedLevenshtein(Substitution.getInterface());
+        JaroWinkler jaro = new JaroWinkler();
         for (String supermarket : supermarkets) {
-            double distance = levenshtein.distance(string, supermarket);
-            Log.d(TAG, string + " " + distance);
+            double distanceJ = jaro.distance(string, supermarket);
+            Log.d(TAG, string + " " + distanceJ);
         }
         return null;
     }
 
     private static String removeNumbers(String string) {
         string = string.replaceAll(" ", "");
+        string = string.replaceAll("\\.", "");
         string = string.replaceAll("regnr", "");
-        return string.replaceAll("\\d","");
+        string = string.replaceAll("\\d","");
+        return string;
     }
 
     private static String getFirstString(String string) {
