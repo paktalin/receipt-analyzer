@@ -1,5 +1,7 @@
 package com.paktalin.receiptanalyzer;
 
+import static com.paktalin.receiptanalyzer.StringManager.similar;
+
 /**
  * Created by Paktalin on 21-Mar-18.
  */
@@ -20,7 +22,7 @@ class StoreName {
      * Prisma   29-35
      * Selver   10-20
      *
-     * Let the recognition error to be 15%,
+     * Let the recognition error be 15%,
      * so the length of supermarkets' fist line should be in such limits:
      *
      * Maxima   22-30
@@ -53,7 +55,7 @@ class StoreName {
     }
 
     private static void checkFor(String string, String name) {
-        if (StringManager.similarity(input, string) < VERY_SIMILAR)
+        if (similar(input, string))
             StoreName.name = name;
     }
 
@@ -66,7 +68,7 @@ class StoreName {
     private static void checkForPrisma() {
         String prismaFirstLine = "prismaperemarketas";
         String inputCut = input.substring(0, 18);
-        if (StringManager.similarity(inputCut, prismaFirstLine) < VERY_SIMILAR)
+        if (similar(inputCut, prismaFirstLine))
             name = "Prisma";
     }
 
@@ -74,7 +76,7 @@ class StoreName {
         String selverFirstLine = "selver";
         int length = input.length();
         String inputCut = input.substring(length - 6, length);
-        if (StringManager.similarity(inputCut, selverFirstLine) < VERY_SIMILAR)
+        if (similar(inputCut, selverFirstLine))
             name = "Selver";
     }
 }

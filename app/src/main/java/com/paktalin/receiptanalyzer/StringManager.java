@@ -44,4 +44,8 @@ class StringManager {
         Log.d(TAG, input + " " + string + " " + distance);
         return distance;
     }
+
+    static boolean similar(String input, String string) {
+        return similarity(input, string) < 0.08;
+    }
 }

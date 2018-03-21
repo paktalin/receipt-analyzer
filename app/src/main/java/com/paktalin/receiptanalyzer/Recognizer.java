@@ -40,7 +40,7 @@ class Recognizer {
                 Log.d(TAG, "Couldn't identify the supermarket");
 
             if (store.equals("Selver")) {
-                SelverReceipt selverReceipt = new SelverReceipt(firstLine);
+                SelverReceipt selverReceipt = new SelverReceipt(filtered);
                 Log.d(TAG, selverReceipt.getName());
                 Log.d(TAG, selverReceipt.getAdditionalName());
                 Log.d(TAG, selverReceipt.getAddress());
