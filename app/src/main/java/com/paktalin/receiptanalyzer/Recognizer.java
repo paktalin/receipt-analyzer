@@ -31,12 +31,20 @@ class Recognizer {
                 e.printStackTrace();
             }
             String firstLine = StringManager.getFirstLine(filtered);
+            firstLine = StringManager.clean(firstLine);
             Log.d(TAG, "First line: " + firstLine);
             String store = StoreName.getStoreName(firstLine);
             if (store != null)
                 Log.d(TAG, store);
             else
                 Log.d(TAG, "Couldn't identify the supermarket");
+
+            if (store.equals("Selver")) {
+                SelverReceipt selverReceipt = new SelverReceipt(firstLine);
+                Log.d(TAG, selverReceipt.getName());
+                Log.d(TAG, selverReceipt.getAdditionalName());
+                Log.d(TAG, selverReceipt.getAddress());
+            }
 
         }else {
             Log.d(TAG, "Could not set up the detector!");

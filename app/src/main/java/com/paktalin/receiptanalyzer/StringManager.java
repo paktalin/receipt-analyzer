@@ -2,6 +2,8 @@ package com.paktalin.receiptanalyzer;
 
 import android.util.Log;
 
+import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
+
 /**
  * Created by Paktalin on 19-Mar-18.
  */
@@ -34,5 +36,12 @@ class StringManager {
     static String getFirstLine(String string) {
         int index = string.indexOf('\n');
         return string.substring(0, index);
+    }
+
+    static double similarity(String input, String string) {
+        JaroWinkler jaro = new JaroWinkler();
+        double distance = jaro.distance(input, string);
+        Log.d(TAG, input + " " + string + " " + distance);
+        return distance;
     }
 }

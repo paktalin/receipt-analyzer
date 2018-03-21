@@ -5,7 +5,7 @@ package com.paktalin.receiptanalyzer;
  */
 
 public class PrismaReceipt extends Receipt{
-    @Override
+    /*@Override
     String[] getTitles(){
         return new String[]{
                 "prismaperemarketaskristiineprisma",
@@ -30,5 +30,5 @@ public class PrismaReceipt extends Receipt{
                 "Nõlvaku 2, 50708, Tartu",
                 "Kangelaste prospekt 29, 20607, Narva"};
         return array[index];
-    }
+    }*/
 }

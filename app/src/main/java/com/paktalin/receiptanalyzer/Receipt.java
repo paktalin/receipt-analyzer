@@ -5,17 +5,19 @@ package com.paktalin.receiptanalyzer;
  */
 
 abstract class Receipt {
-    private String name;
-    private String address;
+    String name = null;
+    String additionalName = null;
+    String address = null;
 
-    void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
-    void setAddress(String address) {
-        this.address = address;
+    String getAdditionalName() {
+        return additionalName;
     }
 
-    abstract String[] getTitles();
-    abstract String getAddressByIndex(int index);
+    String getAddress() {
+        return address;
+    }
 }
