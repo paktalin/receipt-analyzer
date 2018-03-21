@@ -10,7 +10,7 @@ class StringManager {
     private static final String TAG = StringManager.class.getSimpleName();
 
 
-    static String getFirstString(String string) {
+    /*static String getFirstLine(String string) {
         int index = string.indexOf('\n');
         return string.substring(0, index);
     }
@@ -23,5 +23,16 @@ class StringManager {
         }
         Log.d(TAG, "Couldn't extract register code");
         return null;
+    }*/
+
+    static String clean(String string) {
+        string = string.replaceAll(" ", "");
+        string = string.replaceAll("\\.", "");
+        return string;
+    }
+
+    static String getFirstLine(String string) {
+        int index = string.indexOf('\n');
+        return string.substring(0, index);
     }
 }

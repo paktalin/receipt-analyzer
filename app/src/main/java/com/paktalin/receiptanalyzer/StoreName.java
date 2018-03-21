@@ -5,79 +5,49 @@ import android.util.Log;
 import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
 
 /**
- * Created by Paktalin on 10.03.2018.
+ * Created by Paktalin on 21-Mar-18.
  */
 
-class StoreName {
+public class StoreName {
     private static final String TAG = StoreName.class.getSimpleName();
-    private static JaroWinkler jaro = new JaroWinkler();
-    private static final double SMALL_DISTANCE = 0.1;
 
-    static String getStore(String string) {
-        string = getFirstString(string);
-        string = clean(string);
-        int PRISMA_CODE = 0, SELVER_CODE = 1;
+    private static final double RATHER_SIMILAR = 0.16;
+    private static final double VERY_SIMILAR = 0.08;
 
-        String[] supermarketTitles = StringArrays.getSupermarketTitles();
-        for (int i = 0; i < supermarketTitles.length; i++) {
-            String supermarketTitle = supermarketTitles[i];
-            double distance = jaro.distance(string, supermarketTitle);
-            if (distance < SMALL_DISTANCE)
-                return StringArrays.getNameByIndex(i);
-        }
-        String prismaDistance = calculateDistance(string, PRISMA_CODE);
-        if(prismaDistance == null) {
-            String selverDistance = calculateDistance(string, SELVER_CODE);
-            if(selverDistance == null)
-                Log.d(TAG, "Couldn't identify the supermarket");
-            else
-                return selverDistance;
+    static private String name = null;
+    private static String input;
 
-        } else
-            return prismaDistance;
-        return null;
+    static String getStoreName(String input) {
+        StoreName.input = input;
+        input = StringManager.clean(input);
+        getFirstGroupName();
+        if(name == null)
+            getSecondGroupName();
+        return name;
     }
 
-    private static String clean(String string) {
-        string = string.replaceAll(" ", "");
-        string = string.replaceAll("\\.", "");
-        string = string.replaceAll("\\d","");
-        return string;
-    }
-
-    private static String getFirstString(String string) {
-        int index = string.indexOf('\n');
-        return string.substring(0, index);
-    }
-
-    private static String calculateDistance(String string, int supermarket) {
-        double minDistance = 1;
-        int minIndex = -1;
-        String[] titles = null;
-        switch (supermarket){
-            case 0:
-                titles = StringArrays.getPrismaTitles();
-                break;
-            case 1:
-                titles = StringArrays.getSelverTitles();
-                break;
-        }
-        if(titles != null){
-            for (int i = 0; i < titles.length; i++) {
-                String title = titles[i];
-                double distance = jaro.distance(string, title);
-                if(distance < minDistance) {
-                    minDistance = distance;
-                    minIndex = i;
-                }
+    private static void getFirstGroupName() {
+        String[] firstStrings = StringArrays.getFirstGroupFirstLines();
+        for (int i = 0; i < firstStrings.length; i++) {
+            if (calculateSimilarity(firstStrings[i]) < VERY_SIMILAR) {
+                name = StringArrays.getFirstGroupNameByIndex(i);
+                return;
             }
-        } else {
-            Log.d(TAG, "Null titles object!");
         }
-        Log.d(TAG, minDistance + "");
-        if (minDistance < SMALL_DISTANCE)
-            return titles[minIndex];
-        else
-            return null;
+    }
+
+    private static void getSecondGroupName() {
+        String[] firstStrings = StringArrays.getSecondGroupFirstLines();
+        for (int i = 0; i < firstStrings.length; i++) {
+            if (calculateSimilarity(firstStrings[i]) < RATHER_SIMILAR)
+                name = StringArrays.getSecondGroupNameByIndex(i);
+        }
+    }
+
+    private static double calculateSimilarity(String string) {
+        JaroWinkler jaro = new JaroWinkler();
+        double distance = jaro.distance(input, string);
+        Log.d(TAG, string + " " + distance);
+        return distance;
     }
 }

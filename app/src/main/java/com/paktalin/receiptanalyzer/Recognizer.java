@@ -30,7 +30,13 @@ class Recognizer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.d(TAG, StoreName.getStore(filtered));
+            String firstLine = StringManager.getFirstLine(filtered);
+            Log.d(TAG, "First line: " + firstLine);
+            String store = StoreName.getStoreName(firstLine);
+            if (store != null)
+                Log.d(TAG, store);
+            else
+                Log.d(TAG, "Couldn't identify the supermarket");
 
         }else {
             Log.d(TAG, "Could not set up the detector!");

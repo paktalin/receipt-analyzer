@@ -3,15 +3,4 @@
     <string name="pictures_dir">Pictures</string>
     <string name="txt_dir">Scanned</string>
 
-    <string-array name="prisma_addresses">
-        <item>Endla 45, 10615, Tallinn</item>
-        <item>Tartu mnt 87, 10112, Tallinn</item>
-        <item>Paldiski mnt 102, 13522, Tallinn</item>
-        <item>A.H.Tammsaare tee 116, 12918, Tallinn</item>
-        <item>Mustakivi tee 17, 13912, Tallinn</item>
-        <item>Sõbra 58, 50106, Tartu</item>
-        <item>Nõlvaku 2, 50708, Tartu</item>
-        <item>Kangelaste prospekt 29, 20607, Narva</item>
-    </string-array>
-
 </resources>
