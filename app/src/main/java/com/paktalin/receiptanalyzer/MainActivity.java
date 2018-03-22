@@ -15,6 +15,8 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             if (requestCode == REQUEST_GET_FROM_GALLERY)
                 imageUri = data.getData();
             try {
-                bitmap = Recognizer.decodeBitmapUri(MainActivity.this, imageUri);
+                bitmap = FileManager.decodeBitmapUri(MainActivity.this, imageUri);
                 image.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -76,17 +78,10 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            FileManager.saveBitmap(bitmap);
-            Thread thread = new Thread(null, recognition,
-                    "Background");
+            Thread thread = new Thread(null,
+                    new Analyzer(MainActivity.this, bitmap), "Background");
             thread.start();
             image.setVisibility(View.INVISIBLE);
-        }
-    };
-
-    private Runnable recognition = new Runnable() {
-        public void run() {
-            Recognizer.recognize(MainActivity.this, bitmap);
         }
     };
 

@@ -8,7 +8,7 @@ import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
  * Created by Paktalin on 19-Mar-18.
  */
 
-class StringManager {
+public class StringManager {
     private static final String TAG = StringManager.class.getSimpleName();
 
 
@@ -27,25 +27,25 @@ class StringManager {
         return null;
     }*/
 
-    static String clean(String string) {
+    public static String clean(String string) {
         string = string.replaceAll(" ", "");
         string = string.replaceAll("\\.", "");
         return string;
     }
 
-    static String getFirstLine(String string) {
+    public static String getFirstLine(String string) {
         int index = string.indexOf('\n');
         return string.substring(0, index);
     }
 
-    static double similarity(String input, String string) {
+    public static double similarity(String input, String string) {
         JaroWinkler jaro = new JaroWinkler();
         double distance = jaro.distance(input, string);
         Log.d(TAG, input + " " + string + " " + distance);
         return distance;
     }
 
-    static boolean similar(String input, String string) {
+    public static boolean similar(String input, String string) {
         return similarity(input, string) < 0.08;
     }
 }

@@ -4,7 +4,7 @@ package com.paktalin.receiptanalyzer;
  * Created by Paktalin on 20-Mar-18.
  */
 
-class StringArrays {
+public class StringArrays {
 
     static String[] getFirstGroupFirstLines() {
         return new String[]{
@@ -37,7 +37,7 @@ class StringArrays {
         return array[index];
     }
 
-    static String[] getSelverNames() {
+    public static String[] getSelverNames() {
         return new String[]{
                 "arsenaliselver",
                 "baltijaamaturuselver",
@@ -94,7 +94,7 @@ class StringArrays {
         };
     }
 
-    static String getSelverAddress(int index) {
+    public static String getSelverAddress(int index) {
         String[] array = {
                 "Erika tn 14, Tallinn",
                 "Kopli 1, Tallinn",

@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -27,7 +29,7 @@ class FileManager {
 
     static void setUpAppDir(Context context) {
         PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity)context);
-        File appDir = new File(Environment.getExternalStorageDirectory(), context.getString(R.string.app_name));
+        File appDir = new File(Environment.getExternalStorageDirectory(), "ReceiptAnalyzer");
         if(created(appDir)) {
             appDirPath = appDir.getAbsolutePath();
             picturesDirPath = appDir + "/Pictures";
@@ -89,10 +91,27 @@ class FileManager {
     }
 
     private static String makeName() {
-        return new SimpleDateFormat("HHmmss").format(new Date()) + ".txt";
+        return new SimpleDateFormat("ddMMHHmmss").format(new Date()) + ".txt";
     }
 
     static String getPictureDirPath() {
         return picturesDirPath;
+    }
+
+    static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
+        int targetW = 600;
+        int targetH = 600;
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri), null, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+
+        return BitmapFactory.decodeStream(ctx.getContentResolver()
+                .openInputStream(uri), null, bmOptions);
     }
 }

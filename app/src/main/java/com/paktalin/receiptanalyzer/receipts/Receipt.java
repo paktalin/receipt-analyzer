@@ -1,10 +1,10 @@
-package com.paktalin.receiptanalyzer;
+package com.paktalin.receiptanalyzer.receipts;
 
 /**
  * Created by Paktalin on 21-Mar-18.
  */
 
-abstract class Receipt {
+public class Receipt {
     String name = null;
     String additionalName = null;
     String address = null;
@@ -13,11 +13,11 @@ abstract class Receipt {
         return name;
     }
 
-    String getAdditionalName() {
+    public String getAdditionalName() {
         return additionalName;
     }
 
-    String getAddress() {
+    public String getAddress() {
         return address;
     }
 }
