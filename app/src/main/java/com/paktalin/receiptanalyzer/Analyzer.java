@@ -19,7 +19,7 @@ public class Analyzer implements Runnable {
     private static final String TAG = Analyzer.class.getSimpleName();
     private Context context;
     private Bitmap bitmap;
-    private String filteredString;
+    String[] linesArray;
 
     Analyzer(Context context, Bitmap bitmap) {
         this.context = context;
@@ -29,10 +29,9 @@ public class Analyzer implements Runnable {
     @Override
     public void run() {
         ArrayList<String> lines = recognize(context, bitmap);
-        filteredString = StringFilter.filter(lines);
-        String firstLine = StringManager.getFirstLine(filteredString);
-        firstLine = StringManager.clean(firstLine);
-        String store = StoreName.getStoreName(firstLine);
+        String filteredString = StringFilter.filter(lines);
+        linesArray = filteredString.split("\n");
+        String store = StoreName.getStoreName(linesArray[0]);
         if (store != null){
             Receipt receipt = createReceipt(store);
         }
@@ -56,7 +55,7 @@ public class Analyzer implements Runnable {
         Receipt receipt = null;
         switch (store){
             case "Selver":
-                receipt = new SelverReceipt(filteredString);
+                receipt = new SelverReceipt(linesArray);
 
                 Log.d(TAG, receipt.getName());
                 Log.d(TAG, receipt.getAdditionalName());

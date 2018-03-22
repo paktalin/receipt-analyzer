@@ -6,7 +6,7 @@ package com.paktalin.receiptanalyzer;
 
 public class StringArrays {
 
-    public static String[] getSelverNames() {
+    public static String[] getSelverFirstStrings() {
         return new String[]{
                 "arsenaliselver",
                 "baltijaamaturuselver",
@@ -179,11 +179,11 @@ public class StringArrays {
         return array[index];
     }
 
-    public static String[] getPrismaNames(){
+    public static String[] getPrismaFirstStrings(){
         return new String[]{
-                "prismaperemarketaskristiineprisma",
                 "prismaperemarketassikupilliprisma",
                 "prismaperemarketasroccaalmareprisma",
+                "prismaperemarketaskristiineprisma",
                 "prismaperemarketasmustamaeprisma",
                 "prismaperemarketaslasnamaeprisma",
                 "prismaperemarketassobraprisma",
@@ -193,14 +193,27 @@ public class StringArrays {
 
     public static String getPrismaAddress(int index) {
         String[] array = {
-                "Endla 45, 10615, Tallinn",
                 "Tartu mnt 87, 10112, Tallinn",
                 "Paldiski mnt 102, 13522, Tallinn",
+                "Endla 45, 10615, Tallinn",
                 "A.H.Tammsaare tee 116, 12918, Tallinn",
                 "Mustakivi tee 17, 13912, Tallinn",
                 "Sõbra 58, 50106, Tartu",
                 "Nõlvaku 2, 50708, Tartu",
                 "Kangelaste prospekt 29, 20607, Narva"};
+        return array[index];
+    }
+
+    public static String getPrismaAdditionalName(int index) {
+        String[] array = {
+                "Sikupilli Prisma",
+                "Rocca Al Mare Prisma",
+                "Kristiine Prisma",
+                "Mustamäe Prisma",
+                "Lasnamäe Prisma",
+                "Sõbra Prisma",
+                "Annelinna Prisma\n",
+                "Narva Prisma"};
         return array[index];
     }
 }

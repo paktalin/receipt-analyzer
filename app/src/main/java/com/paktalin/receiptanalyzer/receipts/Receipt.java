@@ -3,19 +3,24 @@ package com.paktalin.receiptanalyzer.receipts;
 import com.paktalin.receiptanalyzer.StringArrays;
 import com.paktalin.receiptanalyzer.StringManager;
 
-import java.util.Objects;
-
 /**
  * Created by Paktalin on 21-Mar-18.
  */
 
 public class Receipt {
-    String input;
     String name = null;
-    String additionalName = null;
+    private String additionalName = null;
     String address = null;
     int startLine;
     int supermarketIndex;
+    String[] lines;
+    final String
+            SELVER = "Selver",
+            PRISMA = "Prisma",
+            MAXIMA = "Maxima",
+            RIMI = "Rimi",
+            KONSUM = "Konsum";
+
 
     public String getName() {
         return name;
@@ -30,19 +35,23 @@ public class Receipt {
     }
 
     void setAdditionalName(String[] array) {
-        String string = StringManager.getFirstLine(input);
+        String string = lines[0];
         string = StringManager.clean(string);
 
         for (int i = 0; i < array.length; i++) {
             String anArray = array[i];
             if (StringManager.similarity(string, anArray) < 0.05){
-                if(name.equals("Selver"))
+                if(name.equals(SELVER))
                     additionalName = StringArrays.getSelverAdditionalName(i);
-                else
-                    additionalName = anArray;
+                else if(name.equals(PRISMA))
+                    additionalName = StringArrays.getPrismaAdditionalName(i);
                 supermarketIndex = i;
                 break;
             }
         }
+    }
+
+    void setLines(String input) {
+        lines = input.split("\n");
     }
 }

@@ -12,12 +12,12 @@ import com.paktalin.receiptanalyzer.StringManager;
 public class PrismaReceipt extends Receipt{
     private static final String TAG = PrismaReceipt.class.getSimpleName();
 
-    public PrismaReceipt(String input){
-        name = "Prisma";
-        this.input = input;
-        setAdditionalName(StringArrays.getPrismaNames());
+    public PrismaReceipt(String[] lines){
+        name = PRISMA;
+        this.lines = lines;
+        setAdditionalName(StringArrays.getPrismaFirstStrings());
         address = StringArrays.getPrismaAddress(supermarketIndex);
-        startLine = StringManager.findLine(input, "", 0);
+        startLine = StringManager.findLine(lines, "Arve/Kviitung", 3) + 2;
         Log.d(TAG, startLine + "");
     }
 }

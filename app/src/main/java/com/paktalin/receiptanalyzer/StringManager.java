@@ -44,8 +44,7 @@ public class StringManager {
      * @param number the number of line where the line is supposed to be
      * @return actual number of the line we're looking for
      */
-    public static int findLine(String input, String line, int number) {
-        String[] lines = input.split("\n");
+    public static int findLine(String[] lines, String line, int number) {
         if (similar(lines[number - 1], line))
             return number;
         return -1;
