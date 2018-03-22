@@ -8,11 +8,11 @@ import com.paktalin.receiptanalyzer.StringManager;
 
 public class Receipt {
     String name = null;
-    String additionalName = null;
-    String address = null;
+    String additionalName = "";
+    String address = "";
     int startLine;
     int supermarketIndex;
-    private String[] lines;
+    String[] lines;
     final String
             SELVER = "Selver",
             PRISMA = "Prisma",
