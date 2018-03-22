@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.paktalin.receiptanalyzer.receipts.PrismaReceipt;
 import com.paktalin.receiptanalyzer.receipts.Receipt;
 import com.paktalin.receiptanalyzer.receipts.SelverReceipt;
 
@@ -19,7 +20,7 @@ public class Analyzer implements Runnable {
     private static final String TAG = Analyzer.class.getSimpleName();
     private Context context;
     private Bitmap bitmap;
-    String[] linesArray;
+    private String[] linesArray;
 
     Analyzer(Context context, Bitmap bitmap) {
         this.context = context;
@@ -56,14 +57,14 @@ public class Analyzer implements Runnable {
         switch (store){
             case "Selver":
                 receipt = new SelverReceipt(linesArray);
-
-                Log.d(TAG, receipt.getName());
-                Log.d(TAG, receipt.getAdditionalName());
-                Log.d(TAG, receipt.getAddress());
                 break;
             case "Prisma":
-
+                receipt = new PrismaReceipt(linesArray);
+                break;
         }
+        Log.d(TAG, receipt.getName());
+        Log.d(TAG, receipt.getAdditionalName());
+        Log.d(TAG, receipt.getAddress());
         return receipt;
     }
 }
