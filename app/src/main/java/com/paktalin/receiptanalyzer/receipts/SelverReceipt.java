@@ -13,37 +13,13 @@ import static com.paktalin.receiptanalyzer.StringManager.similar;
 
 public class SelverReceipt extends Receipt {
     private static final String TAG = SelverReceipt.class.getSimpleName();
-    private String input;
-    private int selverIndex;
-    private int startLine;
 
     public SelverReceipt(String input) {
         name = "Selver";
         this.input = input;
-        setAdditionalName();
-        address = StringArrays.getSelverAddress(selverIndex);
-        removeUnneccessary();
+        setAdditionalName(StringArrays.getSelverNames());
+        address = StringArrays.getSelverAddress(supermarketIndex);
+        startLine = StringManager.findLine(input, "nimetuskogushindsumma", 8);
         Log.d(TAG, startLine + "");
-    }
-
-    private void setAdditionalName() {
-        String string = StringManager.getFirstLine(input);
-        string = StringManager.clean(string);
-
-        String[] array = StringArrays.getSelverNames();
-        for (int i = 0; i < array.length; i++) {
-            String anArray = array[i];
-            if (StringManager.similarity(string, anArray) < 0.05){
-                additionalName = anArray;
-                selverIndex = i;
-                break;
-            }
-        }
-    }
-
-    private void removeUnneccessary() {
-        String[] lines = input.split("\n");
-        if (similar(lines[7], "nimetuskogushindsumma"))
-            startLine = 8;
     }
 }

@@ -38,6 +38,19 @@ public class StringManager {
         return string.substring(0, index);
     }
 
+    /**
+     * @param input the whole string
+     * @param line the line we look for
+     * @param number the number of line where the line is supposed to be
+     * @return actual number of the line we're looking for
+     */
+    public static int findLine(String input, String line, int number) {
+        String[] lines = input.split("\n");
+        if (similar(lines[number - 1], line))
+            return number;
+        return -1;
+    }
+
     public static double similarity(String input, String string) {
         JaroWinkler jaro = new JaroWinkler();
         double distance = jaro.distance(input, string);

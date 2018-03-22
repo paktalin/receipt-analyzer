@@ -8,7 +8,6 @@ import static com.paktalin.receiptanalyzer.StringManager.similar;
 
 class StoreName {
     private static final String TAG = StoreName.class.getSimpleName();
-    private static final double VERY_SIMILAR = 0.08;
     static private String name = null;
     private static String input;
 

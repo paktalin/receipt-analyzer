@@ -6,37 +6,6 @@ package com.paktalin.receiptanalyzer;
 
 public class StringArrays {
 
-    static String[] getFirstGroupFirstLines() {
-        return new String[]{
-                "maximaeestiouregnr10765896",
-                "rimieestifoodasregnr10263574",
-                "harjutarbijateuhistu"
-        };
-    }
-
-    static String getFirstGroupNameByIndex(int index) {
-        String[] array = {
-                "Maxima",
-                "Rimi",
-                "Konsum"
-        };
-        return array[index];
-    }
-
-    static String[] getSecondGroupFirstLines() {
-        return new String[]{
-                "prismaperemarketas",
-                "selver"};
-    }
-
-    static String getSecondGroupNameByIndex(int index) {
-        String[] array = {
-                "Prisma",
-                "Selver"
-        };
-        return array[index];
-    }
-
     public static String[] getSelverNames() {
         return new String[]{
                 "arsenaliselver",
@@ -148,8 +117,90 @@ public class StringArrays {
                 "Raja tn 5, Valga",
                 "Sõpruse tee 15, 74001, Haabneeme, Viimsi vald",
                 "Vilja tn 6, Võru",
-                "Tallinna mnt 93a/ Roheline 80, Pärnu",
-        };
+                "Tallinna mnt 93a/ Roheline 80, Pärnu",};
+        return array[index];
+    }
+
+    public static String getSelverAdditionalName(int index) {
+        String[] array = {
+                "Arsenali Selver",
+                "Balti Jaama Turu Selver",
+                "Balti jaama Selver",
+                "Järve Selver",
+                "Kadaka Selver",
+                "Kakumäe Selver",
+                "Kotka Selver",
+                "Kärberi Selver",
+                "Laagri Selver",
+                "Läänemere Selver",
+                "Marienthali Selver",
+                "Merimetsa Selver",
+                "Mustakivi Selver",
+                "Pelgulinna Selver",
+                "Pirita Selver",
+                "Punane Selver",
+                "Pääsküla Selver",
+                "Sepapaja Selver",
+                "Tondi Selver",
+                "Torupilli Selver",
+                "Tähesaju Selver",
+                "Aardla Selver",
+                "Anne Selver",
+                "Jaamamõisa Selver",
+                "Ringtee Selver",
+                "Sõbra Selver",
+                "Vahi Selver",
+                "Veeriku Selver",
+                "Astri Selver",
+                "Centrumi Selver",
+                "Hiiumaa Selver",
+                "Hiiumaa rändpood",
+                "Jõgeva Selver",
+                "Jõhvi Selver",
+                "Keila Selver",
+                "Kohtla-Järve Selver",
+                "Krooni Selver",
+                "Maardu Selver",
+                "Mai Selver",
+                "Männimäe Selver",
+                "Paide Selver",
+                "Peetri Selver",
+                "Põltsamaa Selver",
+                "Põlva Selver",
+                "Rannarootsi Selver",
+                "Rapla Selver",
+                "Saare Selver",
+                "Saku Selver",
+                "Suurejõe Selver",
+                "Valga Selver",
+                "Viimsi Selver",
+                "Vilja Selver",
+                "Ülejõe Selver"};
+        return array[index];
+    }
+
+    public static String[] getPrismaNames(){
+        return new String[]{
+                "prismaperemarketaskristiineprisma",
+                "prismaperemarketassikupilliprisma",
+                "prismaperemarketasroccaalmareprisma",
+                "prismaperemarketasmustamaeprisma",
+                "prismaperemarketaslasnamaeprisma",
+                "prismaperemarketassobraprisma",
+                "prismaperemarketasannelinnaprisma",
+                "prismaperemarketasnarvaprisma"};
+    }
+
+    public static String getPrismaAddress(int index) {
+        String[] array = {
+                "Endla 45, 10615, Tallinn",
+                "Tartu mnt 87, 10112, Tallinn",
+                "Paldiski mnt 102, 13522, Tallinn",
+                "A.H.Tammsaare tee 116, 12918, Tallinn",
+                "Mustakivi tee 17, 13912, Tallinn",
+                "Sõbra 58, 50106, Tartu",
+                "Nõlvaku 2, 50708, Tartu",
+                "Kangelaste prospekt 29, 20607, Narva"};
         return array[index];
     }
 }

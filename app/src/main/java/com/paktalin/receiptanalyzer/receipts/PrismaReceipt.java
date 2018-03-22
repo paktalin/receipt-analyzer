@@ -1,34 +1,23 @@
 package com.paktalin.receiptanalyzer.receipts;
 
+import android.util.Log;
+
+import com.paktalin.receiptanalyzer.StringArrays;
+import com.paktalin.receiptanalyzer.StringManager;
+
 /**
  * Created by Paktalin on 21-Mar-18.
  */
 
 public class PrismaReceipt extends Receipt{
-    /*@Override
-    String[] getTitles(){
-        return new String[]{
-                "prismaperemarketaskristiineprisma",
-                "prismaperemarketassikupilliprisma",
-                "prismaperemarketasroccaalmareprisma",
-                "prismaperemarketasmustamaeprisma",
-                "prismaperemarketaslasnamaeprisma",
-                "prismaperemarketassobraprisma",
-                "prismaperemarketasannelinnaprisma",
-                "prismaperemarketasnarvaprisma"};
-    }
+    private static final String TAG = PrismaReceipt.class.getSimpleName();
 
-    @Override
-    String getAddressByIndex(int index) {
-        String[] array = {
-                "Endla 45, 10615, Tallinn",
-                "Tartu mnt 87, 10112, Tallinn",
-                "Paldiski mnt 102, 13522, Tallinn",
-                "A.H.Tammsaare tee 116, 12918, Tallinn",
-                "Mustakivi tee 17, 13912, Tallinn",
-                "Sõbra 58, 50106, Tartu",
-                "Nõlvaku 2, 50708, Tartu",
-                "Kangelaste prospekt 29, 20607, Narva"};
-        return array[index];
-    }*/
+    public PrismaReceipt(String input){
+        name = "Prisma";
+        this.input = input;
+        setAdditionalName(StringArrays.getPrismaNames());
+        address = StringArrays.getPrismaAddress(supermarketIndex);
+        startLine = StringManager.findLine(input, "", 0);
+        Log.d(TAG, startLine + "");
+    }
 }
