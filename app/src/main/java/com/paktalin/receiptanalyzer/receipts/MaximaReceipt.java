@@ -15,15 +15,17 @@ public class MaximaReceipt extends Receipt{
         super(lines);
         name = MAXIMA;
         startLine = startLine("kviitungnr", 4);
+        endLine = endLine("kmtakmkmga", false);
+        setPurchases();
     }
 
     @Override
     int startLine(String startString, int number) {
-        String string = lines[number - 1];
+        String string = lines[number];
         string = string.substring(0, 10);
         Log.d(TAG, "cut string: " + string);
         if (StringManager.identical(string, startString))
-            return number;
+            return number + 1;
         return -1;
     }
 }

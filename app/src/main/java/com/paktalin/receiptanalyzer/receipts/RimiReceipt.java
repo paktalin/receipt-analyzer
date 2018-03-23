@@ -16,6 +16,7 @@ public class RimiReceipt extends Receipt{
         name = RIMI;
         startLine = startLine("klient", 6);
         endLine = endLine("kaardimakse", false);
+        setPurchases();
     }
 
     @Override

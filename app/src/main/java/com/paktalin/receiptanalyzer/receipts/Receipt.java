@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
 
+import java.util.Arrays;
+
 /**
  * Created by Paktalin on 21-Mar-18.
  */
@@ -15,8 +17,10 @@ public class Receipt {
     String additionalName = "";
     String address = "";
     int startLine, endLine;
-    int supermarketIndex;
-    String[] lines;
+    int supermarketIndex = -1;
+    String[] lines, purchases;
+
+
     final String
             SELVER = "Selver",
             PRISMA = "Prisma",
@@ -46,7 +50,7 @@ public class Receipt {
         firstLine = StringManager.clean(firstLine);
         for (int i = 0; i < array.length; i++) {
             String anArray = array[i];
-            if (StringManager.similarity(firstLine, anArray) < 0.05){
+            if (StringManager.identical(firstLine, anArray)){
                 supermarketIndex = i;
                 break;
             }
@@ -75,13 +79,23 @@ public class Receipt {
         return -1;
     }
 
+    void setPurchases() {
+        purchases = Arrays.copyOfRange(lines, startLine, endLine + 1);
+    }
+
     public void logReceipt() {
-        Log.d(TAG, "______RECEIPT______");
+        Log.d(TAG, "\n\n______RECEIPT______");
         Log.d(TAG, "Name = " + name);
         Log.d(TAG, "additionalName = " + additionalName);
         Log.d(TAG, "address = " + address);
-        Log.d(TAG, "startLine = " + startLine + "");
-        Log.d(TAG, "endLine = " + endLine + "");
+        //Log.d(TAG, "startLine = " + startLine + "");
+        //Log.d(TAG, "endLine = " + endLine + "");
+        Log.d(TAG, "\n_PURCHASES_");
+        log(Arrays.toString(purchases));
         //Log.d(TAG, Arrays.toString(lines));
+    }
+
+    private void log(String string) {
+        Log.d(TAG, string);
     }
 }

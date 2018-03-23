@@ -18,10 +18,12 @@ public class SelverReceipt extends Receipt {
         additionalName = StringArrays.getSelverAdditionalName(supermarketIndex);
         address = StringArrays.getSelverAddress(supermarketIndex);
         startLine = startLine("nimetuskogushindsumma", 7);
+        endLine = endLine("vahesumma", true);
+        setPurchases();
     }
 
     private String cutFirstLine() {
         int length = lines[0].length();
-        return lines[0].substring(length-7, length-1);
+        return lines[0].substring(0, length-6);
     }
 }

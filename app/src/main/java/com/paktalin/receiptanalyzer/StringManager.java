@@ -46,7 +46,7 @@ public class StringManager {
     }
 
     public static boolean identical(String input, String string) {
-        return similarity(input, string) < 0.08;
+        return similarity(input, string) < 0.07;
     }
 
     public static boolean similar(String input, String string) {

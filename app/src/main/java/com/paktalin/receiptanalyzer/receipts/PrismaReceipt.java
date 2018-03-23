@@ -19,6 +19,7 @@ public class PrismaReceipt extends Receipt{
         address = StringArrays.getPrismaAddress(supermarketIndex);
         startLine = startLine("arvekviitung", 2) + 1;
         endLine = endLine("kokku", true);
+        setPurchases();
     }
 
     private String cutFirstLine() {
