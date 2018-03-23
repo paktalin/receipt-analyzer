@@ -1,6 +1,6 @@
 package com.paktalin.receiptanalyzer;
 
-import static com.paktalin.receiptanalyzer.StringManager.similar;
+import static com.paktalin.receiptanalyzer.StringManager.identical;
 
 /**
  * Created by Paktalin on 21-Mar-18.
@@ -54,7 +54,7 @@ class StoreName {
     }
 
     private static void checkFor(String string, String name) {
-        if (similar(input, string))
+        if (identical(input, string))
             StoreName.name = name;
     }
 
@@ -67,7 +67,7 @@ class StoreName {
     private static void checkForPrisma() {
         String prismaFirstLine = "prismaperemarketas";
         String inputCut = input.substring(0, 18);
-        if (similar(inputCut, prismaFirstLine))
+        if (identical(inputCut, prismaFirstLine))
             name = "Prisma";
     }
 
@@ -75,7 +75,7 @@ class StoreName {
         String selverFirstLine = "selver";
         int length = input.length();
         String inputCut = input.substring(length - 6, length);
-        if (similar(inputCut, selverFirstLine))
+        if (identical(inputCut, selverFirstLine))
             name = "Selver";
     }
 }

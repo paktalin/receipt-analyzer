@@ -181,14 +181,14 @@ public class StringArrays {
 
     public static String[] getPrismaFirstStrings(){
         return new String[]{
-                "prismaperemarketassikupilliprisma",
-                "prismaperemarketasroccaalmareprisma",
-                "prismaperemarketaskristiineprisma",
-                "prismaperemarketasmustamaeprisma",
-                "prismaperemarketaslasnamaeprisma",
-                "prismaperemarketassobraprisma",
-                "prismaperemarketasannelinnaprisma",
-                "prismaperemarketasnarvaprisma"};
+                "sikupilliprisma",
+                "roccaalmareprisma",
+                "kristiineprisma",
+                "mustamaeprisma",
+                "lasnamaeprisma",
+                "sobraprisma",
+                "annelinnaprisma",
+                "narvaprisma"};
     }
 
     public static String getPrismaAddress(int index) {
@@ -215,5 +215,11 @@ public class StringArrays {
                 "Annelinna Prisma\n",
                 "Narva Prisma"};
         return array[index];
+    }
+
+    public static String[] getMaximaAddresses(){
+        return new String[]{
+                "",
+        };
     }
 }

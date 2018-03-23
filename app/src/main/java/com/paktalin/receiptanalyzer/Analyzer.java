@@ -35,7 +35,8 @@ public class Analyzer implements Runnable {
         ArrayList<String> lines = recognize(context, bitmap);
         String filteredString = StringFilter.filter(lines);
         linesArray = filteredString.split("\n");
-        String store = StoreName.getStoreName(linesArray[0]);
+        String firstLine = linesArray[0].replace(" ", "");
+        String store = StoreName.getStoreName(firstLine);
         if (store != null){
             Receipt receipt = createReceipt(store);
         }
@@ -75,9 +76,7 @@ public class Analyzer implements Runnable {
                 break;
         }
 
-        Log.d(TAG, receipt.getName());
-        Log.d(TAG, receipt.getAdditionalName());
-        Log.d(TAG, receipt.getAddress());
+        receipt.logReceipt();
         return receipt;
     }
 }

@@ -14,10 +14,14 @@ public class SelverReceipt extends Receipt {
     public SelverReceipt(String[] lines) {
         super(lines);
         name = SELVER;
-        setSupermarketIndex(StringArrays.getSelverFirstStrings());
+        setSupermarketIndex(cutFirstLine(), StringArrays.getSelverFirstStrings());
         additionalName = StringArrays.getSelverAdditionalName(supermarketIndex);
         address = StringArrays.getSelverAddress(supermarketIndex);
-        startLine = startLine("nimetuskogushindsumma", 8);
-        Log.d(TAG, startLine + "");
+        startLine = startLine("nimetuskogushindsumma", 7);
+    }
+
+    private String cutFirstLine() {
+        int length = lines[0].length();
+        return lines[0].substring(length-7, length-1);
     }
 }

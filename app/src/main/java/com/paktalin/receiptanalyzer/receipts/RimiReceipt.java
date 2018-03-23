@@ -14,17 +14,16 @@ public class RimiReceipt extends Receipt{
     public RimiReceipt(String[] lines) {
         super(lines);
         name = RIMI;
-        startLine = startLine("klient", 7);
-        Log.d(TAG, startLine + "");
+        startLine = startLine("klient", 6);
+        endLine = endLine("kaardimakse", false);
     }
 
     @Override
     int startLine(String startString, int number) {
-        String string = lines[number - 1];
-        string = string.substring(0, 6);
-        Log.d(TAG, "cut string: " + string);
+        String string = StringManager.clean(lines[number]);
+        string = string.substring(0, 7);
         if (StringManager.similar(string, startString))
-            return number;
+            return number + 1;
         return -1;
     }
 }

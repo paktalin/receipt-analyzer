@@ -33,6 +33,11 @@ public class StringManager {
         return string;
     }
 
+    public static String removeNumbers(String string){
+        string = clean(string);
+        return string.replaceAll("\\d", "");
+    }
+
     public static double similarity(String input, String string) {
         JaroWinkler jaro = new JaroWinkler();
         double distance = jaro.distance(input, string);
@@ -40,7 +45,11 @@ public class StringManager {
         return distance;
     }
 
-    public static boolean similar(String input, String string) {
+    public static boolean identical(String input, String string) {
         return similarity(input, string) < 0.08;
+    }
+
+    public static boolean similar(String input, String string) {
+        return similarity(input, string) < 0.15;
     }
 }

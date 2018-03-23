@@ -14,8 +14,7 @@ public class MaximaReceipt extends Receipt{
     public MaximaReceipt(String[] lines) {
         super(lines);
         name = MAXIMA;
-        startLine = startLine("kviitungnr", 5);
-        Log.d(TAG, startLine + "");
+        startLine = startLine("kviitungnr", 4);
     }
 
     @Override
@@ -23,7 +22,7 @@ public class MaximaReceipt extends Receipt{
         String string = lines[number - 1];
         string = string.substring(0, 10);
         Log.d(TAG, "cut string: " + string);
-        if (StringManager.similar(string, startString))
+        if (StringManager.identical(string, startString))
             return number;
         return -1;
     }

@@ -14,10 +14,14 @@ public class PrismaReceipt extends Receipt{
     public PrismaReceipt(String[] lines){
         super(lines);
         name = PRISMA;
-        setSupermarketIndex(StringArrays.getPrismaFirstStrings());
+        setSupermarketIndex(cutFirstLine(), StringArrays.getPrismaFirstStrings());
         additionalName = StringArrays.getPrismaAdditionalName(supermarketIndex);
         address = StringArrays.getPrismaAddress(supermarketIndex);
-        startLine = startLine("arvekviitung", 3) + 2;
-        Log.d(TAG, startLine + "");
+        startLine = startLine("arvekviitung", 2) + 1;
+        endLine = endLine("kokku", true);
+    }
+
+    private String cutFirstLine() {
+        return lines[0].substring(20, lines[0].length());
     }
 }
