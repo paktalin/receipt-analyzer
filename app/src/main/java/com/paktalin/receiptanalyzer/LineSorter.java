@@ -1,5 +1,6 @@
 package com.paktalin.receiptanalyzer;
 
+import android.util.Log;
 import android.util.SparseArray;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
@@ -61,10 +62,13 @@ class LineSorter {
             Line line = lines.get(i);
             if (close(Line.getMeanTop(toOneLine), line.getTop())) {
                 toOneLine.add(line);
+                Log.d(TAG, i + " line: " + line.getFilling());
             } else{
                 stringLines.add(Line.join(toOneLine));
+                Log.d(TAG, "Join: " + stringLines.get(stringLines.size()-1));
                 toOneLine.clear();
                 toOneLine.add(line);
+                Log.d(TAG, "Line here: " + line.getFilling());
             }
         }
         return stringLines;
@@ -76,6 +80,7 @@ class LineSorter {
     }
 
     private static boolean close(int top1, int top2) {
+        Log.d(TAG, (top2 - top1) + " " + height/1.6);
         return (top2 - top1) < height/1.6;
     }
 }

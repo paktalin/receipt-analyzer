@@ -19,7 +19,7 @@ public class SelverReceipt extends Receipt {
         address = StringArrays.getSelverAddress(supermarketIndex);
         startLine = startLine("nimetuskogushindsumma", 7);
         endLine = endLine("vahesumma", true);
-        setPurchases();
+        purchases = extractPurchases();
     }
 
     private String cutFirstLine() {

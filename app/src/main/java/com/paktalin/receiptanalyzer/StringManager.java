@@ -41,7 +41,7 @@ public class StringManager {
     public static double similarity(String input, String string) {
         JaroWinkler jaro = new JaroWinkler();
         double distance = jaro.distance(input, string);
-        Log.d(TAG, input + " " + string + " " + distance);
+        //Log.d(TAG, input + " " + string + " " + distance);
         return distance;
     }
 

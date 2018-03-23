@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -18,10 +19,11 @@ public class Receipt {
     String address = "";
     int startLine, endLine;
     int supermarketIndex = -1;
-    String[] lines, purchases;
+    String[] lines;
+    private String[] purchasesStrings;
+    ArrayList<Purchase> purchases;
 
-
-    final String
+    final static String
             SELVER = "Selver",
             PRISMA = "Prisma",
             MAXIMA = "Maxima",
@@ -46,7 +48,6 @@ public class Receipt {
     }
 
     void setSupermarketIndex(String firstLine, String[] array) {
-        Log.d(TAG, "setting index");
         firstLine = StringManager.clean(firstLine);
         for (int i = 0; i < array.length; i++) {
             String anArray = array[i];
@@ -72,7 +73,6 @@ public class Receipt {
             String line = lines[i];
             if (removeNumbers)
                 line = StringManager.removeNumbers(line);
-            Log.d(TAG, i + " " + line);
             if (StringManager.identical(line, endLine))
                 return i - 1;
         }
@@ -80,8 +80,26 @@ public class Receipt {
     }
 
     void setPurchases() {
-        purchases = Arrays.copyOfRange(lines, startLine, endLine + 1);
+        purchasesStrings = Arrays.copyOfRange(lines, startLine, endLine + 1);
     }
+
+    ArrayList<Purchase> extractPurchases() {
+        setPurchases();
+        ArrayList<Purchase> purchases = new ArrayList<>();
+        for (String string : purchasesStrings){
+            String[] string_arr = string.split(" ");
+            Log.d(TAG, Arrays.toString(string_arr));
+            if (Purchase.purchase(string_arr)) {
+                Purchase purchase = new Purchase(string_arr, name);
+                purchases.add(purchase);
+            } else {
+                Log.d(TAG, Arrays.toString(string_arr) + " is not a purchase");
+            }
+        }
+        return purchases;
+    }
+
+
 
     public void logReceipt() {
         Log.d(TAG, "\n\n______RECEIPT______");
@@ -91,11 +109,9 @@ public class Receipt {
         //Log.d(TAG, "startLine = " + startLine + "");
         //Log.d(TAG, "endLine = " + endLine + "");
         Log.d(TAG, "\n_PURCHASES_");
-        log(Arrays.toString(purchases));
         //Log.d(TAG, Arrays.toString(lines));
-    }
-
-    private void log(String string) {
-        Log.d(TAG, string);
+        for (Purchase p : purchases){
+            p.printPurchase();
+        }
     }
 }
