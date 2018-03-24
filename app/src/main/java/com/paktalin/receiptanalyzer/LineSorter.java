@@ -62,13 +62,10 @@ class LineSorter {
             Line line = lines.get(i);
             if (close(Line.getMeanTop(toOneLine), line.getTop())) {
                 toOneLine.add(line);
-                Log.d(TAG, i + " line: " + line.getFilling());
             } else{
                 stringLines.add(Line.join(toOneLine));
-                Log.d(TAG, "Join: " + stringLines.get(stringLines.size()-1));
                 toOneLine.clear();
                 toOneLine.add(line);
-                Log.d(TAG, "Line here: " + line.getFilling());
             }
         }
         return stringLines;
@@ -80,7 +77,6 @@ class LineSorter {
     }
 
     private static boolean close(int top1, int top2) {
-        Log.d(TAG, (top2 - top1) + " " + height/1.6);
         return (top2 - top1) < height/1.6;
     }
 }
