@@ -21,7 +21,7 @@ public class Receipt {
     int supermarketIndex = -1;
     String[] lines;
     private String[] purchasesStrings;
-    ArrayList<Purchase2> purchases;
+    ArrayList<Purchase> purchases;
 
     final static String
             SELVER = "Selver",
@@ -83,30 +83,14 @@ public class Receipt {
         purchasesStrings = Arrays.copyOfRange(lines, startLine, endLine + 1);
     }
 
-    /*ArrayList<Purchase> extractPurchases() {
+    ArrayList<Purchase> extractPurchases() {
         setPurchases();
         ArrayList<Purchase> purchases = new ArrayList<>();
         for (String string : purchasesStrings){
             String[] string_arr = string.split(" ");
             Log.d(TAG, Arrays.toString(string_arr));
             if (Purchase.purchase(string_arr)) {
-                Purchase purchase = new Purchase(string_arr, name);
-                purchases.add(purchase);
-            } else {
-                Log.d(TAG, Arrays.toString(string_arr) + " is not a purchase");
-            }
-        }
-        return purchases;
-    }*/
-
-    ArrayList<Purchase2> extractPurchases() {
-        setPurchases();
-        ArrayList<Purchase2> purchases = new ArrayList<>();
-        for (String string : purchasesStrings){
-            String[] string_arr = string.split(" ");
-            Log.d(TAG, Arrays.toString(string_arr));
-            if (Purchase.purchase(string_arr)) {
-                Purchase2 purchase = new Purchase2(new ArrayList<>(Arrays.asList(string_arr)));
+                Purchase purchase = new Purchase(new ArrayList<>(Arrays.asList(string_arr)));
                 purchases.add(purchase);
             } else {
                 Log.d(TAG, Arrays.toString(string_arr) + " is not a purchase");
@@ -124,7 +108,7 @@ public class Receipt {
         //Log.d(TAG, "endLine = " + endLine + "");
         Log.d(TAG, "\n_PURCHASES_");
         //Log.d(TAG, Arrays.toString(lines));
-        for (Purchase2 p : purchases){
+        for (Purchase p : purchases){
             p.printPurchase();
         }
     }

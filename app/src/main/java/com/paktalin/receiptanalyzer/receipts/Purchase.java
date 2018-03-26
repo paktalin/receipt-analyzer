@@ -4,81 +4,98 @@ import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
 
-import java.util.Arrays;
-
-import static com.paktalin.receiptanalyzer.receipts.Receipt.SELVER;
+import java.util.ArrayList;
 
 /**
- * Created by Paktalin on 23-Mar-18.
+ * Created by Paktalin on 24-Mar-18.
  */
 
 class Purchase {
     private static final String TAG = Purchase.class.getSimpleName();
 
-    private String title;
-    private float weight_amount, price, sum;
+    private String title = "";
+    private float amount = -1;
+    private float price = -1;
+    float sum = -1;
+    private ArrayList<String> items;
+    private String last;
 
-    Purchase(String[] items, String store){
-        //Log.d(TAG, Arrays.toString(items));
-        int length = items.length;
-
-        switch (store) {
-            case SELVER:
-                if(length == 6) {
-                    if (containsChar(items[2]))
-                        extract(items[0] + items[1] + items[2], items[3], items[4], items[5]);
+    Purchase(ArrayList<String> items) {
+        this.items = items;
+        while(items.size() > 0) {
+            last = last();
+            if (!set(sum)) {
+                sum = tryToCast();
+                Log.d(TAG, "Sum: "+ String.valueOf(sum));
+                checkIfCasted(sum, false);
+            } else if (!set(price)) {
+                price = tryToCast();
+                Log.d(TAG, "Price: "+ String.valueOf(price));
+                checkIfCasted(price, false);
+            } else if(!set(amount)) {
+                amount = tryToCast();
+                Log.d(TAG, "Amount: " + String.valueOf(amount));
+                checkIfCasted(amount, true);
+            } else {
+                int size = items.size();
+                if(size == 1){
+                    title = last;
+                    items.remove(last);
+                } else {
+                    ArrayList<String> titleList = (ArrayList<String>)items.clone();
+                    for (String string : titleList)
+                        title += string;
+                    items.clear();
                 }
-                if(length == 5) {
-                    if (containsChar(items[1]))
-                        extract(items[0] + items[1], items[2], items[3], items[4]);
-                    else if(containsChar(items[2]))
-                        extract(items[0] + items[1] + items[2], "1", items[3], items[4]);
-                }
-                if (length == 4) {
-                    if (containsChar(items[1]))
-                        extract(items[0] + items[1], "1", items[2], items[3]);
-                    else
-                        extract(items[0], items[1], items[2], items[3]);
-                }
-                else if(length == 3)
-                    extract(items[0], "1", items[1], items[2]);
+            }
         }
-        printPurchase();
-    }
-
-    private void extract(String t, String w_a, String p, String s){
-        title = t;
-        weight_amount = toFloat(w_a);
-        price = toFloat(p);
-        sum = toFloat(s);
-    }
-
-    private float toFloat(String string){
-        float f = -1;
-        try {
-            f = Float.parseFloat(string);
-        }catch (NumberFormatException e){
-            e.printStackTrace();
-            String cut = string.substring(2, string.length());
-            int index = cut.indexOf('.') + 2;
-            String first = string.substring(0, index - 2);
-            String second = string.substring(index - 1, string.length());
-            Log.d(TAG, "first: " + first + " ; second: " + second);
-        }
-
-        return f;
     }
 
     static boolean purchase(String[] string){
         return !StringManager.similar(string[0], "pusikliendivoit");
     }
 
-    void printPurchase(){
-        Log.d(TAG, "title: " + title + "; weight/amount: " + weight_amount +
-                "; price: " + price + "; sum: " + sum);
+    private boolean set(float f){
+        return f != -1;
     }
 
-    private static boolean containsChar(String string){
-        return string.matches(".*[a-z].*");
+    private float tryToCast(){
+        try {
+            return Float.parseFloat(last);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    private String last() {
+        return items.get(items.size()-1);
+    }
+
+    private void checkIfCasted(float field, boolean amount){
+        if (set(field))
+            items.remove(last);
+        else {
+            tryToSplit(last);
+            if (amount && last.equals(last()))
+                items.add("1");
+        }
+    }
+
+    private void tryToSplit(String string) {
+        if(string.contains("."))  {
+            String cut = string.substring(2, string.length());
+            int index = cut.indexOf('.') + 2;
+            String first = string.substring(0, index - 1);
+            String second = string.substring(index - 1, string.length());
+            items.remove(last);
+            items.add(first);
+            items.add(second);
+            Log.d(TAG, "first: " + first + " ; second: " + second);
+        }
+    }
+
+    void printPurchase(){
+        Log.d(TAG, "title: " + title + "; weight/amount: " + amount +
+                "; price: " + price + "; sum: " + sum);
     }
 }
