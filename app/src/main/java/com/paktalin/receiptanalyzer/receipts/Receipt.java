@@ -39,14 +39,6 @@ public class Receipt {
         return name;
     }
 
-    public String getAdditionalName() {
-        return additionalName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
     void setSupermarketIndex(String firstLine, String[] array) {
         firstLine = StringManager.clean(firstLine);
         for (int i = 0; i < array.length; i++) {
@@ -106,10 +98,23 @@ public class Receipt {
         Log.d(TAG, "address = " + address);
         //Log.d(TAG, "startLine = " + startLine + "");
         //Log.d(TAG, "endLine = " + endLine + "");
-        Log.d(TAG, "\n_PURCHASES_");
+        Log.d(TAG, "_PURCHASES_");
         //Log.d(TAG, Arrays.toString(lines));
         for (Purchase p : purchases){
-            p.printPurchase();
+            p.purchaseInfo();
         }
+    }
+
+    public String getInfo() {
+        StringBuilder info;
+        info = new StringBuilder("______RECEIPT______" +
+                "\nName = " + name +
+                "\nadditionalName = " + additionalName +
+                "\naddress = " + address +
+                "\n\n_PURCHASES_");
+        for (Purchase p : purchases){
+            info.append(p.purchaseInfo());
+        }
+        return info.toString();
     }
 }

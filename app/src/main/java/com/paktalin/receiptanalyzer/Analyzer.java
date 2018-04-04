@@ -19,19 +19,11 @@ import java.util.ArrayList;
  * Created by Paktalin on 22-Mar-18.
  */
 
-public class Analyzer implements Runnable {
+class Analyzer {
     private static final String TAG = Analyzer.class.getSimpleName();
-    private Context context;
-    private Bitmap bitmap;
-    private String[] linesArray;
+    private static String[] linesArray;
 
-    Analyzer(Context context, Bitmap bitmap) {
-        this.context = context;
-        this.bitmap = bitmap;
-    }
-
-    @Override
-    public void run() {
+    static String analyze(Context context, Bitmap bitmap) {
         ArrayList<String> lines = recognize(context, bitmap);
         String filteredString = StringFilter.filter(lines);
         linesArray = filteredString.split("\n");
@@ -39,24 +31,26 @@ public class Analyzer implements Runnable {
         String store = StoreName.getStoreName(firstLine);
         if (store != null){
             Receipt receipt = createReceipt(store);
+            return receipt.getInfo();
         }
-        else
+        else {
             Log.d(TAG, "Couldn't identify the supermarket");
+            return null;
+        }
     }
 
-    private ArrayList<String> recognize(Context context, Bitmap bitmap) {
+    private static ArrayList<String> recognize(Context context, Bitmap bitmap) {
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            ArrayList<String> lines = LineSorter.toTextLines(detector.detect(frame));
-            return lines;
+            return LineSorter.toTextLines(detector.detect(frame));
         }else {
             Log.d(TAG, "Could not set up the detector!");
             return null;
         }
     }
 
-    private Receipt createReceipt(String store){
+    private static Receipt createReceipt(String store){
         Receipt receipt = null;
         switch (store){
             case "Selver":
@@ -75,8 +69,6 @@ public class Analyzer implements Runnable {
                 receipt = new MaximaReceipt(linesArray);
                 break;
         }
-
-        receipt.logReceipt();
         return receipt;
     }
 }

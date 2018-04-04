@@ -8,25 +8,25 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_GET_FROM_GALLERY = 100;
     private static final int REQUEST_GET_FROM_CAMERA = 30;
-    private ImageView image;
+    private ImageView image, buttonRotate;
     private Bitmap bitmap;
     Uri imageUri;
+    static String receiptInfo = null;
+    TextView textView;
+    Button buttonOk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK) {
             setContentView(R.layout.actvity_edit);
-
-            ImageView buttonRotate = findViewById(R.id.button_rotate);
+            textView = findViewById(R.id.text_view);
+            buttonRotate = findViewById(R.id.button_rotate);
             image = findViewById(R.id.image);
-            Button buttonOk = findViewById(R.id.button_ok);
+            buttonOk = findViewById(R.id.button_ok);
             buttonRotate.setOnClickListener(buttonRotateListener);
             buttonOk.setOnClickListener(buttonOkListener);
             if (requestCode == REQUEST_GET_FROM_GALLERY)
@@ -78,10 +78,19 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Thread thread = new Thread(null,
-                    new Analyzer(MainActivity.this, bitmap), "Background");
+            Thread thread = new Thread(() -> receiptInfo = Analyzer.analyze(MainActivity.this, bitmap));
             thread.start();
+            while(thread.isAlive());
+
+            buttonOk.setVisibility(View.INVISIBLE);
+            buttonRotate.setVisibility(View.INVISIBLE);
             image.setVisibility(View.INVISIBLE);
+            textView.setVisibility(View.VISIBLE);
+
+            if (receiptInfo != null)
+                textView.setText(receiptInfo);
+            else
+                textView.setText("Sorry, we couldn't get the data");
         }
     };
 

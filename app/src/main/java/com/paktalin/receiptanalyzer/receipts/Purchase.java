@@ -26,15 +26,12 @@ class Purchase {
             last = last();
             if (!set(sum)) {
                 sum = tryToCast();
-                Log.d(TAG, "Sum: "+ String.valueOf(sum));
                 checkIfCasted(sum, false);
             } else if (!set(price)) {
                 price = tryToCast();
-                Log.d(TAG, "Price: "+ String.valueOf(price));
                 checkIfCasted(price, false);
             } else if(!set(amount)) {
                 amount = tryToCast();
-                Log.d(TAG, "Amount: " + String.valueOf(amount));
                 checkIfCasted(amount, true);
             } else {
                 int size = items.size();
@@ -94,8 +91,10 @@ class Purchase {
         }
     }
 
-    void printPurchase(){
-        Log.d(TAG, "title: " + title + "; weight/amount: " + amount +
-                "; price: " + price + "; sum: " + sum);
+    String purchaseInfo(){
+        return  "title: " + title +
+                "; amount: " + amount +
+                "; price: " + price +
+                "; sum: " + sum + "\n";
     }
 }
