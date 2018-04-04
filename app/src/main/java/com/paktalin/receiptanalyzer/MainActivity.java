@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                     MediaStore.Images.Media.INTERNAL_CONTENT_URI));
             startActivityForResult(galleryIntent, REQUEST_GET_FROM_GALLERY);
         });
+        DB.run(MainActivity.this);
     }
 
     @Override
