@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -22,21 +23,25 @@ import java.util.ArrayList;
 class Analyzer {
     private static final String TAG = Analyzer.class.getSimpleName();
     private static String[] linesArray;
+    static String supermarket;
 
     static String analyze(Context context, Bitmap bitmap) {
         ArrayList<String> lines = recognize(context, bitmap);
         String filteredString = StringFilter.filter(lines);
         linesArray = filteredString.split("\n");
         String firstLine = linesArray[0].replace(" ", "");
-        String store = StoreName.getStoreName(firstLine);
-        if (store != null){
-            Receipt receipt = createReceipt(store);
+        Supermarket supermarket = new Supermarket(context, firstLine);
+        supermarket.execute();
+        /*supermarket = StoreName.getStoreName(firstLine);
+        if (supermarket != null){
+            Receipt receipt = createReceipt();
             return receipt.getInfo();
         }
         else {
             Log.d(TAG, "Couldn't identify the supermarket");
             return null;
-        }
+        }*/
+        return null;
     }
 
     private static ArrayList<String> recognize(Context context, Bitmap bitmap) {
@@ -50,9 +55,9 @@ class Analyzer {
         }
     }
 
-    private static Receipt createReceipt(String store){
+    private static Receipt createReceipt(){
         Receipt receipt = null;
-        switch (store){
+        switch (supermarket){
             case "Selver":
                 receipt = new SelverReceipt(linesArray);
                 break;
@@ -71,4 +76,19 @@ class Analyzer {
         }
         return receipt;
     }
+
+    /*static Cursor getDBTable(Context context) {
+        DatabaseHelper helper = new DatabaseHelper(context);
+        Cursor cursor = helper.query(supermarket, null);
+
+        ArrayList<String>[] supermarketData = new ArrayList[3];
+
+        if (cursor.moveToFirst()) {
+            int i = 0;
+            do {
+                supermarketData[0].add(cursor.getString(1));
+
+            } while (cursor.moveToNext());
+        }
+    }*/
 }

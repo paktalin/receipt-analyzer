@@ -17,20 +17,19 @@ import java.io.OutputStream;
  * Created by Paktalin on 07/04/2018.
  */
 
-class DatabaseHelper  extends SQLiteOpenHelper {
+public class DatabaseHelper  extends SQLiteOpenHelper {
 
     private String DB_PATH = null;
     private static String DB_NAME = "receipt_analyzer_db";
     private SQLiteDatabase myDataBase;
     private final Context myContext;
 
-    DatabaseHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, 10);
         this.myContext = context;
         this.DB_PATH = "/data/data/" + context.getPackageName() + "/" + "databases/";
-        Log.e("Path 1", DB_PATH);
+        Log.d("Path 1", DB_PATH);
     }
-
 
     void createDataBase() throws IOException {
         if (!dbExist()) {
@@ -74,7 +73,6 @@ class DatabaseHelper  extends SQLiteOpenHelper {
     void openDataBase() throws SQLException {
         String myPath = DB_PATH + DB_NAME;
         myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-
     }
 
     @Override
@@ -83,7 +81,6 @@ class DatabaseHelper  extends SQLiteOpenHelper {
             myDataBase.close();
         super.close();
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -100,9 +97,10 @@ class DatabaseHelper  extends SQLiteOpenHelper {
             }
     }
 
-    Cursor query(String table) {
-        return myDataBase.query(table, null, null, null, null, null, null);
+    Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        return myDataBase.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
     }
-
-
+    Cursor rawQuery(String query, String[] statement) {
+        return myDataBase.rawQuery(query, statement);
+    }
 }

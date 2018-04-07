@@ -30,7 +30,8 @@ class DBManager {
         }
 
         Log.d(TAG, "Successfully Imported");
-        Cursor cursor = myDbHelper.query("Selver");
+        Cursor cursor = myDbHelper.query("Selver", null,
+                null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {

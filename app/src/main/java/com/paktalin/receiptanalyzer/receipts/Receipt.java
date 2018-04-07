@@ -1,5 +1,6 @@
 package com.paktalin.receiptanalyzer.receipts;
 
+import android.database.Cursor;
 import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
@@ -15,7 +16,7 @@ public class Receipt {
     private static final String TAG = Receipt.class.getSimpleName();
 
     String name = null;
-    String additionalName = "";
+    String retailer = "";
     String address = "";
     int startLine, endLine;
     int supermarketIndex = -1;
@@ -94,7 +95,7 @@ public class Receipt {
     public void logReceipt() {
         Log.d(TAG, "\n\n______RECEIPT______");
         Log.d(TAG, "Name = " + name);
-        Log.d(TAG, "additionalName = " + additionalName);
+        Log.d(TAG, "retailer = " + retailer);
         Log.d(TAG, "address = " + address);
         //Log.d(TAG, "startLine = " + startLine + "");
         //Log.d(TAG, "endLine = " + endLine + "");
@@ -109,7 +110,7 @@ public class Receipt {
         StringBuilder info;
         info = new StringBuilder("______RECEIPT______" +
                 "\nName = " + name +
-                "\nadditionalName = " + additionalName +
+                "\nretailer = " + retailer +
                 "\naddress = " + address +
                 "\n\n_PURCHASES_");
         for (Purchase p : purchases){

@@ -1,7 +1,5 @@
 package com.paktalin.receiptanalyzer.receipts;
 
-import android.util.Log;
-
 import com.paktalin.receiptanalyzer.StringArrays;
 
 /**
@@ -15,7 +13,7 @@ public class PrismaReceipt extends Receipt{
         super(lines);
         name = PRISMA;
         setSupermarketIndex(cutFirstLine(), StringArrays.getPrismaFirstStrings());
-        additionalName = StringArrays.getPrismaAdditionalName(supermarketIndex);
+        retailer = StringArrays.getPrismaAdditionalName(supermarketIndex);
         address = StringArrays.getPrismaAddress(supermarketIndex);
         startLine = startLine("arvekviitung", 2) + 1;
         endLine = endLine("kokku", true);

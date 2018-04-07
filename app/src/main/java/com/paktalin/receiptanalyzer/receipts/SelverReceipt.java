@@ -1,7 +1,5 @@
 package com.paktalin.receiptanalyzer.receipts;
 
-import android.util.Log;
-
 import com.paktalin.receiptanalyzer.StringArrays;
 
 /**
@@ -15,7 +13,7 @@ public class SelverReceipt extends Receipt {
         super(lines);
         name = SELVER;
         setSupermarketIndex(cutFirstLine(), StringArrays.getSelverFirstStrings());
-        additionalName = StringArrays.getSelverAdditionalName(supermarketIndex);
+        retailer = StringArrays.getSelverAdditionalName(supermarketIndex);
         address = StringArrays.getSelverAddress(supermarketIndex);
         startLine = startLine("nimetuskogushindsumma", 7);
         endLine = endLine("vahesumma", true);
@@ -25,5 +23,10 @@ public class SelverReceipt extends Receipt {
     private String cutFirstLine() {
         int length = lines[0].length();
         return lines[0].substring(0, length-6);
+    }
+
+
+    void setRetailer() {
+
     }
 }
