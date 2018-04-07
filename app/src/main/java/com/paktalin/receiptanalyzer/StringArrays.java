@@ -39,7 +39,7 @@ public class StringArrays {
                 "astri",
                 "centrumi",
                 "hiiumaa",
-                "hiiumaarä",
+                "hiiumaara",
                 "jogeva",
                 "johvi",
                 "keila",
@@ -118,7 +118,7 @@ public class StringArrays {
                 "Raja tn 5, Valga",
                 "Sõpruse tee 15, 74001, Haabneeme, Viimsi vald",
                 "Vilja tn 6, Võru",
-                "Tallinna mnt 93a/ Roheline 80, Pärnu",};
+                "Tallinna mnt 93a/ Roheline 80, Pärnu"};
         return array[index];
     }
 
