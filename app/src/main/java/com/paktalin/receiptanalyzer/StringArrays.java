@@ -51,6 +51,7 @@ public class StringArrays {
                 "paide",
                 "peetri",
                 "poltsamaa",
+                "polva",
                 "rannarootsi",
                 "rapla",
                 "saare",
