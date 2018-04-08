@@ -1,5 +1,7 @@
 package com.paktalin.receiptanalyzer.receipts;
 
+import android.util.Log;
+
 /**
  * Created by Paktalin on 21-Mar-18.
  */
@@ -16,6 +18,6 @@ public class PrismaReceipt extends Receipt {
 
     @Override
     public String cutFirstLine(String firstLine) {
-        return firstLine.substring(20, firstLine.length());
+        return firstLine.substring(18, firstLine.length());
     }
 }

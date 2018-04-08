@@ -20,7 +20,6 @@ public class Receipt {
     int startLine, endLine;
     private String[] purchasesStrings;
     ArrayList<Purchase> purchases;
-    private String name;
 
     Receipt(String[] lines) {
         this.lines = lines;
@@ -88,9 +87,9 @@ public class Receipt {
                 "\nretailer = " + retailer +
                 "\naddress = " + address +
                 "\n\n_PURCHASES_");
-        for (Purchase p : purchases){
+        /*for (Purchase p : purchases){
             info.append(p.purchaseInfo());
-        }
+        }*/
         return info.toString();
     }
 
@@ -101,7 +100,7 @@ public class Receipt {
     public void setAddress(String address) {
         this.address = address;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setSupermarket(String supermarket) {
+        this.supermarket = supermarket;
     }
 }

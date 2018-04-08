@@ -14,6 +14,7 @@ import com.paktalin.receiptanalyzer.receipts.SelverReceipt;
  */
 
 class SupermarketInfo {
+    private static final String TAG = SupermarketInfo.class.getSimpleName();
 
     private String supermarket;
     private String[] lines;
@@ -50,7 +51,7 @@ class SupermarketInfo {
         setIndex(receipt.cutFirstLine(firstLine));
         String retailer = getRetailer();
         String address = getAddress();
-        receipt.setName(supermarket);
+        receipt.setSupermarket(supermarket);
         receipt.setRetailer(retailer);
         receipt.setAddress(address);
         return receipt;
