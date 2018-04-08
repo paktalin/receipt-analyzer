@@ -118,4 +118,12 @@ public class Receipt {
         }
         return info.toString();
     }
+
+    public void setRetailer(String retailer) {
+        this.retailer = retailer;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

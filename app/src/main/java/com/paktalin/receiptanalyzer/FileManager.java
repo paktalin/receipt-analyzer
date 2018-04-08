@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -88,6 +89,21 @@ class FileManager {
 
     static void saveTextFile(String data) throws IOException {
         saveTextFile(makeName(), data);
+    }
+
+    static String[] getStringFromTextFile(Context context, String fileName) {
+        String text = "";
+        try{
+            InputStream inputStream = context.getAssets().open(fileName);
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            text = new String(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return text.split("\n");
     }
 
     private static String makeName() {

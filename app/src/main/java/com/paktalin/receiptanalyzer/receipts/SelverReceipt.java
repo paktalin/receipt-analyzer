@@ -1,7 +1,5 @@
 package com.paktalin.receiptanalyzer.receipts;
 
-import com.paktalin.receiptanalyzer.StringArrays;
-
 /**
  * Created by Paktalin on 21-Mar-18.
  */
@@ -12,9 +10,6 @@ public class SelverReceipt extends Receipt {
     public SelverReceipt(String[] lines) {
         super(lines);
         name = SELVER;
-        setSupermarketIndex(cutFirstLine(), StringArrays.getSelverFirstStrings());
-        retailer = StringArrays.getSelverAdditionalName(supermarketIndex);
-        address = StringArrays.getSelverAddress(supermarketIndex);
         startLine = startLine("nimetuskogushindsumma", 7);
         endLine = endLine("vahesumma", true);
         purchases = extractPurchases();
@@ -23,10 +18,5 @@ public class SelverReceipt extends Receipt {
     private String cutFirstLine() {
         int length = lines[0].length();
         return lines[0].substring(0, length-6);
-    }
-
-
-    void setRetailer() {
-
     }
 }
