@@ -18,7 +18,6 @@ public class Receipt {
     private String supermarket;
     private String retailer, address;
     int startLine, endLine;
-    private String[] purchasesStrings;
     ArrayList<Purchase> purchases;
 
     Receipt(String[] lines) {
@@ -34,7 +33,6 @@ public class Receipt {
             return number + 1;
         return -1;
     }
-
     int endLine(String endLine, boolean removeNumbers) {
         for (int i = startLine + 1; i < lines.length; i++) {
             String line = lines[i];
@@ -46,13 +44,9 @@ public class Receipt {
         return -1;
     }
 
-    void setPurchases() {
-        purchasesStrings = Arrays.copyOfRange(lines, startLine, endLine + 1);
-    }
-
     ArrayList<Purchase> extractPurchases() {
-        setPurchases();
         ArrayList<Purchase> purchases = new ArrayList<>();
+        String[] purchasesStrings = Arrays.copyOfRange(lines, startLine, endLine + 1);
         for (String string : purchasesStrings){
             String[] string_arr = string.split(" ");
             Log.d(TAG, Arrays.toString(string_arr));
