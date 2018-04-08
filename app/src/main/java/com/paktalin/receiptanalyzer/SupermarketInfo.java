@@ -27,7 +27,7 @@ class SupermarketInfo {
         this.context = context;
         this.lines = lines;
         firstLine = StringManager.clean(lines[0]);
-        supermarket = StoreName.getStoreName(firstLine);
+        supermarket = SupermarketName.getStoreName(firstLine);
     }
 
     Receipt createReceipt() {

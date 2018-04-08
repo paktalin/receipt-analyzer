@@ -96,7 +96,6 @@ public class Receipt {
     public void setRetailer(String retailer) {
         this.retailer = retailer;
     }
-
     public void setAddress(String address) {
         this.address = address;
     }

@@ -6,10 +6,14 @@ import static com.paktalin.receiptanalyzer.StringManager.identical;
  * Created by Paktalin on 21-Mar-18.
  */
 
-public class StoreName {
-    private static final String TAG = StoreName.class.getSimpleName();
+class SupermarketName {
+    private static final String TAG = SupermarketName.class.getSimpleName();
     static private String name = null;
     private static String input;
+
+    private final static String rimiString = "rimieestifoodasregnr10263574";
+    private final static String maximaString = "maximaeestiouregnr10765896";
+    private final static String konsumString = "harjutarbijateuhistu";
 
     /**
      * The method is based on the length of the input string.
@@ -30,52 +34,46 @@ public class StoreName {
      * Prisma   24-40
      * Selver   8-23
      */
-    public static String getStoreName(String input) {
-        StoreName.input = input;
+    static String getStoreName(String input) {
+        SupermarketName.input = input;
         int length = input.length();
 
         if (length > 23) {
-            checkFor("rimieestifoodasregnr10263574", "Rimi",
-                    "maximaeestiouregnr10765896", "Maxima");
-            if (name == null)
-                checkForPrisma();
-        } else if(length > 21) {
-            checkFor("maximaeestiouregnr10765896", "Maxima",
-                    "harjutarbijateuhistu", "Konsum");
-            if(name == null)
-                checkForSelver();
+            if(!checkFor(rimiString, "Rimi"))
+                if(!checkFor(maximaString, "Maxima"))
+                    checkForPrisma();
+        } else if (length > 21) {
+            if(!checkFor(maximaString, "Maxima"))
+                if(!checkFor(konsumString, "Konsum"))
+                    checkForSelver();
         } else if(length > 16) {
-            checkFor("harjutarbijateuhistu", "Konsum");
-            if (name == null)
+            if(!checkFor(konsumString, "Konsum"))
                 checkForSelver();
         } else if(length > 7)
             checkForSelver();
         return name;
     }
 
-    private static void checkFor(String string, String name) {
-        if (identical(input, string))
-            StoreName.name = name;
-    }
-
-    private static void checkFor(String string1, String name1, String string2, String name2) {
-        checkFor(string1, name1);
-        if (name == null)
-            checkFor(string2, name2);
+    private static boolean checkFor(String supermarketString, String name) {
+        if (identical(input, supermarketString)) {
+            SupermarketName.name = name;
+            return true;
+        } else
+            return false;
     }
 
     private static void checkForPrisma() {
-        String prismaFirstLine = "prismaperemarketas";
+        String prismaString = "prismaperemarketas";
         String inputCut = input.substring(0, 18);
-        if (identical(inputCut, prismaFirstLine))
+        if (identical(inputCut, prismaString))
             name = "Prisma";
     }
 
     private static void checkForSelver() {
-        String selverFirstLine = "selver";
+        String selverString = "selver";
         int length = input.length();
         String inputCut = input.substring(length - 6, length);
-        if (identical(inputCut, selverFirstLine))
+        if (identical(inputCut, selverString))
             name = "Selver";
     }
 }
