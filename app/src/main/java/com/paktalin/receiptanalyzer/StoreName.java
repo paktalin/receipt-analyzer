@@ -6,7 +6,7 @@ import static com.paktalin.receiptanalyzer.StringManager.identical;
  * Created by Paktalin on 21-Mar-18.
  */
 
-class StoreName {
+public class StoreName {
     private static final String TAG = StoreName.class.getSimpleName();
     static private String name = null;
     private static String input;
@@ -30,7 +30,7 @@ class StoreName {
      * Prisma   24-40
      * Selver   8-23
      */
-    static String getStoreName(String input) {
+    public static String getStoreName(String input) {
         StoreName.input = input;
         int length = input.length();
 

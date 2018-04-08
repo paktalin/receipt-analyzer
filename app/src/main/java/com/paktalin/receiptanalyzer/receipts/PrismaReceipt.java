@@ -1,26 +1,21 @@
 package com.paktalin.receiptanalyzer.receipts;
 
-import com.paktalin.receiptanalyzer.StringArrays;
-
 /**
  * Created by Paktalin on 21-Mar-18.
  */
 
-public class PrismaReceipt extends Receipt{
+public class PrismaReceipt extends Receipt {
     private static final String TAG = PrismaReceipt.class.getSimpleName();
 
     public PrismaReceipt(String[] lines){
         super(lines);
-        name = PRISMA;
-        setSupermarketIndex(cutFirstLine(), StringArrays.getPrismaFirstStrings());
-        retailer = StringArrays.getPrismaAdditionalName(supermarketIndex);
-        address = StringArrays.getPrismaAddress(supermarketIndex);
         startLine = startLine("arvekviitung", 2) + 1;
         endLine = endLine("kokku", true);
         setPurchases();
     }
 
-    private String cutFirstLine() {
-        return lines[0].substring(20, lines[0].length());
+    @Override
+    public String cutFirstLine(String firstLine) {
+        return firstLine.substring(20, firstLine.length());
     }
 }

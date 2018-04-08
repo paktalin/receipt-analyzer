@@ -1,6 +1,5 @@
 package com.paktalin.receiptanalyzer.receipts;
 
-import android.database.Cursor;
 import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
@@ -9,52 +8,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Created by Paktalin on 21-Mar-18.
+ * Created by Paktalin on 08/04/2018.
  */
 
 public class Receipt {
     private static final String TAG = Receipt.class.getSimpleName();
 
-    String name = null;
-    String retailer = "";
-    String address = "";
-    int startLine, endLine;
-    int supermarketIndex = -1;
     String[] lines;
+    private String supermarket;
+    private String retailer, address;
+    int startLine, endLine;
     private String[] purchasesStrings;
     ArrayList<Purchase> purchases;
-
-    final static String
-            SELVER = "Selver",
-            PRISMA = "Prisma",
-            MAXIMA = "Maxima",
-            RIMI = "Rimi",
-            KONSUM = "Konsum";
-
+    private String name;
 
     Receipt(String[] lines) {
         this.lines = lines;
     }
 
-    public String getName() {
-        return name;
+    public String cutFirstLine(String firstLine) {
+        return firstLine;
     }
 
-    void setSupermarketIndex(String firstLine, String[] array) {
-        firstLine = StringManager.clean(firstLine);
-        for (int i = 0; i < array.length; i++) {
-            String anArray = array[i];
-            if (StringManager.identical(firstLine, anArray)){
-                supermarketIndex = i;
-                break;
-            }
-        }
-    }
-
-    /**
-     * @param startString the starting string of this particular supermarket
-     * @param number the number of line where the line is supposed to be
-     */
     int startLine(String startString, int number) {
         if (StringManager.similar(lines[number], startString))
             return number + 1;
@@ -94,7 +69,7 @@ public class Receipt {
 
     public void logReceipt() {
         Log.d(TAG, "\n\n______RECEIPT______");
-        Log.d(TAG, "Name = " + name);
+        Log.d(TAG, "Name = " + supermarket);
         Log.d(TAG, "retailer = " + retailer);
         Log.d(TAG, "address = " + address);
         //Log.d(TAG, "startLine = " + startLine + "");
@@ -109,7 +84,7 @@ public class Receipt {
     public String getInfo() {
         StringBuilder info;
         info = new StringBuilder("______RECEIPT______" +
-                "\nName = " + name +
+                "\nName = " + supermarket +
                 "\nretailer = " + retailer +
                 "\naddress = " + address +
                 "\n\n_PURCHASES_");
@@ -125,5 +100,8 @@ public class Receipt {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }

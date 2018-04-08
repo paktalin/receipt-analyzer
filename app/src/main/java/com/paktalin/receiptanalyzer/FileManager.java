@@ -23,7 +23,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * Created by Paktalin on 21.02.2018.
  */
 
-class FileManager {
+public class FileManager {
     private static final String TAG = FileManager.class.getSimpleName();
     private static String appDirPath;
     private static String picturesDirPath;
@@ -91,7 +91,7 @@ class FileManager {
         saveTextFile(makeName(), data);
     }
 
-    static String[] getStringFromTextFile(Context context, String fileName) {
+    public static String[] getStringFromTextFile(Context context, String fileName) {
         String text = "";
         try{
             InputStream inputStream = context.getAssets().open(fileName);

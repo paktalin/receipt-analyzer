@@ -8,12 +8,11 @@ import com.paktalin.receiptanalyzer.StringManager;
  * Created by Paktalin on 22-Mar-18.
  */
 
-public class MaximaReceipt extends Receipt{
+public class MaximaReceipt extends Receipt {
     private static final String TAG = MaximaReceipt.class.getSimpleName();
 
     public MaximaReceipt(String[] lines) {
         super(lines);
-        name = MAXIMA;
         startLine = startLine("kviitungnr", 4);
         endLine = endLine("kmtakmkmga", false);
         setPurchases();
