@@ -34,11 +34,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button buttonTakePicture = findViewById(R.id.button_scan);
         Button buttonUploadPicture = findViewById(R.id.button_upload);
-        Button buttonCopyDB = findViewById(R.id.button_db_copy);
         FileManager.setUpAppDir(MainActivity.this);
 
         buttonTakePicture.setOnClickListener(buttonTakePictureListener);
-        buttonCopyDB.setOnClickListener(v -> DBManager.execute(MainActivity.this));
         buttonUploadPicture.setOnClickListener(v -> {
             Intent galleryIntent = (new Intent(Intent.ACTION_PICK,
                     MediaStore.Images.Media.INTERNAL_CONTENT_URI));

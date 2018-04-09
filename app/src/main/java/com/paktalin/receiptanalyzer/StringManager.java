@@ -11,22 +11,6 @@ import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
 public class StringManager {
     private static final String TAG = StringManager.class.getSimpleName();
 
-
-    /*static String getFirstLine(String string) {
-        int index = string.indexOf('\n');
-        return string.substring(0, index);
-    }
-
-    static String getRegCode(String string) {
-        //check if contains numbers
-        if (string.matches(".*\\d+.*")) {
-            int index = string.length() - 8 - 1;
-            return string.substring(index, string.length()-1);
-        }
-        Log.d(TAG, "Couldn't extract register code");
-        return null;
-    }*/
-
     public static String clean(String string) {
         string = string.replaceAll(" ", "");
         string = string.replaceAll("\\.", "");
@@ -50,6 +34,21 @@ public class StringManager {
     }
 
     public static boolean similar(String input, String string) {
+        Log.d(TAG, input + " " + string + " = " + similarity(input, string));
         return similarity(input, string) < 0.15;
+    }
+
+    public static float toFloat(String string) {
+        float f = -1;
+        try {
+            f = Float.parseFloat(string);
+        } catch (NumberFormatException e) {
+            if ((string.contains("o")) || (string.contains(" "))) {
+                string = string.replaceAll("o", "0");
+                string = string.replaceAll(" ", "");
+                f = Float.parseFloat(string);
+            }
+        }
+        return f;
     }
 }

@@ -9,8 +9,7 @@ public class KonsumReceipt extends Receipt {
 
     public KonsumReceipt(String[] lines) {
         super(lines);
-        startLine = startLine("kaubanimetuskogushindsumma", 8) + 1;
-        endLine = endLine("maksta", true);
-        setPurchases();
+        purchasesStart = startLine("kaubanimetuskogushindsumma", 8) + 1;
+        purchasesEnd = endLine("maksta", true);
     }
 }

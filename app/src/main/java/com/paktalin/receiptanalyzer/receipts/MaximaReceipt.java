@@ -13,9 +13,8 @@ public class MaximaReceipt extends Receipt {
 
     public MaximaReceipt(String[] lines) {
         super(lines);
-        startLine = startLine("kviitungnr", 4);
-        endLine = endLine("kmtakmkmga", false);
-        setPurchases();
+        purchasesStart = startLine("kviitungnr", 4);
+        purchasesEnd = endLine("kmtakmkmga", false);
     }
 
     @Override
@@ -27,4 +26,6 @@ public class MaximaReceipt extends Receipt {
             return number + 1;
         return -1;
     }
+
+
 }

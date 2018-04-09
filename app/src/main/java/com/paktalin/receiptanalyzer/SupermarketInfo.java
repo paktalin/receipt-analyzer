@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.paktalin.receiptanalyzer.receipts.KonsumReceipt;
 import com.paktalin.receiptanalyzer.receipts.MaximaReceipt;
@@ -21,13 +22,17 @@ class SupermarketInfo {
     private int index = -1;
     private Context context;
     private Receipt receipt = null;
-    String firstLine;
+    private String firstLine;
 
     SupermarketInfo(Context context, String[] lines) {
         this.context = context;
         this.lines = lines;
         firstLine = StringManager.clean(lines[0]);
         supermarket = SupermarketName.getStoreName(firstLine);
+        if (supermarket == null){
+            Log.d(TAG, "Couldn't identify the supermarket");
+            //TODO dialog "Could you help us?"
+        }
     }
 
     Receipt createReceipt() {
@@ -49,11 +54,13 @@ class SupermarketInfo {
                 break;
         }
         setIndex(receipt.cutFirstLine(firstLine));
-        String retailer = getRetailer();
-        String address = getAddress();
+        if (!(index == -1)) {
+            String retailer = getRetailer();
+            String address = getAddress();
+            receipt.setRetailer(retailer);
+            receipt.setAddress(address);
+        }
         receipt.setSupermarket(supermarket);
-        receipt.setRetailer(retailer);
-        receipt.setAddress(address);
         return receipt;
     }
 

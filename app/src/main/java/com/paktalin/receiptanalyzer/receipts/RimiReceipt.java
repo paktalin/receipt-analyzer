@@ -11,9 +11,8 @@ public class RimiReceipt extends Receipt {
 
     public RimiReceipt(String[] lines) {
         super(lines);
-        startLine = startLine("klient", 6);
-        endLine = endLine("kaardimakse", false);
-        setPurchases();
+        purchasesStart = startLine("klient", 6);
+        purchasesEnd = endLine("kaardimakse", false);
     }
 
     @Override

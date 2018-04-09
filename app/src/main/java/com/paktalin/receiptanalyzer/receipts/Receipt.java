@@ -17,8 +17,9 @@ public class Receipt {
     String[] lines;
     private String supermarket;
     private String retailer, address;
-    int startLine, endLine;
+    int purchasesStart, purchasesEnd;
     ArrayList<Purchase> purchases;
+    float finalPrice;
 
     Receipt(String[] lines) {
         this.lines = lines;
@@ -34,11 +35,11 @@ public class Receipt {
         return -1;
     }
     int endLine(String endLine, boolean removeNumbers) {
-        for (int i = startLine + 1; i < lines.length; i++) {
+        for (int i = purchasesStart + 1; i < lines.length; i++) {
             String line = lines[i];
             if (removeNumbers)
                 line = StringManager.removeNumbers(line);
-            if (StringManager.identical(line, endLine))
+            if (StringManager.similar(line, endLine))
                 return i - 1;
         }
         return -1;
@@ -46,7 +47,7 @@ public class Receipt {
 
     ArrayList<Purchase> extractPurchases() {
         ArrayList<Purchase> purchases = new ArrayList<>();
-        String[] purchasesStrings = Arrays.copyOfRange(lines, startLine, endLine + 1);
+        String[] purchasesStrings = Arrays.copyOfRange(lines, purchasesStart, purchasesEnd + 1);
         for (String string : purchasesStrings){
             String[] string_arr = string.split(" ");
             Log.d(TAG, Arrays.toString(string_arr));
@@ -65,8 +66,8 @@ public class Receipt {
         Log.d(TAG, "Name = " + supermarket);
         Log.d(TAG, "retailer = " + retailer);
         Log.d(TAG, "address = " + address);
-        //Log.d(TAG, "startLine = " + startLine + "");
-        //Log.d(TAG, "endLine = " + endLine + "");
+        //Log.d(TAG, "purchasesStart = " + purchasesStart + "");
+        //Log.d(TAG, "purchasesEnd = " + purchasesEnd + "");
         Log.d(TAG, "_PURCHASES_");
         //Log.d(TAG, Arrays.toString(lines));
         for (Purchase p : purchases){
