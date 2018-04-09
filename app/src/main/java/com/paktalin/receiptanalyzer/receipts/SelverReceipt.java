@@ -19,7 +19,7 @@ public class SelverReceipt extends Receipt {
         purchasesStart = startLine("nimetuskogushindsumma", 7);
         purchasesEnd = endLine("vahesumma", true);
         //purchases = extractPurchases();
-        getFinalPrice("maksekaart", false);
+        getFinalPrice("vahesumma");
     }
 
     @Override
@@ -28,9 +28,9 @@ public class SelverReceipt extends Receipt {
         return firstLine.substring(0, length-6);
     }
 
-    private void getFinalPrice(String string, boolean takeLast) {
+    private void getFinalPrice(String string) {
         String priceString = "";
-        for (int i = purchasesEnd + 1; i < lines.length; i++) {
+        for (int i = lines.length - 1; i > purchasesEnd; i--) {
             String line = lines[i];
             Log.d(TAG, "line" + i + " = " + line);
             String cut;
@@ -39,12 +39,12 @@ public class SelverReceipt extends Receipt {
                 if (StringManager.similar(cut, string)) {
                     try {
                         priceString = line.substring(string.length() + 1, line.length());
-                        if (!takeLast)
-                            break;
                         Log.d(TAG, "priceString = " + priceString);
+                        break;
                     } catch (StringIndexOutOfBoundsException e) {
                         Log.e(TAG, "The line doesn't contain the price, we're looking for another one");
-                        getFinalPrice("vahesumma", true);
+                        getFinalPrice("maksekaart");
+                        return;
                     }
                 }
             } catch (StringIndexOutOfBoundsException ignored) {
@@ -53,6 +53,4 @@ public class SelverReceipt extends Receipt {
         finalPrice = StringManager.toFloat(priceString);
         Log.d(TAG, "finalPrice = " + finalPrice);
     }
-
-
 }
