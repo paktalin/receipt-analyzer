@@ -18,8 +18,11 @@ public class StringManager {
     }
 
     public static String removeNumbers(String string){
-        string = clean(string);
         return string.replaceAll("\\d", "");
+    }
+
+    public static String removeLetters(String string) {
+        return string.replaceAll("[a-zA-Z]", "");
     }
 
     public static double similarity(String input, String string) {
@@ -35,18 +38,22 @@ public class StringManager {
 
     public static boolean similar(String input, String string) {
         Log.d(TAG, input + " " + string + " = " + similarity(input, string));
-        return similarity(input, string) < 0.15;
+        return similarity(input, string) < 0.17;
     }
 
-    public static float toFloat(String string) {
+    public static float extractFloat(String string) {
         float f = -1;
         try {
             f = Float.parseFloat(string);
         } catch (NumberFormatException e) {
-            if ((string.contains("o")) || (string.contains(" "))) {
-                string = string.replaceAll("o", "0");
-                string = string.replaceAll(" ", "");
+            string = string.substring(7);
+            string = string.replaceAll("o", "0");
+            string = string.replaceAll(" ", "");
+            string = removeLetters(string);
+            try {
                 f = Float.parseFloat(string);
+            } catch (NumberFormatException ignored){
+
             }
         }
         return f;

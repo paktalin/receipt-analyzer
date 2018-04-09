@@ -19,7 +19,7 @@ public class Receipt {
     private String retailer, address;
     int purchasesStart, purchasesEnd;
     ArrayList<Purchase> purchases;
-    float finalPrice;
+    float finalPrice = -1;
 
     Receipt(String[] lines) {
         this.lines = lines;
@@ -38,6 +38,7 @@ public class Receipt {
         for (int i = purchasesStart + 1; i < lines.length; i++) {
             String line = lines[i];
             if (removeNumbers)
+                line = StringManager.clean(line);
                 line = StringManager.removeNumbers(line);
             if (StringManager.similar(line, endLine))
                 return i - 1;
@@ -81,6 +82,7 @@ public class Receipt {
                 "\nName = " + supermarket +
                 "\nretailer = " + retailer +
                 "\naddress = " + address +
+                "\nfinal price = " + finalPrice +
                 "\n\n_PURCHASES_");
         /*for (Purchase p : purchases){
             info.append(p.purchaseInfo());
