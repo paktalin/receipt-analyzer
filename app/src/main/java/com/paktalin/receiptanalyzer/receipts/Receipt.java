@@ -90,6 +90,10 @@ public class Receipt {
         return info.toString();
     }
 
+    void getFinalPrice() {
+
+    }
+
     public void setRetailer(String retailer) {
         this.retailer = retailer;
     }

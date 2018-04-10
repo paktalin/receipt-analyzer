@@ -12,6 +12,9 @@ import java.util.Arrays;
 
 public class SelverReceipt extends Receipt {
     private static final String TAG = SelverReceipt.class.getSimpleName();
+    private boolean byCard = false;
+    private final double IDENTICAL = 0.07;
+    private final double SIMILAR = 0.17;
 
     public SelverReceipt(String[] lines) {
         super(lines);
@@ -19,7 +22,7 @@ public class SelverReceipt extends Receipt {
         purchasesStart = startLine("nimetuskogushindsumma", 7);
         purchasesEnd = endLine("vahesumma", true);
         //purchases = extractPurchases();
-        getFinalPrice("vahesumma");
+        getFinalPrice();
     }
 
     @Override
@@ -28,33 +31,41 @@ public class SelverReceipt extends Receipt {
         return firstLine.substring(0, length-6);
     }
 
-    private void getFinalPrice(String string) {
-        for (int i = lines.length - 1; i > purchasesEnd; i--) {
-            String line = lines[i];
-            Log.d(TAG, "line" + i + " = " + line);
-            String cut;
-            try {
-                cut = line.substring(0, string.length());
-                if (StringManager.similar(cut, string)) {
-                    try {
-                        finalPrice = StringManager.extractFloat(line);
-                        checkFinalPrice(string);
-                        break;
-                    } catch (StringIndexOutOfBoundsException e) {
-                        checkFinalPrice(string);
-                        return;
-                    }
-                }
-            } catch (StringIndexOutOfBoundsException ignored) {
-            }
+    @Override
+    void getFinalPrice() {
+        finalPrice = getPayment("maksekaart", SIMILAR);
+        if(finalPrice < 0) {
+            finalPrice = getPayment("CASH_PAYMENT", SIMILAR);
+            if (byCard || (finalPrice < 0)) //if the payment reading was not successful
+                finalPrice = getSum();
         }
-        Log.d(TAG, "finalPrice = " + finalPrice);
     }
 
-    private void checkFinalPrice(String string){
-        if ((finalPrice == -1) && (string.equals("vahesumma"))) {
-            Log.e(TAG, "The line doesn't contain the price, we're looking for another one");
-            getFinalPrice("maksekaart");
+    private float getPayment(String payment, double similarity) {
+        float price = -1;
+        boolean cardPayment = payment.equals("maksekaart");
+        for (int i = lines.length - 1; i > purchasesEnd; i--) {
+            String line = lines[i];
+            try {
+                String cut = line.substring(0, payment.length());
+                if (StringManager.similar(cut, payment, similarity)) {
+                    if (cardPayment)
+                        byCard = true;
+                    price = StringManager.extractFloat(line);
+                    break;
+                }
+            }catch (StringIndexOutOfBoundsException ignored) {
+            }
         }
+        return price;
+    }
+
+    private float getSum() {
+        String bonusPointString = "boonusmakse";
+        float bonusPoints = getPayment(bonusPointString, IDENTICAL);
+        float sum = getPayment("vahesumma", SIMILAR);
+        if (!(bonusPoints  < 0))
+            sum = sum - bonusPoints;
+        return sum;
     }
 }

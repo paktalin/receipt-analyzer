@@ -25,20 +25,20 @@ public class StringManager {
         return string.replaceAll("[a-zA-Z]", "");
     }
 
-    public static double similarity(String input, String string) {
+    public static double similarity(String input, String expectedString) {
         JaroWinkler jaro = new JaroWinkler();
-        double distance = jaro.distance(input, string);
+        double distance = jaro.distance(input, expectedString);
         //Log.d(TAG, input + " " + string + " " + distance);
         return distance;
     }
 
-    public static boolean identical(String input, String string) {
-        return similarity(input, string) < 0.07;
+    public static boolean identical(String input, String expectedString) {
+        return similarity(input, expectedString) < 0.07;
     }
 
-    public static boolean similar(String input, String string) {
-        Log.d(TAG, input + " " + string + " = " + similarity(input, string));
-        return similarity(input, string) < 0.17;
+    public static boolean similar(String input, String expectedString, double similarity) {
+        Log.d(TAG, input + " " + expectedString + " = " + similarity(input, expectedString));
+        return similarity(input, expectedString) < 0.17;
     }
 
     public static float extractFloat(String string) {
