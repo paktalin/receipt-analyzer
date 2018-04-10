@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer;
 
 import static com.paktalin.receiptanalyzer.StringManager.identical;
+import static com.paktalin.receiptanalyzer.StringManager.similar;
 
 /**
  * Created by Paktalin on 21-Mar-18.
@@ -73,7 +74,7 @@ class SupermarketName {
         String selverString = "selver";
         int length = input.length();
         String inputCut = input.substring(length - 6, length);
-        if (identical(inputCut, selverString))
+        if (similar(inputCut, selverString))
             name = "Selver";
     }
 }

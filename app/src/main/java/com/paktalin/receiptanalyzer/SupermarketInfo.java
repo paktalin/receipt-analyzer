@@ -17,7 +17,7 @@ import com.paktalin.receiptanalyzer.receipts.SelverReceipt;
 class SupermarketInfo {
     private static final String TAG = SupermarketInfo.class.getSimpleName();
 
-    private String supermarket;
+    String supermarket;
     private String[] lines;
     private int index = -1;
     private Context context;
@@ -28,9 +28,10 @@ class SupermarketInfo {
         this.context = context;
         this.lines = lines;
         firstLine = StringManager.clean(lines[0]);
+        Log.d(TAG, firstLine);
         supermarket = SupermarketName.getStoreName(firstLine);
         if (supermarket == null){
-            Log.d(TAG, "Couldn't identify the supermarket");
+            Log.e(TAG, "Couldn't identify the supermarket");
             //TODO dialog "Could you help us?"
         }
     }

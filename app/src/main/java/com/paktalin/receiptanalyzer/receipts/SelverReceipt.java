@@ -38,8 +38,16 @@ public class SelverReceipt extends Receipt {
             finalPrice = getPayment("CASH_PAYMENT", SIMILAR);
             if (byCard || (finalPrice < 0)) //if the payment reading was not successful
                 finalPrice = getSum();
+        } else if (finalPrice > 100) {
+            float checkPrice = getSum();
+            if (checkPrice != finalPrice) {
+                finalPrice = checkPrice;
+            }
         }
     }
+
+
+
 
     private float getPayment(String payment, double similarity) {
         float price = -1;
@@ -48,7 +56,7 @@ public class SelverReceipt extends Receipt {
             String line = lines[i];
             try {
                 String cut = line.substring(0, payment.length());
-                if (StringManager.similar(cut, payment, similarity)) {
+                if (StringManager.similarity(cut, payment) < similarity) {
                     if (cardPayment)
                         byCard = true;
                     price = StringManager.extractFloat(line);

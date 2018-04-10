@@ -22,8 +22,11 @@ class Analyzer {
         String filteredString = StringFilter.filter(lines);
         String[] linesArray = filteredString.split("\n");
         SupermarketInfo info = new SupermarketInfo(context, linesArray);
-        Receipt receipt = info.createReceipt();
-        return receipt.getInfo();
+        if(info.supermarket != null) {
+            Receipt receipt = info.createReceipt();
+            return receipt.getInfo();
+        }
+        return "Sorry, we couldn't identify the supermarket. Please, try to take picture again";
     }
 
     private static ArrayList<String> recognize(Context context, Bitmap bitmap) {

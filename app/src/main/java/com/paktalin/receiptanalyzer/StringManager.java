@@ -36,7 +36,7 @@ public class StringManager {
         return similarity(input, expectedString) < 0.07;
     }
 
-    public static boolean similar(String input, String expectedString, double similarity) {
+    public static boolean similar(String input, String expectedString) {
         Log.d(TAG, input + " " + expectedString + " = " + similarity(input, expectedString));
         return similarity(input, expectedString) < 0.17;
     }
