@@ -16,5 +16,6 @@ public final class ReceiptContract {
         public final static String COLUMN_RETAILER = "retailer";
         public final static String COLUMN_ADDRESS = "address";
         public final static String COLUMN_FINAL_PRICE = "final_price";
+        public final static String COLUMN_DATE = "creation_date";
     }
 }

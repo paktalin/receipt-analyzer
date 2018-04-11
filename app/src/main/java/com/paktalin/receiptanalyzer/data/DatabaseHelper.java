@@ -28,7 +28,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ReceiptEntry.COLUMN_SUPERMARKET + " TEXT NOT NULL, "
                 + ReceiptEntry.COLUMN_RETAILER + " TEXT NOT NULL, "
                 + ReceiptEntry.COLUMN_ADDRESS + " TEXT NOT NULL, "
-                + ReceiptEntry.COLUMN_FINAL_PRICE + " NUMERIC);";
+                + ReceiptEntry.COLUMN_FINAL_PRICE + " NUMERIC, "
+                + ReceiptEntry.COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP);";
 
         db.execSQL(SQL_CREATE_RECEIPTS_TABLE);
     }

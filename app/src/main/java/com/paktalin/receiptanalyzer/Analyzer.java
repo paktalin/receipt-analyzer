@@ -13,6 +13,7 @@ import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.receipts.Receipt;
 
 import java.util.ArrayList;
+
 import com.paktalin.receiptanalyzer.data.ReceiptContract.ReceiptEntry;
 
 /**
@@ -69,7 +70,8 @@ class Analyzer {
                 ReceiptEntry.COLUMN_SUPERMARKET,
                 ReceiptEntry.COLUMN_RETAILER,
                 ReceiptEntry.COLUMN_ADDRESS,
-                ReceiptEntry.COLUMN_FINAL_PRICE };
+                ReceiptEntry.COLUMN_FINAL_PRICE,
+                ReceiptEntry.COLUMN_DATE};
 
         Cursor cursor = db.query(
                 ReceiptEntry.TABLE_NAME,
@@ -85,6 +87,7 @@ class Analyzer {
         int retailerColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_RETAILER);
         int addressColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_ADDRESS);
         int finalPriceColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_FINAL_PRICE);
+        int dateColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_DATE);
 
         while (cursor.moveToNext()) {
             Log.d(TAG, cursor.getInt(idColumnIndex) + "");
@@ -92,6 +95,7 @@ class Analyzer {
             Log.d(TAG, cursor.getString(retailerColumnIndex));
             Log.d(TAG, cursor.getString(addressColumnIndex));
             Log.d(TAG, cursor.getFloat(finalPriceColumnIndex) + "");
+            Log.d(TAG, cursor.getString(dateColumnIndex));
             //TODO resolve the issue with real in db (read as 4.639999 instead of 4.64)
         }
     }
