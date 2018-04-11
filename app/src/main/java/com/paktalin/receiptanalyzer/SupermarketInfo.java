@@ -10,6 +10,7 @@ import com.paktalin.receiptanalyzer.receipts.Receipt;
 import com.paktalin.receiptanalyzer.receipts.RimiReceipt;
 import com.paktalin.receiptanalyzer.receipts.SelverReceipt;
 
+
 /**
  * Created by Paktalin on 08/04/2018.
  */

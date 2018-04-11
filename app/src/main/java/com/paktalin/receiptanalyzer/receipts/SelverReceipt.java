@@ -22,7 +22,7 @@ public class SelverReceipt extends Receipt {
         purchasesStart = startLine("nimetuskogushindsumma", 7);
         purchasesEnd = endLine("vahesumma", true);
         //purchases = extractPurchases();
-        getFinalPrice();
+        calculateFinalPrice();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SelverReceipt extends Receipt {
     }
 
     @Override
-    void getFinalPrice() {
+    void calculateFinalPrice() {
         finalPrice = getPayment("maksekaart", SIMILAR);
         if(finalPrice < 0) {
             finalPrice = getPayment("CASH_PAYMENT", SIMILAR);

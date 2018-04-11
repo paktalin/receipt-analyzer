@@ -90,8 +90,23 @@ public class Receipt {
         return info.toString();
     }
 
-    void getFinalPrice() {
+    void calculateFinalPrice() {
+    }
 
+    public String getSupermarket() {
+        return supermarket;
+    }
+
+    public String getRetailer() {
+        return retailer;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public float getFinalPrice() {
+        return finalPrice;
     }
 
     public void setRetailer(String retailer) {
