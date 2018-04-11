@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ReceiptEntry.COLUMN_SUPERMARKET + " TEXT NOT NULL, "
                 + ReceiptEntry.COLUMN_RETAILER + " TEXT NOT NULL, "
                 + ReceiptEntry.COLUMN_ADDRESS + " TEXT NOT NULL, "
-                + ReceiptEntry.COLUMN_FINAL_PRICE + " REAL);";
+                + ReceiptEntry.COLUMN_FINAL_PRICE + " NUMERIC);";
 
         db.execSQL(SQL_CREATE_RECEIPTS_TABLE);
     }

@@ -31,7 +31,7 @@ class Analyzer {
         if(info.supermarket != null) {
             Receipt receipt = info.createReceipt();
             dbHelper = new DatabaseHelper(context);
-            saveReceipt(context, receipt);
+            saveReceipt(receipt);
             displayDBData();
             return receipt.getInfo();
         }
@@ -49,7 +49,7 @@ class Analyzer {
         }
     }
 
-    private static void saveReceipt(Context context, Receipt receipt) {
+    private static void saveReceipt(Receipt receipt) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ReceiptEntry.COLUMN_SUPERMARKET, receipt.getSupermarket());
@@ -91,7 +91,7 @@ class Analyzer {
             Log.d(TAG, cursor.getString(supermarketColumnIndex));
             Log.d(TAG, cursor.getString(retailerColumnIndex));
             Log.d(TAG, cursor.getString(addressColumnIndex));
-            Log.d(TAG, cursor.getDouble(finalPriceColumnIndex) + "");
+            Log.d(TAG, cursor.getFloat(finalPriceColumnIndex) + "");
             //TODO resolve the issue with real in db (read as 4.639999 instead of 4.64)
         }
     }
