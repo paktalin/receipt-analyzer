@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer;
+package com.paktalin.receiptanalyzer.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.paktalin.receiptanalyzer.BuildConfig;
+import com.paktalin.receiptanalyzer.FileManager;
+import com.paktalin.receiptanalyzer.R;
+import com.paktalin.receiptanalyzer.ReceiptCreator;
 import com.paktalin.receiptanalyzer.analyzer.SupermarketDistribution;
 
 import java.io.File;
@@ -36,8 +40,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button buttonTakePicture = findViewById(R.id.button_scan);
         Button buttonUploadPicture = findViewById(R.id.button_upload);
+        Button buttonAnalyzeActivity = findViewById(R.id.button_analysis);
         FileManager.setUpAppDir(MainActivity.this);
 
+        buttonAnalyzeActivity.setOnClickListener(v -> {
+            Intent analyzeIntent =  new Intent(MainActivity.this, AnalyzeActivity.class);
+            startActivity(analyzeIntent);
+        });
         buttonTakePicture.setOnClickListener(buttonTakePictureListener);
         buttonUploadPicture.setOnClickListener(v -> {
             Intent galleryIntent = (new Intent(Intent.ACTION_PICK,
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Thread thread = new Thread(() -> receiptInfo = ReceiptCreator.analyze(MainActivity.this, bitmap));
+            Thread thread = new Thread(() -> receiptInfo = ReceiptCreator.extractReceipt(MainActivity.this, bitmap));
             thread.start();
             while(thread.isAlive());
 

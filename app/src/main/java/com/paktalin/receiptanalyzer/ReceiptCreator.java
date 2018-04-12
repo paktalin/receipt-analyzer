@@ -2,6 +2,7 @@ package com.paktalin.receiptanalyzer;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -16,15 +17,18 @@ import java.util.ArrayList;
 
 import com.paktalin.receiptanalyzer.data.ReceiptContract.ReceiptEntry;
 
+import static com.paktalin.receiptanalyzer.DataKeeper.APP_PREFERENCES;
+import static com.paktalin.receiptanalyzer.DataKeeper.SELVER_COUNTER;
+
 /**
  * Created by Paktalin on 22-Mar-18.
  */
 
-class ReceiptCreator {
+public class ReceiptCreator {
     private static final String TAG = ReceiptCreator.class.getSimpleName();
     private static DatabaseHelper dbHelper;
 
-    static String analyze(Context context, Bitmap bitmap) {
+    public static String extractReceipt(Context context, Bitmap bitmap) {
         ArrayList<String> lines = recognize(context, bitmap);
         String filteredString = StringFilter.filter(lines);
         String[] linesArray = filteredString.split("\n");
@@ -34,6 +38,7 @@ class ReceiptCreator {
             dbHelper = new DatabaseHelper(context);
             saveReceipt(receipt);
             displayDBData();
+
             return receipt.getInfo();
         }
         return "Sorry, we couldn't identify the supermarket. Please, try to take picture again";

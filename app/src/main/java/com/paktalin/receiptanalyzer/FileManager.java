@@ -28,7 +28,7 @@ public class FileManager {
     private static String appDirPath;
     private static String picturesDirPath;
 
-    static void setUpAppDir(Context context) {
+    public static void setUpAppDir(Context context) {
         PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity)context);
         File appDir = new File(Environment.getExternalStorageDirectory(), "ReceiptAnalyzer");
         if(created(appDir)) {
@@ -110,11 +110,11 @@ public class FileManager {
         return new SimpleDateFormat("ddMMHHmmss").format(new Date()) + ".txt";
     }
 
-    static String getPictureDirPath() {
+    public static String getPictureDirPath() {
         return picturesDirPath;
     }
 
-    static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
+    public static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
         int targetW = 600;
         int targetH = 600;
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
