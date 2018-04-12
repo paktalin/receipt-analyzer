@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.paktalin.receiptanalyzer.analyzer.SupermarketDistribution;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     MediaStore.Images.Media.INTERNAL_CONTENT_URI));
             startActivityForResult(galleryIntent, REQUEST_GET_FROM_GALLERY);
         });
+        SupermarketDistribution.calculate(this);
     }
 
     @Override
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Thread thread = new Thread(() -> receiptInfo = Analyzer.analyze(MainActivity.this, bitmap));
+            Thread thread = new Thread(() -> receiptInfo = ReceiptCreator.analyze(MainActivity.this, bitmap));
             thread.start();
             while(thread.isAlive());
 

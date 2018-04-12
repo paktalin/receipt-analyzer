@@ -20,8 +20,8 @@ import com.paktalin.receiptanalyzer.data.ReceiptContract.ReceiptEntry;
  * Created by Paktalin on 22-Mar-18.
  */
 
-class Analyzer {
-    private static final String TAG = Analyzer.class.getSimpleName();
+class ReceiptCreator {
+    private static final String TAG = ReceiptCreator.class.getSimpleName();
     private static DatabaseHelper dbHelper;
 
     static String analyze(Context context, Bitmap bitmap) {
@@ -98,6 +98,7 @@ class Analyzer {
             Log.d(TAG, cursor.getString(dateColumnIndex));
             //TODO resolve the issue with real in db (read as 4.639999 instead of 4.64)
         }
+        cursor.close();
     }
 
 }
