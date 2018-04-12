@@ -29,7 +29,6 @@ class SupermarketInfo {
         this.context = context;
         this.lines = lines;
         firstLine = StringManager.clean(lines[0]);
-        Log.d(TAG, firstLine);
         supermarket = SupermarketName.getStoreName(firstLine);
         if (supermarket == null){
             Log.e(TAG, "Couldn't identify the supermarket");

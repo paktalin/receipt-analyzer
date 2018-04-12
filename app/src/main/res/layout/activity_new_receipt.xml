@@ -4,9 +4,15 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/receipt_info"
+        android:id="@+id/supermarket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Here you will see receipt info"/>
+        android:text="Here you will see the supermarket"/>
+
+    <TextView
+        android:id="@+id/retailer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Here you will see the retailer"/>
 
 </LinearLayout>

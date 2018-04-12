@@ -67,6 +67,8 @@ public class EditActivity extends AppCompatActivity{
     View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            FileManager.saveBitmap(bitmap);
+            imageUri = Uri.fromFile(new File(FileManager.getPictureDirPath() + "/last.jpg"));
             Intent okIntent = new Intent(EditActivity.this, NewReceiptActivity.class);
             okIntent.putExtra("uri", imageUri);
             startActivity(okIntent);

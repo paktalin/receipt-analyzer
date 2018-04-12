@@ -70,8 +70,8 @@ public class FileManager {
             Log.d(TAG, "Couldn't save bitmap, because the directory doesn't exists");
         }
     }
-    static void saveBitmap(Bitmap bitmap) {
-        String name = "/processed.jpg";
+    public static void saveBitmap(Bitmap bitmap) {
+        String name = "/last.jpg";
         saveBitmap(bitmap, name);
     }
 
