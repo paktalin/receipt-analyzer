@@ -1,5 +1,6 @@
 package com.paktalin.receiptanalyzer.activities;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +13,16 @@ import com.paktalin.receiptanalyzer.R;
  */
 
 public class NewReceiptActivity extends AppCompatActivity {
+    Bitmap bitmap;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_receipt);
         TextView textView = findViewById(R.id.receipt_info);
 
-
+        bitmap = getIntent().getParcelableExtra("uri");
     }
+
+
 }

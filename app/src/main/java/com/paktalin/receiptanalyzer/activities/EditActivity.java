@@ -1,11 +1,13 @@
 package com.paktalin.receiptanalyzer.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,7 +15,9 @@ import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
+import com.paktalin.receiptanalyzer.ReceiptCreator;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
@@ -21,7 +25,9 @@ import java.io.FileNotFoundException;
  */
 
 public class EditActivity extends AppCompatActivity{
-    private ImageView image, buttonRotate;
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private ImageView image;
     Button buttonOk;
     Bitmap bitmap;
     TextView textView;
@@ -35,11 +41,11 @@ public class EditActivity extends AppCompatActivity{
         imageUri = getIntent().getParcelableExtra("uri");
 
         textView = findViewById(R.id.text_view);
-        buttonRotate = findViewById(R.id.button_rotate);
+        ImageView buttonRotate = findViewById(R.id.button_rotate);
         image = findViewById(R.id.image);
         buttonOk = findViewById(R.id.button_ok);
         buttonRotate.setOnClickListener(buttonRotateListener);
-        //buttonOk.setOnClickListener(buttonOkListener);
+        buttonOk.setOnClickListener(buttonOkListener);
         try {
             bitmap = FileManager.decodeBitmapUri(EditActivity.this, imageUri);
             image.setImageBitmap(bitmap);
@@ -55,6 +61,15 @@ public class EditActivity extends AppCompatActivity{
             matrix.postRotate(90);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             image.setImageBitmap(bitmap);
+        }
+    };
+
+    View.OnClickListener buttonOkListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent okIntent = new Intent(EditActivity.this, NewReceiptActivity.class);
+            okIntent.putExtra("uri", imageUri);
+            startActivity(okIntent);
         }
     };
 }

@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.NewReceiptActivity" />
+        <activity android:name=".activities.EditActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
