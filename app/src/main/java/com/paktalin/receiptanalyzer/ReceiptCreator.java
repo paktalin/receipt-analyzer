@@ -28,7 +28,7 @@ public class ReceiptCreator {
     private static final String TAG = ReceiptCreator.class.getSimpleName();
     private static DatabaseHelper dbHelper;
 
-    public static String extractReceipt(Context context, Bitmap bitmap) {
+   /* public static String extractReceipt(Context context, Bitmap bitmap) {
         ArrayList<String> lines = recognize(context, bitmap);
         String filteredString = StringFilter.filter(lines);
         String[] linesArray = filteredString.split("\n");
@@ -42,7 +42,7 @@ public class ReceiptCreator {
             return receipt.getInfo();
         }
         return "Sorry, we couldn't identify the supermarket. Please, try to take picture again";
-    }
+    }*/
 
     private static ArrayList<String> recognize(Context context, Bitmap bitmap) {
         TextRecognizer detector = new TextRecognizer.Builder(context).build();

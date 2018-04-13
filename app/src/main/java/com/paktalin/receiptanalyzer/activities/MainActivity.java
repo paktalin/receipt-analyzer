@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             image = findViewById(R.id.image);
             buttonOk = findViewById(R.id.button_ok);
             buttonRotate.setOnClickListener(buttonRotateListener);
-            buttonOk.setOnClickListener(buttonOkListener);
+            //buttonOk.setOnClickListener(buttonOkListener);
             if (requestCode == REQUEST_GET_FROM_GALLERY)
                 imageUri = data.getData();
             try {
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    View.OnClickListener buttonOkListener = new View.OnClickListener() {
+    /*View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Thread thread = new Thread(() -> receiptInfo = ReceiptCreator.extractReceipt(MainActivity.this, bitmap));
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             else
                 textView.setText("Sorry, we couldn't get the data");
         }
-    };
+    };*/
 
     View.OnClickListener buttonTakePictureListener = new View.OnClickListener() {
         @Override

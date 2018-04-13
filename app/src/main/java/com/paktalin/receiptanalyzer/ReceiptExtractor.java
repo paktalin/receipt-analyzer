@@ -25,7 +25,9 @@ public class ReceiptExtractor {
 
     public static Receipt extract(Context context, Bitmap bitmap) {
         ArrayList<String> lines = recognize(context, bitmap);
-        return createReceipt(lines);
+        Receipt receipt = createReceipt(lines);
+        receipt = SupermarketInfo.setInfo(receipt, context);
+        return receipt;
     }
 
     private static ArrayList<String> recognize(Context context, Bitmap bitmap) {

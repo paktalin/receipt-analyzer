@@ -18,54 +18,24 @@ import com.paktalin.receiptanalyzer.receipts.SelverReceipt;
 class SupermarketInfo {
     private static final String TAG = SupermarketInfo.class.getSimpleName();
 
-    String supermarket;
-    private String[] lines;
-    private int index = -1;
-    private Context context;
-    private Receipt receipt = null;
-    private String firstLine;
+    private static String supermarket;
+    private static int index = -1;
 
-    SupermarketInfo(Context context, String[] lines) {
-        this.context = context;
-        this.lines = lines;
-        firstLine = StringManager.clean(lines[0]);
-        supermarket = SupermarketName.getStoreName(firstLine);
-        if (supermarket == null){
-            Log.e(TAG, "Couldn't identify the supermarket");
-            //TODO dialog "Could you help us?"
-        }
-    }
+    static Receipt setInfo(Receipt receipt, Context context) {
+        String firstLine = receipt.getFirstLine();
+        supermarket = receipt.getSupermarket();
 
-    Receipt createReceipt() {
-        switch (supermarket){
-            case "Selver":
-                receipt = new SelverReceipt(lines);
-                break;
-            case "Prisma":
-                receipt = new PrismaReceipt(lines);
-                break;
-            case "Rimi":
-                receipt = new RimiReceipt(lines);
-                break;
-            case "Konsum":
-                receipt = new KonsumReceipt(lines);
-                break;
-            case "Maxima":
-                receipt = new MaximaReceipt(lines);
-                break;
-        }
-        setIndex(receipt.cutFirstLine(firstLine));
+        setIndex(receipt.cutFirstLine(firstLine), context);
         if (!(index == -1)) {
-            String retailer = getRetailer();
-            String address = getAddress();
+            String retailer = getRetailer(context);
+            String address = getAddress(context);
             receipt.setRetailer(retailer);
             receipt.setAddress(address);
         }
-        receipt.setSupermarket(supermarket);
         return receipt;
     }
 
-    private void setIndex(String firstLine) {
+    private static void setIndex(String firstLine, Context context) {
         String firstLinesPath = supermarket + "/first_lines";
         String[] firstLines = FileManager.getStringFromTextFile(context, firstLinesPath);
 
@@ -78,13 +48,13 @@ class SupermarketInfo {
         }
     }
 
-    private String getRetailer() {
+    private static String getRetailer(Context context) {
         String retailersPath = supermarket + "/retailers";
         String[] retailers = FileManager.getStringFromTextFile(context, retailersPath);
         return retailers[index];
     }
 
-    private String getAddress() {
+    private static String getAddress(Context context) {
         String addressesPath = supermarket + "/addresses";
         String[] addresses = FileManager.getStringFromTextFile(context, addressesPath);
         return addresses[index];

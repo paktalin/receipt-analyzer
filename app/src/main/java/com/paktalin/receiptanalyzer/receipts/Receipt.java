@@ -118,4 +118,8 @@ public class Receipt {
     public void setSupermarket(String supermarket) {
         this.supermarket = supermarket;
     }
+
+    public String getFirstLine() {
+        return lines[0];
+    }
 }
