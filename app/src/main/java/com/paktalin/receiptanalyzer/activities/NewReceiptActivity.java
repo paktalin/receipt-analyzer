@@ -48,10 +48,4 @@ public class NewReceiptActivity extends AppCompatActivity {
 
 
     }
-
-    static void setSupermarket() {
-
-    }
-
-
 }

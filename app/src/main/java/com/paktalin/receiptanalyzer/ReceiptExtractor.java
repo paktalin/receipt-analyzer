@@ -6,15 +6,9 @@ import android.util.Log;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextRecognizer;
-import com.paktalin.receiptanalyzer.receipts.KonsumReceipt;
-import com.paktalin.receiptanalyzer.receipts.MaximaReceipt;
-import com.paktalin.receiptanalyzer.receipts.PrismaReceipt;
 import com.paktalin.receiptanalyzer.receipts.Receipt;
-import com.paktalin.receiptanalyzer.receipts.RimiReceipt;
-import com.paktalin.receiptanalyzer.receipts.SelverReceipt;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Paktalin on 12/04/2018.
@@ -25,7 +19,7 @@ public class ReceiptExtractor {
 
     public static Receipt extract(Context context, Bitmap bitmap) {
         ArrayList<String> lines = recognize(context, bitmap);
-        Receipt receipt = createReceipt(lines);
+        Receipt receipt = ReceiptCreator.createReceipt(lines);
         receipt = SupermarketInfo.setInfo(receipt, context);
         return receipt;
     }
@@ -39,35 +33,5 @@ public class ReceiptExtractor {
             Log.d(TAG, "Could not set up the detector!");
             return null;
         }
-    }
-
-    private static Receipt createReceipt(ArrayList<String> list) {
-        String filteredString = StringFilter.filter(list);
-        String[] linesArray = filteredString.split("\n");
-        String firstLine = StringManager.clean(linesArray[0]);
-        String supermarket = SupermarketName.getStoreName(firstLine);
-        Log.d(TAG, "supermarket: " + Arrays.toString(linesArray));
-
-        Receipt receipt = null;
-        switch (supermarket) {
-            case "Selver":
-                receipt = new SelverReceipt(linesArray);
-                break;
-            case "Prisma":
-                receipt = new PrismaReceipt(linesArray);
-                break;
-            case "Rimi":
-                receipt = new RimiReceipt(linesArray);
-                break;
-            case "Konsum":
-                receipt = new KonsumReceipt(linesArray);
-                break;
-            case "Maxima":
-                receipt = new MaximaReceipt(linesArray);
-                break;
-        }
-        if (receipt != null)
-            receipt.setSupermarket(supermarket);
-        return receipt;
     }
 }

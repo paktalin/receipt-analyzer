@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.paktalin.receiptanalyzer.BuildConfig;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
-import com.paktalin.receiptanalyzer.ReceiptCreator;
 import com.paktalin.receiptanalyzer.analyzer.SupermarketDistribution;
 
 import java.io.File;
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     /*View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Thread thread = new Thread(() -> receiptInfo = ReceiptCreator.extractReceipt(MainActivity.this, bitmap));
+            Thread thread = new Thread(() -> receiptInfo = ReceiptDBHelper.extractReceipt(MainActivity.this, bitmap));
             thread.start();
             while(thread.isAlive());
 

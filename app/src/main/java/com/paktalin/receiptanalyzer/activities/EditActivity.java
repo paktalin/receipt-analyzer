@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
-import com.paktalin.receiptanalyzer.ReceiptCreator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
