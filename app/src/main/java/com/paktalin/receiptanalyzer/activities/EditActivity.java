@@ -31,6 +31,7 @@ public class EditActivity extends AppCompatActivity{
     Bitmap bitmap;
     TextView textView;
     Uri imageUri;
+    int rotation = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class EditActivity extends AppCompatActivity{
         public void onClick(View v) {
             Matrix matrix = new Matrix();
             matrix.postRotate(90);
+            setRotation();
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             image.setImageBitmap(bitmap);
         }
@@ -70,7 +72,14 @@ public class EditActivity extends AppCompatActivity{
             imageUri = Uri.fromFile(new File(FileManager.getPictureDirPath() + "/last.jpg"));
             Intent okIntent = new Intent(EditActivity.this, NewReceiptActivity.class);
             okIntent.putExtra("uri", imageUri);
+            okIntent.putExtra("rotation", rotation);
             startActivity(okIntent);
         }
     };
+
+    private void setRotation() {
+        rotation += 90;
+        if (rotation == 360)
+            rotation = 0;
+    }
 }

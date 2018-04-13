@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.FileManager;
@@ -35,6 +36,9 @@ public class NewReceiptActivity extends AppCompatActivity {
         TextView textViewAddress = findViewById(R.id.address);
         TextView textViewFinalPrice = findViewById(R.id.final_price);
 
+        ProgressBar progress = findViewById(R.id.progress_bar);
+
+        int rotation = getIntent().getIntExtra("rotation", 0);
         imageUri = getIntent().getParcelableExtra("uri");
         try {
             bitmap = FileManager.decodeBitmapUri(NewReceiptActivity.this, imageUri);
@@ -43,10 +47,11 @@ public class NewReceiptActivity extends AppCompatActivity {
         }
 
         Thread thread = new Thread(() -> {
-            receipt = ReceiptExtractor.extract(NewReceiptActivity.this, bitmap);
+            receipt = ReceiptExtractor.extract(NewReceiptActivity.this, bitmap, rotation);
         });
         thread.start();
-        while(thread.isAlive());
+        while(thread.isAlive())
+            progress.setIndeterminate(true);
         textViewSupermarket.setText(receipt.getSupermarket());
         textViewRetailer.setText(receipt.getRetailer());
         textViewAddress.setText(receipt.getAddress());
