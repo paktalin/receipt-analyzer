@@ -1,5 +1,8 @@
 package com.paktalin.receiptanalyzer.activities;
 
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
@@ -9,12 +12,15 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.ReceiptExtractor;
+import com.paktalin.receiptanalyzer.data.DatabaseHelper;
+import com.paktalin.receiptanalyzer.data.ReceiptContract;
 import com.paktalin.receiptanalyzer.receipts.Receipt;
 
 import java.io.FileNotFoundException;
@@ -30,6 +36,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     Receipt receipt;
     ProgressBar progress;
     TextView textViewSupermarket, textViewRetailer, textViewAddress, textViewFinalPrice;
+    Button buttonOk;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +77,9 @@ public class NewReceiptActivity extends AppCompatActivity {
             textViewAddress.setText(receipt.getAddress());
             String finalPrice = String.valueOf(receipt.getFinalPrice());
             textViewFinalPrice.setText(finalPrice);
+            Button buttonOk = findViewById(R.id.button_ok);
+            buttonOk.setVisibility(View.VISIBLE);
+            buttonOk.setOnClickListener(buttonOkListener);
         }
     }
 
@@ -83,4 +93,23 @@ public class NewReceiptActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    View.OnClickListener buttonOkListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(ReceiptContract.ReceiptEntry.COLUMN_SUPERMARKET, receipt.getSupermarket());
+            values.put(ReceiptContract.ReceiptEntry.COLUMN_RETAILER, receipt.getRetailer());
+            values.put(ReceiptContract.ReceiptEntry.COLUMN_ADDRESS, receipt.getAddress());
+            values.put(ReceiptContract.ReceiptEntry.COLUMN_FINAL_PRICE, receipt.getFinalPrice());
+            long newRowId = db.insert(ReceiptContract.ReceiptEntry.TABLE_NAME, null, values);
+            if (newRowId == -1)
+                Log.e(TAG, "Couldn't insert the receipt into DB");
+
+            Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
+            startActivity(mainActivityIntent);
+        }
+    };
 }
