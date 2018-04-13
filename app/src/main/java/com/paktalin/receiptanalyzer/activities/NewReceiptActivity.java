@@ -32,12 +32,13 @@ public class NewReceiptActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_receipt);
 
+        ProgressBar progress = findViewById(R.id.progress_bar);
+        progress.setIndeterminate(true);
+
         TextView textViewSupermarket = findViewById(R.id.supermarket);
         TextView textViewRetailer = findViewById(R.id.retailer);
         TextView textViewAddress = findViewById(R.id.address);
         TextView textViewFinalPrice = findViewById(R.id.final_price);
-
-        ProgressBar progress = findViewById(R.id.progress_bar);
 
         int rotation = getIntent().getIntExtra("rotation", 0);
         imageUri = getIntent().getParcelableExtra("uri");
@@ -47,7 +48,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             receipt = ReceiptExtractor.extract(NewReceiptActivity.this, bitmap);
         });
         thread.start();
-        while(thread.isAlive())
+        while(thread.isAlive());
         textViewSupermarket.setText(receipt.getSupermarket());
         textViewRetailer.setText(receipt.getRetailer());
         textViewAddress.setText(receipt.getAddress());
@@ -57,7 +58,7 @@ public class NewReceiptActivity extends AppCompatActivity {
 
     private void extractBitmap(int rotation) {
         try {
-            bitmap = FileManager.decodeBitmapUri1(NewReceiptActivity.this, imageUri);
+            bitmap = FileManager.decodeBitmapUri(NewReceiptActivity.this, imageUri);
             Matrix matrix = new Matrix();
             matrix.postRotate(rotation);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);

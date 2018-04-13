@@ -35,7 +35,7 @@ class ReceiptCreator {
         String supermarket = getStoreName(firstLine);
         Log.d(TAG, "supermarket: " + Arrays.toString(linesArray));
 
-        Receipt receipt = null;
+        Receipt receipt;
         switch (supermarket) {
             case "Selver":
                 receipt = new SelverReceipt(linesArray);

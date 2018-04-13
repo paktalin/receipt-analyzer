@@ -29,16 +29,16 @@ public class FileManager {
     private static String picturesDirPath;
 
     public static void setUpAppDir(Context context) {
-        PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity)context);
+        PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity) context);
         File appDir = new File(Environment.getExternalStorageDirectory(), "ReceiptAnalyzer");
-        if(created(appDir)) {
+        if (created(appDir)) {
             appDirPath = appDir.getAbsolutePath();
             picturesDirPath = appDir + "/Pictures";
         }
     }
 
     private static boolean created(File dir) {
-        if(!dir.exists()) {
+        if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 Log.d(TAG, "Couldn't create the directory");
                 return false;
@@ -50,7 +50,7 @@ public class FileManager {
 
     static void saveBitmap(Bitmap bitmap, String name) {
         File bitmapFile = new File(picturesDirPath);
-        if(created(bitmapFile)) {
+        if (created(bitmapFile)) {
             FileOutputStream out = null;
             try {
                 out = new FileOutputStream(picturesDirPath + name);
@@ -70,6 +70,7 @@ public class FileManager {
             Log.d(TAG, "Couldn't save bitmap, because the directory doesn't exists");
         }
     }
+
     public static void saveBitmap(Bitmap bitmap) {
         String name = "/last.jpg";
         saveBitmap(bitmap, name);
@@ -77,7 +78,7 @@ public class FileManager {
 
     static void saveTextFile(String name, String data) throws IOException {
         String scannedDirPath = appDirPath + "/ScannedText/";
-        if(created(new File(scannedDirPath))) {
+        if (created(new File(scannedDirPath))) {
             FileOutputStream fOut = new FileOutputStream(scannedDirPath + name);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
             myOutWriter.append(data);
@@ -93,7 +94,7 @@ public class FileManager {
 
     public static String[] getStringFromTextFile(Context context, String fileName) {
         String text = "";
-        try{
+        try {
             InputStream inputStream = context.getAssets().open(fileName);
             int size = inputStream.available();
             byte[] buffer = new byte[size];
@@ -114,9 +115,21 @@ public class FileManager {
         return picturesDirPath;
     }
 
-    public static Bitmap decodeBitmapUri1(Context ctx, Uri uri) throws FileNotFoundException {
-        InputStream ims = ctx.getContentResolver().openInputStream(uri);
-        return BitmapFactory.decodeStream(ims);
-    }
+    public static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
+        int targetW = 600;
+        int targetH = 600;
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri), null, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
 
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+
+        return BitmapFactory.decodeStream(ctx.getContentResolver()
+                .openInputStream(uri), null, bmOptions);
+
+    }
 }
