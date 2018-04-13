@@ -24,7 +24,7 @@ import java.io.FileNotFoundException;
  */
 
 public class EditActivity extends AppCompatActivity{
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = EditActivity.class.getSimpleName();
 
     private ImageView image;
     Button buttonOk;
