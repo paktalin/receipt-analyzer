@@ -15,4 +15,16 @@
         android:layout_height="wrap_content"
         android:text="Here you will see the retailer"/>
 
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Here you will see the address"/>
+
+    <TextView
+        android:id="@+id/final_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Here you will see the final price"/>
+
 </LinearLayout>

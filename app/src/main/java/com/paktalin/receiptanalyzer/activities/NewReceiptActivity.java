@@ -29,8 +29,12 @@ public class NewReceiptActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_receipt);
+
         TextView textViewSupermarket = findViewById(R.id.supermarket);
         TextView textViewRetailer = findViewById(R.id.retailer);
+        TextView textViewAddress = findViewById(R.id.address);
+        TextView textViewFinalPrice = findViewById(R.id.final_price);
+
         imageUri = getIntent().getParcelableExtra("uri");
         try {
             bitmap = FileManager.decodeBitmapUri(NewReceiptActivity.this, imageUri);
@@ -45,7 +49,8 @@ public class NewReceiptActivity extends AppCompatActivity {
         while(thread.isAlive());
         textViewSupermarket.setText(receipt.getSupermarket());
         textViewRetailer.setText(receipt.getRetailer());
-
-
+        textViewAddress.setText(receipt.getAddress());
+        String finalPrice = String.valueOf(receipt.getFinalPrice());
+        textViewFinalPrice.setText(finalPrice);
     }
 }
