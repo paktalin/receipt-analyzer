@@ -32,11 +32,7 @@ import java.io.FileNotFoundException;
 public class NewReceiptActivity extends AppCompatActivity {
     private static final String TAG = NewReceiptActivity.class.getSimpleName();
 
-    Bitmap bitmap;
     Receipt receipt;
-    ProgressBar progress;
-    TextView textViewSupermarket, textViewRetailer, textViewAddress, textViewFinalPrice;
-    Button buttonOk;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,39 +47,42 @@ public class NewReceiptActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             int rotation = getIntent().getIntExtra("rotation", 0);
             Uri imageUri = getIntent().getParcelableExtra("uri");
-            extractBitmap(rotation, imageUri);
-            receipt = ReceiptExtractor.extract(NewReceiptActivity.this, bitmap);
+            receipt = ReceiptExtractor.extract(NewReceiptActivity.this, extractBitmap(rotation, imageUri));
             return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progress = findViewById(R.id.progress_bar);
-            progress.setIndeterminate(true);
-            progress.setVisibility(View.VISIBLE);
-            textViewSupermarket = findViewById(R.id.supermarket);
-            textViewRetailer = findViewById(R.id.retailer);
-            textViewAddress = findViewById(R.id.address);
-            textViewFinalPrice = findViewById(R.id.final_price);
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            ProgressBar progress = findViewById(R.id.progress_bar);
             progress.setVisibility(View.INVISIBLE);
+
+            TextView textViewSupermarket = findViewById(R.id.supermarket);
+            TextView textViewRetailer = findViewById(R.id.retailer);
+            TextView textViewAddress = findViewById(R.id.address);
+            TextView textViewFinalPrice = findViewById(R.id.final_price);
+
             textViewSupermarket.setText(receipt.getSupermarket());
             textViewRetailer.setText(receipt.getRetailer());
             textViewAddress.setText(receipt.getAddress());
             String finalPrice = String.valueOf(receipt.getFinalPrice());
             textViewFinalPrice.setText(finalPrice);
+
             Button buttonOk = findViewById(R.id.button_ok);
             buttonOk.setVisibility(View.VISIBLE);
             buttonOk.setOnClickListener(buttonOkListener);
+
+            Button buttonCancel = findViewById(R.id.button_cancel);
+            buttonCancel.setVisibility(View.VISIBLE);
+            buttonCancel.setOnClickListener(v -> {
+                Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
+                startActivity(mainActivityIntent);
+            });
         }
     }
 
-    private void extractBitmap(int rotation, Uri uri) {
+    private Bitmap extractBitmap(int rotation, Uri uri) {
+        Bitmap bitmap = null;
         try {
             bitmap = FileManager.decodeBitmapUri(NewReceiptActivity.this, uri);
             Matrix matrix = new Matrix();
@@ -92,6 +91,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        return bitmap;
     }
 
     View.OnClickListener buttonOkListener = new View.OnClickListener() {
@@ -112,4 +112,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             startActivity(mainActivityIntent);
         }
     };
+
+
+
 }
