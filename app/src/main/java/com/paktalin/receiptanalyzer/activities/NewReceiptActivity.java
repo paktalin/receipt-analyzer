@@ -113,6 +113,10 @@ public class NewReceiptActivity extends AppCompatActivity {
         }
     };
 
+    private void syncData() {
+        //TODO increase supermarket counter in SharedPreferences
+    }
+
 
 
 }

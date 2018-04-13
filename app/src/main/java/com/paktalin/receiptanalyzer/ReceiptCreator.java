@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 import static com.paktalin.receiptanalyzer.StringManager.identical;
 import static com.paktalin.receiptanalyzer.StringManager.similar;
+import static com.paktalin.receiptanalyzer.Supermarkets.*;
 
 /**
  * Created by Paktalin on 21-Mar-18.
@@ -37,19 +38,19 @@ class ReceiptCreator {
 
         Receipt receipt;
         switch (supermarket) {
-            case "Selver":
+            case SELVER:
                 receipt = new SelverReceipt(linesArray);
                 break;
-            case "Prisma":
+            case PRISMA:
                 receipt = new PrismaReceipt(linesArray);
                 break;
-            case "Rimi":
+            case RIMI:
                 receipt = new RimiReceipt(linesArray);
                 break;
-            case "Konsum":
+            case KONSUM:
                 receipt = new KonsumReceipt(linesArray);
                 break;
-            case "Maxima":
+            case MAXIMA:
                 receipt = new MaximaReceipt(linesArray);
                 break;
             default:
