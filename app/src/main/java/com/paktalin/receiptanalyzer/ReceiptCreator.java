@@ -52,6 +52,8 @@ class ReceiptCreator {
             case "Maxima":
                 receipt = new MaximaReceipt(linesArray);
                 break;
+            default:
+                receipt = null;
         }
         if (receipt != null)
             receipt.setSupermarket(supermarket);

@@ -29,7 +29,6 @@ public class EditActivity extends AppCompatActivity{
     private ImageView image;
     Button buttonOk;
     Bitmap bitmap;
-    TextView textView;
     Uri imageUri;
     int rotation = 0;
 
@@ -40,7 +39,6 @@ public class EditActivity extends AppCompatActivity{
 
         imageUri = getIntent().getParcelableExtra("uri");
 
-        textView = findViewById(R.id.text_view);
         ImageView buttonRotate = findViewById(R.id.button_rotate);
         image = findViewById(R.id.image);
         buttonOk = findViewById(R.id.button_ok);
@@ -57,29 +55,18 @@ public class EditActivity extends AppCompatActivity{
     View.OnClickListener buttonRotateListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Matrix matrix = new Matrix();
-            matrix.postRotate(90);
-            setRotation();
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            image.setImageBitmap(bitmap);
+            rotation += 90;
+            image.setRotation(rotation);
         }
     };
 
     View.OnClickListener buttonOkListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            FileManager.saveBitmap(bitmap);
-            imageUri = Uri.fromFile(new File(FileManager.getPictureDirPath() + "/last.jpg"));
             Intent okIntent = new Intent(EditActivity.this, NewReceiptActivity.class);
             okIntent.putExtra("uri", imageUri);
             okIntent.putExtra("rotation", rotation);
             startActivity(okIntent);
         }
     };
-
-    private void setRotation() {
-        rotation += 90;
-        if (rotation == 360)
-            rotation = 0;
-    }
 }

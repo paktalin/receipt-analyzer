@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer.activities;
 
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,22 +41,28 @@ public class NewReceiptActivity extends AppCompatActivity {
 
         int rotation = getIntent().getIntExtra("rotation", 0);
         imageUri = getIntent().getParcelableExtra("uri");
-        try {
-            bitmap = FileManager.decodeBitmapUri(NewReceiptActivity.this, imageUri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        extractBitmap(rotation);
 
         Thread thread = new Thread(() -> {
-            receipt = ReceiptExtractor.extract(NewReceiptActivity.this, bitmap, rotation);
+            receipt = ReceiptExtractor.extract(NewReceiptActivity.this, bitmap);
         });
         thread.start();
         while(thread.isAlive())
-            progress.setIndeterminate(true);
         textViewSupermarket.setText(receipt.getSupermarket());
         textViewRetailer.setText(receipt.getRetailer());
         textViewAddress.setText(receipt.getAddress());
         String finalPrice = String.valueOf(receipt.getFinalPrice());
         textViewFinalPrice.setText(finalPrice);
+    }
+
+    private void extractBitmap(int rotation) {
+        try {
+            bitmap = FileManager.decodeBitmapUri1(NewReceiptActivity.this, imageUri);
+            Matrix matrix = new Matrix();
+            matrix.postRotate(rotation);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

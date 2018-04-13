@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class ReceiptExtractor {
     private static final String TAG = ReceiptExtractor.class.getSimpleName();
 
-    public static Receipt extract(Context context, Bitmap bitmap, byte[] byteArray) {
+    public static Receipt extract(Context context, Bitmap bitmap) {
         ArrayList<String> lines = recognize(context, bitmap);
         Receipt receipt = ReceiptCreator.createReceipt(lines);
         receipt = SupermarketInfo.setInfo(receipt, context);
@@ -29,7 +29,6 @@ public class ReceiptExtractor {
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder()
                     .setBitmap(bitmap)
-                    //.setImageData(byteArray)
                     .build();
 
             return LineSorter.toTextLines(detector.detect(frame));

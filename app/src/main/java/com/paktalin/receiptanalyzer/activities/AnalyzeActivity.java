@@ -39,7 +39,7 @@ public class AnalyzeActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analyze);
-        TextView textView = findViewById(R.id.text_view);
+        TextView textView = findViewById(R.id.text_view_analyze);
         Button buttonNewReceipt = findViewById(R.id.button_new_receipt);
         loadData(this);
         FileManager.setUpAppDir(AnalyzeActivity.this);
