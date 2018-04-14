@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.paktalin.receiptanalyzer.DataKeeper;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.ReceiptExtractor;
@@ -26,9 +23,7 @@ import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.data.ReceiptContract;
 import com.paktalin.receiptanalyzer.receipts.Receipt;
 
-import java.io.FileNotFoundException;
-
-import static com.paktalin.receiptanalyzer.DataKeeper.APP_PREFERENCES;
+import static com.paktalin.receiptanalyzer.DataKeeper.*;
 
 /**
  * Created by Paktalin on 12/04/2018.
@@ -38,7 +33,8 @@ public class NewReceiptActivity extends AppCompatActivity {
     private static final String TAG = NewReceiptActivity.class.getSimpleName();
 
     Receipt receipt;
-    String supermarket;
+    SharedPreferences appData;
+    private String supermarket, retailer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,8 +68,9 @@ public class NewReceiptActivity extends AppCompatActivity {
             TextView textViewFinalPrice = findViewById(R.id.final_price);
 
             supermarket = receipt.getSupermarket();
+            retailer = receipt.getRetailer();
             textViewSupermarket.setText(supermarket);
-            textViewRetailer.setText(receipt.getRetailer());
+            textViewRetailer.setText(retailer);
             textViewAddress.setText(receipt.getAddress());
             String finalPrice = String.valueOf(receipt.getFinalPrice());
             textViewFinalPrice.setText(finalPrice);
@@ -93,7 +90,8 @@ public class NewReceiptActivity extends AppCompatActivity {
 
     View.OnClickListener buttonOkListener = v -> {
         saveToDB();
-        syncData();
+        syncData(APP_PREFERENCES, supermarket);
+        syncData(RETAILERS_PREFERENCES, retailer);
         Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
         startActivity(mainActivityIntent);
     };
@@ -111,12 +109,11 @@ public class NewReceiptActivity extends AppCompatActivity {
             Log.e(TAG, "Couldn't insert the receipt into DB");
     }
 
-    private void syncData() {
-        SharedPreferences appData = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String key = DataKeeper.getKey(supermarket);
-        int supermarketCounter = appData.getInt(key, 0) + 1;
+    private void syncData(String preferences, String key) {
+        appData = getSharedPreferences(preferences, Context.MODE_PRIVATE);
+        int counter = appData.getInt(key, 0) + 1;
         SharedPreferences.Editor editor = appData.edit();
-        editor.putInt(key, supermarketCounter);
+        editor.putInt(key, counter);
         editor.apply();
     }
 }
