@@ -4,9 +4,16 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/text_view_analyze"
+        android:id="@+id/text_view_supermarkets"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="supermarkets"/>
+
+    <TextView
+        android:id="@+id/text_view_retailers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="retailers"/>
 
     <Button
         android:id="@+id/button_new_receipt"

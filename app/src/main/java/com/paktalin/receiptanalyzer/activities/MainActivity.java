@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -28,23 +29,28 @@ import static com.paktalin.receiptanalyzer.DataKeeper.*;
  */
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     Uri imageUri;
     private static final int REQUEST_GET_FROM_CAMERA = 30;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
     SharedPreferences appData;
-    TextView textView;
+    SharedPreferences retailersData;
+    TextView textViewSupermarkets, textViewRetailers;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_analyze);
-        textView = findViewById(R.id.text_view_analyze);
+        setContentView(R.layout.activity_main);
+        textViewSupermarkets = findViewById(R.id.text_view_supermarkets);
+        textViewRetailers = findViewById(R.id.text_view_retailers);
         Button buttonNewReceipt = findViewById(R.id.button_new_receipt);
         FileManager.setUpAppDir(MainActivity.this);
-        appData = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        SupermarketLoader loader = new SupermarketLoader();
-        loader.execute();
+        appData = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        (new SupermarketLoader()).execute();
+        retailersData = this.getSharedPreferences(RETAILERS_PREFERENCES, Context.MODE_PRIVATE);
+        (new RetailersLoader()).execute();
 
         buttonNewReceipt.setOnClickListener(v -> createDialog(MainActivity.this));
     }
@@ -86,28 +92,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class SupermarketLoader extends AsyncTask<Void, Void, String> {
-
         @Override
         protected String doInBackground(Void... voids) {
-            StringBuilder toTextView = new StringBuilder();
-
-            Map<String, ?> supermarketsData = appData.getAll();
-            for (Map.Entry entry : supermarketsData.entrySet()) {
-                toTextView
-                        .append(entry.getKey())
-                        .append(" = ")
-                        .append(entry.getValue().toString())
-                        .append("\n");
-            }
-            return toTextView.toString();
+            return extractMap(appData.getAll());
         }
 
         @Override
         protected void onPostExecute(String strings) {
             super.onPostExecute(strings);
-            textView.setText(strings);
+            textViewSupermarkets.setText(strings);
         }
     }
 
+    class RetailersLoader extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            return extractMap(retailersData.getAll());
+        }
+
+        @Override
+        protected void onPostExecute(String strings) {
+            super.onPostExecute(strings);
+            textViewRetailers.setText(strings);
+        }
+    }
+
+    private String extractMap(Map<String, ?> map) {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry entry : map.entrySet()) {
+            Log.d(TAG, "key: " + entry.getKey());
+            builder
+                    .append(entry.getKey())
+                    .append(" = ")
+                    .append(entry.getValue().toString())
+                    .append("\n");
+        }
+        return builder.toString();
+    }
 
 }
