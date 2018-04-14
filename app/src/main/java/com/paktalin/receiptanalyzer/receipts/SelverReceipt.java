@@ -26,9 +26,9 @@ public class SelverReceipt extends Receipt {
     }
 
     @Override
-    public String cutRetailersLine(String firstLine) {
-        int length = firstLine.length();
-        return firstLine.substring(0, length-6);
+    public String cutRetailersLine(String line) {
+        int length = line.length();
+        return line.substring(0, length-6);
     }
 
     @Override

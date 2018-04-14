@@ -25,8 +25,8 @@ public class Receipt {
         this.lines = lines;
     }
 
-    public String cutRetailersLine(String firstLine) {
-        return firstLine;
+    public String cutRetailersLine(String line) {
+        return line;
     }
 
     int startLine(String startString, int number) {

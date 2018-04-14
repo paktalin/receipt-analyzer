@@ -1,5 +1,7 @@
 package com.paktalin.receiptanalyzer.receipts;
 
+import android.util.Log;
+
 import com.paktalin.receiptanalyzer.StringManager;
 
 /**
@@ -25,7 +27,8 @@ public class RimiReceipt extends Receipt {
     }
 
     @Override
-    public String cutRetailersLine(String firstLine) {
-        return null;
+    public String cutRetailersLine(String line) {
+        Log.d(TAG, line.substring(4, line.length()));
+        return line.substring(4, line.length());
     }
 }

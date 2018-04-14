@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.paktalin.receiptanalyzer.receipts.Receipt;
 
@@ -41,6 +42,7 @@ class SupermarketInfo {
             String fL = firstLines[i];
             if (StringManager.similar(firstLine, fL)){
                 index = i;
+                Log.d(TAG, "index: " + i);
                 return;
             }
         }

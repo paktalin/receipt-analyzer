@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         textViewSupermarkets = findViewById(R.id.text_view_supermarkets);
         textViewRetailers = findViewById(R.id.text_view_retailers);
         textViewAddresses = findViewById(R.id.text_view_addresses);
