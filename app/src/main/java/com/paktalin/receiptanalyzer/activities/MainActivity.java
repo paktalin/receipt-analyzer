@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         FileManager.setUpAppDir(MainActivity.this);
         appData = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        MyAsyncTask task = new MyAsyncTask();
-        task.execute();
+        SupermarketLoader loader = new SupermarketLoader();
+        loader.execute();
 
         buttonNewReceipt.setOnClickListener(v -> createDialog(MainActivity.this));
     }
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    class MyAsyncTask extends AsyncTask<Void, Void, String> {
+    class SupermarketLoader extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {

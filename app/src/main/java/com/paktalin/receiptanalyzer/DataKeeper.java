@@ -9,12 +9,6 @@ import static com.paktalin.receiptanalyzer.Supermarkets.*;
 public class DataKeeper {
     public static final String APP_PREFERENCES = "app_data";
 
-    private static final int SELVER_INDEX = 0;
-    private static final int MAXIMA_INDEX = 1;
-    private static final int RIMI_INDEX = 2;
-    private static final int KONSUM_INDEX = 3;
-    private static final int PRISMA_INDEX = 4;
-
     public static final String[] KEYS_SUPERMARKETS = {
             "selver_counter",
             "maxima_counter",
@@ -23,11 +17,7 @@ public class DataKeeper {
             "prisma_counter"};
 
     public static final String[] SUPERMARKETS = {
-            "Selver",
-            "Maxima",
-            "Rimi",
-            "Konsum",
-            "Prisma"};
+            SELVER, MAXIMA, RIMI, KONSUM, PRISMA};
 
     public static String getKey(String supermarket) {
         switch (supermarket) {
