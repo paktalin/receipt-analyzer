@@ -8,13 +8,10 @@ import static com.paktalin.receiptanalyzer.Supermarkets.*;
 
 public class DataKeeper {
     public static final String APP_PREFERENCES = "app_data";
+    public static final String RETAILERS_PREFERENCES = "retailers";
 
     public static final String[] KEYS_SUPERMARKETS = {
-            "selver_counter",
-            "maxima_counter",
-            "rimi_counter",
-            "konsum_counter",
-            "prisma_counter"};
+            SELVER, MAXIMA, RIMI, KONSUM, PRISMA};
 
     public static final String[] SUPERMARKETS = {
             SELVER, MAXIMA, RIMI, KONSUM, PRISMA};

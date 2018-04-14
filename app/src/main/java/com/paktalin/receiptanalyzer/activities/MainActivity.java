@@ -15,11 +15,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.BuildConfig;
-import com.paktalin.receiptanalyzer.DataKeeper;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 
 import java.io.File;
+import java.util.Map;
 
 import static com.paktalin.receiptanalyzer.DataKeeper.*;
 
@@ -90,15 +90,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids) {
             StringBuilder toTextView = new StringBuilder();
-            for (int i = 0; i < DataKeeper.SUPERMARKETS.length; i++) {
-                String key = DataKeeper.KEYS_SUPERMARKETS[i];
-                String supermarket = DataKeeper.SUPERMARKETS[i];
-                int value = appData.getInt(key, 0);
 
+            Map<String, ?> supermarketsData = appData.getAll();
+            for (Map.Entry entry : supermarketsData.entrySet()) {
                 toTextView
-                        .append(supermarket)
+                        .append(entry.getKey())
                         .append(" = ")
-                        .append(value)
+                        .append(entry.getValue().toString())
                         .append("\n");
             }
             return toTextView.toString();
