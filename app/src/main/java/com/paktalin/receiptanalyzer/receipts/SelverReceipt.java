@@ -56,7 +56,7 @@ public class SelverReceipt extends Receipt {
                 if (StringManager.similarity(cut, payment) < similarity) {
                     if (cardPayment)
                         byCard = true;
-                    price = StringManager.extractFloat(line);
+                    price = StringManager.extractFloat(line, payment.length());
                     break;
                 }
             }catch (StringIndexOutOfBoundsException ignored) {

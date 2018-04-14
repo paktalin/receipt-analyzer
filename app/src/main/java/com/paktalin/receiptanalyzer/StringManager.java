@@ -41,12 +41,13 @@ public class StringManager {
         return similarity(input, expectedString) < 0.17;
     }
 
-    public static float extractFloat(String string) {
+    public static float extractFloat(String string, int flagLength) {
         float f = -1;
         try {
             f = Float.parseFloat(string);
         } catch (NumberFormatException e) {
-            string = string.substring(7);
+            Log.d(TAG, "we got here! " + string);
+            string = string.substring(flagLength - 2);
             string = string.replaceAll("o", "0");
             string = string.replaceAll(" ", "");
             string = removeLetters(string);

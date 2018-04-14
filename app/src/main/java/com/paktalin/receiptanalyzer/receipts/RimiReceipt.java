@@ -45,7 +45,7 @@ public class RimiReceipt extends Receipt {
             try {
                 String cut = line.substring(0, payment.length());
                 if (StringManager.similar(cut, payment)) {
-                    price = StringManager.extractFloat(line);
+                    price = StringManager.extractFloat(line, payment.length());
                     break;
                 }
             }catch (StringIndexOutOfBoundsException ignored) {
