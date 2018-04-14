@@ -36,14 +36,18 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_GET_FROM_GALLERY = 40;
     SharedPreferences appData;
     SharedPreferences retailersData;
-    TextView textViewSupermarkets, textViewRetailers;
+    SharedPreferences addressesData;
+    TextView textViewSupermarkets, textViewRetailers, textViewAddresses;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         textViewSupermarkets = findViewById(R.id.text_view_supermarkets);
         textViewRetailers = findViewById(R.id.text_view_retailers);
+        textViewAddresses = findViewById(R.id.text_view_addresses);
+
         Button buttonNewReceipt = findViewById(R.id.button_new_receipt);
         FileManager.setUpAppDir(MainActivity.this);
 
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         (new SupermarketLoader()).execute();
         retailersData = this.getSharedPreferences(RETAILERS_PREFERENCES, Context.MODE_PRIVATE);
         (new RetailersLoader()).execute();
+        addressesData = this.getSharedPreferences(ADDRESSES_PREFERENCES, Context.MODE_PRIVATE);
+        (new AddressesLoader()).execute();
 
         buttonNewReceipt.setOnClickListener(v -> createDialog(MainActivity.this));
     }
@@ -114,6 +120,19 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String strings) {
             super.onPostExecute(strings);
             textViewRetailers.setText(strings);
+        }
+    }
+
+    class AddressesLoader extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            return extractMap(addressesData.getAll());
+        }
+
+        @Override
+        protected void onPostExecute(String strings) {
+            super.onPostExecute(strings);
+            textViewAddresses.setText(strings);
         }
     }
 

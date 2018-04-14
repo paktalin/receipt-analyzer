@@ -34,7 +34,7 @@ public class NewReceiptActivity extends AppCompatActivity {
 
     Receipt receipt;
     SharedPreferences appData;
-    private String supermarket, retailer;
+    private String supermarket, retailer, address;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,9 +69,11 @@ public class NewReceiptActivity extends AppCompatActivity {
 
             supermarket = receipt.getSupermarket();
             retailer = receipt.getRetailer();
+            address = receipt.getAddress();
+
             textViewSupermarket.setText(supermarket);
             textViewRetailer.setText(retailer);
-            textViewAddress.setText(receipt.getAddress());
+            textViewAddress.setText(address);
             String finalPrice = String.valueOf(receipt.getFinalPrice());
             textViewFinalPrice.setText(finalPrice);
 
@@ -92,6 +94,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         saveToDB();
         syncData(APP_PREFERENCES, supermarket);
         syncData(RETAILERS_PREFERENCES, retailer);
+        syncData(ADDRESSES_PREFERENCES, address);
         Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
         startActivity(mainActivityIntent);
     };
