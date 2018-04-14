@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+
+import com.paktalin.receiptanalyzer.activities.NewReceiptActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -131,5 +134,18 @@ public class FileManager {
         return BitmapFactory.decodeStream(ctx.getContentResolver()
                 .openInputStream(uri), null, bmOptions);
 
+    }
+
+    public static Bitmap decodeBitmapUri_Rotate(int rotation, Uri uri, Context context) {
+        Bitmap bitmap = null;
+        try {
+            bitmap = FileManager.decodeBitmapUri(context, uri);
+            Matrix matrix = new Matrix();
+            matrix.postRotate(rotation);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 }

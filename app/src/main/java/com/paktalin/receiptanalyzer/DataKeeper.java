@@ -1,6 +1,5 @@
 package com.paktalin.receiptanalyzer;
 
-import android.content.SharedPreferences;
 import static com.paktalin.receiptanalyzer.Supermarkets.*;
 
 /**
@@ -10,32 +9,38 @@ import static com.paktalin.receiptanalyzer.Supermarkets.*;
 public class DataKeeper {
     public static final String APP_PREFERENCES = "app_data";
 
-    private static final String KEY_SELVER_COUNTER = "selver_counter";
-    private static final String KEY_MAXIMA_COUNTER = "maxima_counter";
-    private static final String KEY_RIMI_COUNTER = "rimi_counter";
-    private static final String KEY_KONSUM_COUNTER = "konsum_counter";
-    private static final String KEY_PRISMA_COUNTER = "prisma_counter";
+    private static final int SELVER_INDEX = 0;
+    private static final int MAXIMA_INDEX = 1;
+    private static final int RIMI_INDEX = 2;
+    private static final int KONSUM_INDEX = 3;
+    private static final int PRISMA_INDEX = 4;
 
-    static int SELVER_COUNTER;
-    static int MAXIMA_COUNTER;
-    static int RIMI_COUNTER;
-    static int KONSUM_COUNTER;
-    static int PRISMA_COUNTER;
-    private SharedPreferences mAppData;
+    public static final String[] KEYS_SUPERMARKETS = {
+            "selver_counter",
+            "maxima_counter",
+            "rimi_counter",
+            "konsum_counter",
+            "prisma_counter"};
 
+    public static final String[] SUPERMARKETS = {
+            "Selver",
+            "Maxima",
+            "Rimi",
+            "Konsum",
+            "Prisma"};
 
-    static String getKey(String supermarket) {
+    public static String getKey(String supermarket) {
         switch (supermarket) {
             case SELVER:
-                return KEY_SELVER_COUNTER;
+                return KEYS_SUPERMARKETS[0];
             case MAXIMA:
-                return KEY_MAXIMA_COUNTER;
+                return KEYS_SUPERMARKETS[1];
             case RIMI:
-                return KEY_RIMI_COUNTER;
+                return KEYS_SUPERMARKETS[2];
             case KONSUM:
-                return KEY_KONSUM_COUNTER;
+                return KEYS_SUPERMARKETS[3];
             case PRISMA:
-                return KEY_PRISMA_COUNTER;
+                return KEYS_SUPERMARKETS[4];
             default:
                 return null;
         }

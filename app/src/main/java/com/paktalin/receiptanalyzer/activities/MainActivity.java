@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.BuildConfig;
+import com.paktalin.receiptanalyzer.DataKeeper;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 
@@ -25,29 +27,26 @@ import static com.paktalin.receiptanalyzer.DataKeeper.*;
  * Created by Paktalin on 12/04/2018.
  */
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     Uri imageUri;
     private static final int REQUEST_GET_FROM_CAMERA = 30;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
-
-    private static SharedPreferences mAppData;
+    SharedPreferences appData;
+    TextView textView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analyze);
-        TextView textView = findViewById(R.id.text_view_analyze);
+        textView = findViewById(R.id.text_view_analyze);
         Button buttonNewReceipt = findViewById(R.id.button_new_receipt);
-        loadData(this);
         FileManager.setUpAppDir(MainActivity.this);
+        appData = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        MyAsyncTask task = new MyAsyncTask();
+        task.execute();
 
         buttonNewReceipt.setOnClickListener(v -> createDialog(MainActivity.this));
-    }
-
-
-    private static void loadData(Context context) {
-        mAppData = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        //TODO: load data from shared preferences
     }
 
     private void createDialog(Context context) {
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             Intent editIntent = new Intent(MainActivity.this, EditActivity.class);
             if (requestCode == REQUEST_GET_FROM_GALLERY)
                 imageUri = data.getData();
@@ -85,4 +84,32 @@ public class MainActivity extends AppCompatActivity{
             startActivity(editIntent);
         }
     }
+
+    class MyAsyncTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            StringBuilder toTextView = new StringBuilder();
+            for (int i = 0; i < DataKeeper.SUPERMARKETS.length; i++) {
+                String key = DataKeeper.KEYS_SUPERMARKETS[i];
+                String supermarket = DataKeeper.SUPERMARKETS[i];
+                int value = appData.getInt(key, 0);
+
+                toTextView
+                        .append(supermarket)
+                        .append(" = ")
+                        .append(value)
+                        .append("\n");
+            }
+            return toTextView.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String strings) {
+            super.onPostExecute(strings);
+            textView.setText(strings);
+        }
+    }
+
+
 }

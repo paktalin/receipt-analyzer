@@ -1,7 +1,9 @@
 package com.paktalin.receiptanalyzer.activities;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -16,6 +18,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.paktalin.receiptanalyzer.DataKeeper;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.ReceiptExtractor;
@@ -25,6 +28,8 @@ import com.paktalin.receiptanalyzer.receipts.Receipt;
 
 import java.io.FileNotFoundException;
 
+import static com.paktalin.receiptanalyzer.DataKeeper.APP_PREFERENCES;
+
 /**
  * Created by Paktalin on 12/04/2018.
  */
@@ -33,6 +38,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     private static final String TAG = NewReceiptActivity.class.getSimpleName();
 
     Receipt receipt;
+    String supermarket;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +53,10 @@ public class NewReceiptActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             int rotation = getIntent().getIntExtra("rotation", 0);
             Uri imageUri = getIntent().getParcelableExtra("uri");
-            receipt = ReceiptExtractor.extract(NewReceiptActivity.this, extractBitmap(rotation, imageUri));
+            Context context = NewReceiptActivity.this;
+            receipt = ReceiptExtractor.extract(context,
+                    //decoded and rotated bitmap
+                    FileManager.decodeBitmapUri_Rotate(rotation, imageUri, context));
             return null;
         }
 
@@ -62,7 +71,8 @@ public class NewReceiptActivity extends AppCompatActivity {
             TextView textViewAddress = findViewById(R.id.address);
             TextView textViewFinalPrice = findViewById(R.id.final_price);
 
-            textViewSupermarket.setText(receipt.getSupermarket());
+            supermarket = receipt.getSupermarket();
+            textViewSupermarket.setText(supermarket);
             textViewRetailer.setText(receipt.getRetailer());
             textViewAddress.setText(receipt.getAddress());
             String finalPrice = String.valueOf(receipt.getFinalPrice());
@@ -81,42 +91,32 @@ public class NewReceiptActivity extends AppCompatActivity {
         }
     }
 
-    private Bitmap extractBitmap(int rotation, Uri uri) {
-        Bitmap bitmap = null;
-        try {
-            bitmap = FileManager.decodeBitmapUri(NewReceiptActivity.this, uri);
-            Matrix matrix = new Matrix();
-            matrix.postRotate(rotation);
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
-    View.OnClickListener buttonOkListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(ReceiptContract.ReceiptEntry.COLUMN_SUPERMARKET, receipt.getSupermarket());
-            values.put(ReceiptContract.ReceiptEntry.COLUMN_RETAILER, receipt.getRetailer());
-            values.put(ReceiptContract.ReceiptEntry.COLUMN_ADDRESS, receipt.getAddress());
-            values.put(ReceiptContract.ReceiptEntry.COLUMN_FINAL_PRICE, receipt.getFinalPrice());
-            long newRowId = db.insert(ReceiptContract.ReceiptEntry.TABLE_NAME, null, values);
-            if (newRowId == -1)
-                Log.e(TAG, "Couldn't insert the receipt into DB");
-
-            Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
-            startActivity(mainActivityIntent);
-        }
+    View.OnClickListener buttonOkListener = v -> {
+        saveToDB();
+        syncData();
+        Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
+        startActivity(mainActivityIntent);
     };
 
-    private void syncData() {
-        //TODO increase supermarket counter in SharedPreferences
+    private void saveToDB() {
+        DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ReceiptContract.ReceiptEntry.COLUMN_SUPERMARKET, receipt.getSupermarket());
+        values.put(ReceiptContract.ReceiptEntry.COLUMN_RETAILER, receipt.getRetailer());
+        values.put(ReceiptContract.ReceiptEntry.COLUMN_ADDRESS, receipt.getAddress());
+        values.put(ReceiptContract.ReceiptEntry.COLUMN_FINAL_PRICE, receipt.getFinalPrice());
+        long newRowId = db.insert(ReceiptContract.ReceiptEntry.TABLE_NAME, null, values);
+        if (newRowId == -1)
+            Log.e(TAG, "Couldn't insert the receipt into DB");
     }
 
-
-
+    private void syncData() {
+        SharedPreferences appData = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String key = DataKeeper.getKey(supermarket);
+        int supermarketCounter = appData.getInt(key, 0) + 1;
+        SharedPreferences.Editor editor = appData.edit();
+        editor.putInt(key, supermarketCounter);
+        editor.apply();
+    }
 }

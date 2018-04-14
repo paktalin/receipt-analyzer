@@ -26,6 +26,4 @@ public class MaximaReceipt extends Receipt {
             return number + 1;
         return -1;
     }
-
-
 }
