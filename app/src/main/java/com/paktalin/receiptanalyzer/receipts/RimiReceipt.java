@@ -23,4 +23,9 @@ public class RimiReceipt extends Receipt {
             return number + 1;
         return -1;
     }
+
+    @Override
+    public String cutRetailersLine(String firstLine) {
+        return null;
+    }
 }

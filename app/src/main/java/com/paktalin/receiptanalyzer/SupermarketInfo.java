@@ -1,14 +1,10 @@
 package com.paktalin.receiptanalyzer;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.paktalin.receiptanalyzer.receipts.KonsumReceipt;
-import com.paktalin.receiptanalyzer.receipts.MaximaReceipt;
-import com.paktalin.receiptanalyzer.receipts.PrismaReceipt;
 import com.paktalin.receiptanalyzer.receipts.Receipt;
-import com.paktalin.receiptanalyzer.receipts.RimiReceipt;
-import com.paktalin.receiptanalyzer.receipts.SelverReceipt;
+
+import static com.paktalin.receiptanalyzer.Supermarkets.*;
 
 
 /**
@@ -20,12 +16,14 @@ class SupermarketInfo {
 
     private static String supermarket;
     private static int index = -1;
+    private static Receipt receipt;
 
     static Receipt setInfo(Receipt receipt, Context context) {
-        String firstLine = receipt.getFirstLine();
+        SupermarketInfo.receipt = receipt;
         supermarket = receipt.getSupermarket();
+        String retailersLine = getRetailersLine();
 
-        setIndex(receipt.cutFirstLine(firstLine), context);
+        setIndex(receipt.cutRetailersLine(retailersLine), context);
         if (!(index == -1)) {
             String retailer = getRetailer(context);
             String address = getAddress(context);
@@ -58,5 +56,12 @@ class SupermarketInfo {
         String addressesPath = supermarket + "/addresses";
         String[] addresses = FileManager.getStringFromTextFile(context, addressesPath);
         return addresses[index];
+    }
+
+    static private String getRetailersLine() {
+        String result = receipt.getLine(0);
+        if (supermarket.equals(RIMI))
+            result = receipt.getLine(3);
+        return StringManager.clean(result);
     }
 }

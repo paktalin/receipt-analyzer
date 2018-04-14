@@ -26,7 +26,7 @@ public class SelverReceipt extends Receipt {
     }
 
     @Override
-    public String cutFirstLine(String firstLine) {
+    public String cutRetailersLine(String firstLine) {
         int length = firstLine.length();
         return firstLine.substring(0, length-6);
     }
@@ -45,9 +45,6 @@ public class SelverReceipt extends Receipt {
             }
         }
     }
-
-
-
 
     private float getPayment(String payment, double similarity) {
         float price = -1;

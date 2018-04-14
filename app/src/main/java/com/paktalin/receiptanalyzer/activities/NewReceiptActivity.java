@@ -58,7 +58,6 @@ public class NewReceiptActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
             ProgressBar progress = findViewById(R.id.progress_bar);
             progress.setVisibility(View.INVISIBLE);
 

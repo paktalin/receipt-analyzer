@@ -25,7 +25,7 @@ public class Receipt {
         this.lines = lines;
     }
 
-    public String cutFirstLine(String firstLine) {
+    public String cutRetailersLine(String firstLine) {
         return firstLine;
     }
 
@@ -119,7 +119,7 @@ public class Receipt {
         this.supermarket = supermarket;
     }
 
-    public String getFirstLine() {
-        return lines[0];
+    public String getLine(int index) {
+        return lines[index];
     }
 }

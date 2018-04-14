@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String strings) {
-            super.onPostExecute(strings);
             textViewSupermarkets.setText(strings);
         }
     }
@@ -118,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String strings) {
-            super.onPostExecute(strings);
             textViewRetailers.setText(strings);
         }
     }
@@ -131,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String strings) {
-            super.onPostExecute(strings);
             textViewAddresses.setText(strings);
         }
     }
