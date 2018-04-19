@@ -107,7 +107,7 @@ public class FileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return text.split("\n");
+        return text.split("\\r?\\n");
     }
 
     private static String makeName() {

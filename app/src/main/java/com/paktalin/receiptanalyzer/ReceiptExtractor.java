@@ -18,10 +18,13 @@ public class ReceiptExtractor {
     private static final String TAG = ReceiptExtractor.class.getSimpleName();
 
     public static Receipt extract(Context context, Bitmap bitmap) {
-        ArrayList<String> lines = recognize(context, bitmap);
-        Receipt receipt = ReceiptCreator.createReceipt(lines);
-        receipt = SupermarketInfo.setInfo(receipt, context);
-        return receipt;
+        if (bitmap != null) {
+            ArrayList<String> lines = recognize(context, bitmap);
+            Receipt receipt = ReceiptCreator.createReceipt(lines);
+            receipt = SupermarketInfo.setInfo(receipt, context);
+            return receipt;
+        }
+        return null;
     }
 
     private static ArrayList<String> recognize(Context context, Bitmap bitmap) {

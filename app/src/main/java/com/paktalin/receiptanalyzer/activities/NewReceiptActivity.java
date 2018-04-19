@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
@@ -50,9 +52,15 @@ public class NewReceiptActivity extends AppCompatActivity {
             int rotation = getIntent().getIntExtra("rotation", 0);
             Uri imageUri = getIntent().getParcelableExtra("uri");
             Context context = NewReceiptActivity.this;
-            receipt = ReceiptExtractor.extract(context,
-                    //decoded and rotated bitmap
-                    FileManager.decodeBitmapUri_Rotate(rotation, imageUri, context));
+            Bitmap bitmap = null;
+            try {
+                bitmap = FileManager.decodeBitmapUri_Rotate(rotation, imageUri, context);
+            } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+                Toast toast = Toast.makeText(context, "An error occered. Please, try again", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            receipt = ReceiptExtractor.extract(context, bitmap);
             return null;
         }
 
@@ -66,15 +74,22 @@ public class NewReceiptActivity extends AppCompatActivity {
             TextView textViewAddress = findViewById(R.id.address);
             TextView textViewFinalPrice = findViewById(R.id.final_price);
 
-            supermarket = receipt.getSupermarket();
-            retailer = receipt.getRetailer();
-            address = receipt.getAddress();
+            if (receipt != null) {
+                supermarket = receipt.getSupermarket();
+                retailer = receipt.getRetailer();
+                Log.d(TAG, "retailer: '"  + retailer + "'");
+                address = receipt.getAddress();
 
-            textViewSupermarket.setText(supermarket);
-            textViewRetailer.setText(retailer);
-            textViewAddress.setText(address);
-            String finalPrice = String.valueOf(receipt.getFinalPrice());
-            textViewFinalPrice.setText(finalPrice);
+                textViewSupermarket.setText(supermarket);
+                textViewRetailer.setText(retailer);
+                textViewAddress.setText(address);
+                String finalPrice = String.valueOf(receipt.getFinalPrice());
+                textViewFinalPrice.setText(finalPrice);
+            } else {
+                Toast toast = Toast.makeText(NewReceiptActivity.this,
+                        "Sorry, we couldn't scan the receipt. Please, try again", Toast.LENGTH_SHORT);
+                toast.show();
+            }
 
             Button buttonOk = findViewById(R.id.button_ok);
             buttonOk.setVisibility(View.VISIBLE);
