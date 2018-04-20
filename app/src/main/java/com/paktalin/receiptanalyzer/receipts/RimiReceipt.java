@@ -15,6 +15,7 @@ public class RimiReceipt extends Receipt {
         super(lines);
         purchasesStart = startLine("klient", 6);
         purchasesEnd = endLine("kaardimakse", false);
+        priceFlag = "kokku";
         calculateFinalPrice();
     }
 
@@ -35,22 +36,16 @@ public class RimiReceipt extends Receipt {
 
     @Override
     void calculateFinalPrice() {
-        finalPrice = getPayment("kokku");
-    }
-
-    private float getPayment(String payment) {
-        float price = -1;
         for (int i = lines.length - 1; i > purchasesEnd; i--) {
             String line = lines[i];
             try {
-                String cut = line.substring(0, payment.length());
-                if (StringManager.similar(cut, payment)) {
-                    price = StringManager.extractFloat(line, payment.length());
+                String cut = line.substring(0, priceFlag.length());
+                if (StringManager.similar(cut, priceFlag)) {
+                    finalPrice = StringManager.extractFloat(line, priceFlag.length());
                     break;
                 }
             }catch (StringIndexOutOfBoundsException ignored) {
             }
         }
-        return price;
     }
 }
