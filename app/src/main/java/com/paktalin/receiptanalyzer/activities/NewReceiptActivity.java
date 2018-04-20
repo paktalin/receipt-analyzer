@@ -84,7 +84,6 @@ public class NewReceiptActivity extends AppCompatActivity {
                 receipt.extractPurchases(NewReceiptActivity.this);
                 for (Purchase p : receipt.getPurchases())
                     Log.d(TAG, p.purchaseInfo());
-                receipt.logReceipt();
 
                 textViewSupermarket.setText(supermarket);
                 textViewRetailer.setText(retailer);

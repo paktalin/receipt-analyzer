@@ -50,9 +50,9 @@ public class Receipt {
 
     public void extractPurchases(Context context) {
         purchases = new ArrayList<>();
-        for (int i = purchasesStart; i < purchasesEnd; i++) {
+        for (int i = purchasesStart; i <= purchasesEnd; i++) {
             String[] string_arr = lines[i].split(" ");
-            if (Purchase.purchase(string_arr)) {
+            if (Purchase.purchase(string_arr[0])) {
                 Purchase purchase = new Purchase(new ArrayList<>(Arrays.asList(string_arr)), context);
                 purchases.add(purchase);
             }

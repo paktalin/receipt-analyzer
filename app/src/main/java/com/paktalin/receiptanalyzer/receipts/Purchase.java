@@ -18,13 +18,18 @@ public class Purchase {
     private String title = "";
     private float amount = -1;
     private float price = -1;
-    public String category = "";
-    float sum = -1;
+    private float sum = -1;
+    private String category = null;
     private ArrayList<String> items;
     private String last;
 
     Purchase(ArrayList<String> items, Context context) {
         this.items = items;
+        if (items.size() == 6)
+            if(!purchase(items.get(4))) {
+                items.remove(items.get(5));
+                items.remove(items.get(4));
+            }
         while(items.size() > 0) {
             last = last();
             if (!set(sum)) {
@@ -52,8 +57,8 @@ public class Purchase {
         category = setCategory(context);
     }
 
-    static boolean purchase(String[] string){
-        return !StringManager.similar(string[0], "pusikliendivoit");
+    static boolean purchase(String string){
+        return !StringManager.similar(string, "pusikliendivoit");
     }
 
     private boolean set(float f){

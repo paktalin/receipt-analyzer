@@ -34,7 +34,6 @@ class ReceiptCreator {
         String[] linesArray = filteredString.split("\n");
         String firstLine = StringManager.clean(linesArray[0]);
         String supermarket = getStoreName(firstLine);
-        Log.d(TAG, "supermarket: " + Arrays.toString(linesArray));
 
         Receipt receipt;
         switch (supermarket) {
