@@ -11,5 +11,7 @@ public class KonsumReceipt extends Receipt {
         super(lines);
         purchasesStart = startLine("kaubanimetuskogushindsumma", 8) + 1;
         purchasesEnd = endLine("maksta", true);
+        priceFlag = "maksta";
+        calculateFinalPrice();
     }
 }

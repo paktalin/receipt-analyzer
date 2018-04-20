@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
@@ -47,8 +48,10 @@ public class EditActivity extends AppCompatActivity{
         try {
             bitmap = FileManager.decodeBitmapUri(EditActivity.this, imageUri);
             image.setImageBitmap(bitmap);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            Toast toast = Toast.makeText(this, "Sorry, an error occured while loading your image. Try again, please", Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 

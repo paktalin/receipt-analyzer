@@ -118,7 +118,7 @@ public class FileManager {
         return picturesDirPath;
     }
 
-    public static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws FileNotFoundException {
+    public static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws Exception {
         int targetW = 600;
         int targetH = 600;
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -143,8 +143,9 @@ public class FileManager {
             Matrix matrix = new Matrix();
             matrix.postRotate(rotation);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
         return bitmap;
     }
