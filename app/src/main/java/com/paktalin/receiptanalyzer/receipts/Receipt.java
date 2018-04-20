@@ -20,6 +20,7 @@ public class Receipt {
     int purchasesStart, purchasesEnd;
     ArrayList<Purchase> purchases;
     float finalPrice = -1;
+    String priceFlag;
 
     Receipt(String[] lines) {
         this.lines = lines;
@@ -91,6 +92,16 @@ public class Receipt {
     }
 
     void calculateFinalPrice() {
+        for (String line : lines) {
+            try {
+                String cut = line.substring(0, priceFlag.length());
+                if (StringManager.similar(cut, priceFlag)) {
+                    finalPrice = StringManager.extractFloat(line, priceFlag.length());
+                    break;
+                }
+            } catch (StringIndexOutOfBoundsException ignored) {
+            }
+        }
     }
 
     public String getSupermarket() {

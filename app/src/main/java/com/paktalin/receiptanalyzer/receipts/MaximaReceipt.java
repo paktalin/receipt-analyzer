@@ -15,6 +15,8 @@ public class MaximaReceipt extends Receipt {
         super(lines);
         purchasesStart = startLine("kviitungnr", 4);
         purchasesEnd = endLine("kmtakmkmga", false);
+        priceFlag = "kokkumaksta";
+        calculateFinalPrice();
     }
 
     @Override

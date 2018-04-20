@@ -22,14 +22,17 @@ class SupermarketInfo {
     static Receipt setInfo(Receipt receipt, Context context) {
         SupermarketInfo.receipt = receipt;
         supermarket = receipt.getSupermarket();
-        String retailersLine = getRetailersLine();
 
-        setIndex(receipt.cutRetailersLine(retailersLine), context);
-        if (!(index == -1)) {
-            String retailer = getRetailer(context);
-            String address = getAddress(context);
-            receipt.setRetailer(retailer);
-            receipt.setAddress(address);
+        if (!supermarket.equals(MAXIMA)) {
+            String retailersLine = getRetailersLine();
+
+            setIndex(receipt.cutRetailersLine(retailersLine), context);
+            if (!(index == -1)) {
+                String retailer = getRetailer(context);
+                String address = getAddress(context);
+                receipt.setRetailer(retailer);
+                receipt.setAddress(address);
+            }
         }
         return receipt;
     }
