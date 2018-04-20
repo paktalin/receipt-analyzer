@@ -21,7 +21,6 @@ public class SelverReceipt extends Receipt {
         Log.d(TAG, "lines:\n" + Arrays.toString(lines));
         purchasesStart = startLine("nimetuskogushindsumma", 7);
         purchasesEnd = endLine("vahesumma", true);
-        //purchases = extractPurchases();
         calculateFinalPrice();
     }
 

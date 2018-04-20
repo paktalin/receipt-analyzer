@@ -45,7 +45,6 @@ class SupermarketInfo {
             String fL = firstLines[i];
             if (StringManager.similar(firstLine, fL)){
                 index = i;
-                Log.d(TAG, "index: " + i);
                 return;
             }
         }

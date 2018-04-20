@@ -20,6 +20,7 @@ import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 
 import java.io.File;
+import java.util.Hashtable;
 import java.util.Map;
 
 import static com.paktalin.receiptanalyzer.DataKeeper.*;
@@ -52,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
         appData = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         (new SupermarketLoader()).execute();
-        retailersData = this.getSharedPreferences(RETAILERS_PREFERENCES, Context.MODE_PRIVATE);
+        /*retailersData = this.getSharedPreferences(RETAILERS_PREFERENCES, Context.MODE_PRIVATE);
         (new RetailersLoader()).execute();
         addressesData = this.getSharedPreferences(ADDRESSES_PREFERENCES, Context.MODE_PRIVATE);
-        (new AddressesLoader()).execute();
+        (new AddressesLoader()).execute();*/
 
         buttonNewReceipt.setOnClickListener(v -> createDialog(MainActivity.this));
     }
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     class SupermarketLoader extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
-            return extractMap(appData.getAll());
+            return extractMap(percentage(appData.getAll()));
         }
 
         @Override
@@ -145,4 +146,17 @@ public class MainActivity extends AppCompatActivity {
         return builder.toString();
     }
 
+    private Map<String, ?> percentage(Map<String, ?> map) {
+        float sum = 0;
+        for (Map.Entry entry : map.entrySet()) {
+            sum += (Integer) entry.getValue();
+        }
+        for (Map.Entry entry : map.entrySet()) {
+            int value = (Integer)entry.getValue();
+            float float_value = (float) value;
+            float percent = (float_value / sum) * 100;
+            entry.setValue(percent);
+        }
+        return map;
+    }
 }

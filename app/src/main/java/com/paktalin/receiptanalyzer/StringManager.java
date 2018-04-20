@@ -36,7 +36,7 @@ public class StringManager {
     }
 
     public static boolean similar(String input, String expectedString) {
-        Log.d(TAG, input + " " + expectedString + " = " + similarity(input, expectedString));
+        //Log.d(TAG, input + " " + expectedString + " = " + similarity(input, expectedString));
         return similarity(input, expectedString) < 0.17;
     }
 
@@ -45,7 +45,6 @@ public class StringManager {
         try {
             f = Float.parseFloat(string);
         } catch (NumberFormatException e) {
-            Log.d(TAG, "we got here! " + string);
             string = string.substring(flagLength - 2);
             string = string.replaceAll("o", "0");
             string = string.replaceAll(" ", "");

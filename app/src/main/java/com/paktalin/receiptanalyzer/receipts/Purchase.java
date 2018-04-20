@@ -1,7 +1,9 @@
 package com.paktalin.receiptanalyzer.receipts;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.StringManager;
 
 import java.util.ArrayList;
@@ -10,17 +12,18 @@ import java.util.ArrayList;
  * Created by Paktalin on 24-Mar-18.
  */
 
-class Purchase {
+public class Purchase {
     private static final String TAG = Purchase.class.getSimpleName();
 
     private String title = "";
     private float amount = -1;
     private float price = -1;
+    public String category = "";
     float sum = -1;
     private ArrayList<String> items;
     private String last;
 
-    Purchase(ArrayList<String> items) {
+    Purchase(ArrayList<String> items, Context context) {
         this.items = items;
         while(items.size() > 0) {
             last = last();
@@ -46,6 +49,7 @@ class Purchase {
                 }
             }
         }
+        category = setCategory(context);
     }
 
     static boolean purchase(String[] string){
@@ -91,10 +95,24 @@ class Purchase {
         }
     }
 
-    String purchaseInfo(){
+    public String purchaseInfo(){
         return  "title: " + title +
                 "; amount: " + amount +
                 "; price: " + price +
-                "; sum: " + sum + "\n";
+                "; sum: " + sum +
+                "; category: " + category + "\n";
+    }
+
+    private String setCategory(Context context) {
+        String[] tags = FileManager.getStringFromTextFile(context, "categories/tags");
+        String category = null;
+        for (String line : tags) {
+            if (line.substring(0, 2).equals("__"))
+                category = line.substring(2, line.length());
+            else
+                if (title.contains(line))
+                    return category;
+        }
+        return null;
     }
 }

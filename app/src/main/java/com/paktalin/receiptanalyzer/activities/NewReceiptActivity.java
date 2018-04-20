@@ -24,6 +24,9 @@ import com.paktalin.receiptanalyzer.ReceiptExtractor;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.data.ReceiptContract;
 import com.paktalin.receiptanalyzer.receipts.Receipt;
+import com.paktalin.receiptanalyzer.receipts.Purchase;
+
+import java.util.ArrayList;
 
 import static com.paktalin.receiptanalyzer.DataKeeper.*;
 
@@ -77,8 +80,11 @@ public class NewReceiptActivity extends AppCompatActivity {
             if (receipt != null) {
                 supermarket = receipt.getSupermarket();
                 retailer = receipt.getRetailer();
-                Log.d(TAG, "retailer: '"  + retailer + "'");
                 address = receipt.getAddress();
+                receipt.extractPurchases(NewReceiptActivity.this);
+                for (Purchase p : receipt.getPurchases())
+                    Log.d(TAG, p.purchaseInfo());
+                receipt.logReceipt();
 
                 textViewSupermarket.setText(supermarket);
                 textViewRetailer.setText(retailer);

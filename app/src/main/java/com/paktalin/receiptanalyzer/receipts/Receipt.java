@@ -1,5 +1,6 @@
 package com.paktalin.receiptanalyzer.receipts;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
@@ -18,9 +19,9 @@ public class Receipt {
     private String supermarket;
     private String retailer, address;
     int purchasesStart, purchasesEnd;
-    ArrayList<Purchase> purchases;
     float finalPrice = -1;
     String priceFlag;
+    ArrayList<Purchase> purchases;
 
     Receipt(String[] lines) {
         this.lines = lines;
@@ -47,20 +48,15 @@ public class Receipt {
         return -1;
     }
 
-    ArrayList<Purchase> extractPurchases() {
-        ArrayList<Purchase> purchases = new ArrayList<>();
-        String[] purchasesStrings = Arrays.copyOfRange(lines, purchasesStart, purchasesEnd + 1);
-        for (String string : purchasesStrings){
-            String[] string_arr = string.split(" ");
-            Log.d(TAG, Arrays.toString(string_arr));
+    public void extractPurchases(Context context) {
+        purchases = new ArrayList<>();
+        for (int i = purchasesStart; i < purchasesEnd; i++) {
+            String[] string_arr = lines[i].split(" ");
             if (Purchase.purchase(string_arr)) {
-                Purchase purchase = new Purchase(new ArrayList<>(Arrays.asList(string_arr)));
+                Purchase purchase = new Purchase(new ArrayList<>(Arrays.asList(string_arr)), context);
                 purchases.add(purchase);
-            } else {
-                Log.d(TAG, Arrays.toString(string_arr) + " is not a purchase");
             }
         }
-        return purchases;
     }
 
     public void logReceipt() {
@@ -68,27 +64,9 @@ public class Receipt {
         Log.d(TAG, "Name = " + supermarket);
         Log.d(TAG, "retailer = " + retailer);
         Log.d(TAG, "address = " + address);
+        Log.d(TAG, "final price = " + finalPrice);
         //Log.d(TAG, "purchasesStart = " + purchasesStart + "");
         //Log.d(TAG, "purchasesEnd = " + purchasesEnd + "");
-        Log.d(TAG, "_PURCHASES_");
-        //Log.d(TAG, Arrays.toString(lines));
-        for (Purchase p : purchases){
-            p.purchaseInfo();
-        }
-    }
-
-    public String getInfo() {
-        StringBuilder info;
-        info = new StringBuilder("______RECEIPT______" +
-                "\nName = " + supermarket +
-                "\nretailer = " + retailer +
-                "\naddress = " + address +
-                "\nfinal price = " + finalPrice +
-                "\n\n_PURCHASES_");
-        /*for (Purchase p : purchases){
-            info.append(p.purchaseInfo());
-        }*/
-        return info.toString();
     }
 
     void calculateFinalPrice() {
@@ -104,22 +82,6 @@ public class Receipt {
         }
     }
 
-    public String getSupermarket() {
-        return supermarket;
-    }
-
-    public String getRetailer() {
-        return retailer;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public float getFinalPrice() {
-        return finalPrice;
-    }
-
     public void setRetailer(String retailer) {
         this.retailer = retailer;
     }
@@ -130,7 +92,22 @@ public class Receipt {
         this.supermarket = supermarket;
     }
 
+    public String getSupermarket() {
+        return supermarket;
+    }
+    public String getRetailer() {
+        return retailer;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public float getFinalPrice() {
+        return finalPrice;
+    }
     public String getLine(int index) {
         return lines[index];
+    }
+    public ArrayList<Purchase> getPurchases() {
+        return purchases;
     }
 }
