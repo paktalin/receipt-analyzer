@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import static com.paktalin.receiptanalyzer.DataKeeper.*;
 import com.paktalin.receiptanalyzer.data.Contracts.*;
+
+import java.util.ArrayList;
 
 
 /**
@@ -70,7 +73,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             ProgressBar progressBar = findViewById(R.id.progress_bar);
             progressBar.setVisibility(View.INVISIBLE);
-
+            ArrayList<Purchase> purchases = null;
             TextView textViewSupermarket = findViewById(R.id.supermarket);
             TextView textViewRetailer = findViewById(R.id.retailer);
             TextView textViewAddress = findViewById(R.id.address);
@@ -81,7 +84,8 @@ public class NewReceiptActivity extends AppCompatActivity {
                 retailer = receipt.getRetailer();
                 address = receipt.getAddress();
                 receipt.extractPurchases(NewReceiptActivity.this);
-                for (Purchase p : receipt.getPurchases())
+                purchases = receipt.getPurchases();
+                for (Purchase p : purchases)
                     Log.d(TAG, p.purchaseInfo());
 
                 textViewSupermarket.setText(supermarket);
@@ -105,6 +109,10 @@ public class NewReceiptActivity extends AppCompatActivity {
                 Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
                 startActivity(mainActivityIntent);
             });
+
+            ListViewAdapter adapter = new ListViewAdapter(NewReceiptActivity.this, purchases);
+            ListView listView = findViewById(R.id.list_view);
+            listView.setAdapter(adapter);
         }
     }
 

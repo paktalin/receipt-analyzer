@@ -126,4 +126,14 @@ public class Purchase {
     public void setInilial(String inilial) {
         this.inilial = inilial;
     }
+
+    public float getSum() {
+        return sum;
+    }
+    public String getCategory() {
+        return category;
+    }
+    public String getInilial() {
+        return inilial;
+    }
 }
