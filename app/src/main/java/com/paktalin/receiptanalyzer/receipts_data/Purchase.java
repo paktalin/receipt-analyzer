@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.receipts;
+package com.paktalin.receiptanalyzer.receipts_data;
 
 import android.content.Context;
 import android.util.Log;
@@ -22,8 +22,9 @@ public class Purchase {
     private String category = null;
     private ArrayList<String> items;
     private String last;
+    private String inilial;
 
-    Purchase(ArrayList<String> items, Context context) {
+    public Purchase(ArrayList<String> items, Context context) {
         this.items = items;
         if (items.size() == 6)
             if(!purchase(items.get(4))) {
@@ -57,7 +58,7 @@ public class Purchase {
         category = setCategory(context);
     }
 
-    static boolean purchase(String string){
+    public static boolean purchase(String string){
         return !StringManager.similar(string, "pusikliendivoit");
     }
 
@@ -105,6 +106,7 @@ public class Purchase {
                 "; amount: " + amount +
                 "; price: " + price +
                 "; sum: " + sum +
+                "; initial: " + inilial +
                 "; category: " + category + "\n";
     }
 
@@ -119,5 +121,9 @@ public class Purchase {
                     return category;
         }
         return null;
+    }
+
+    public void setInilial(String inilial) {
+        this.inilial = inilial;
     }
 }

@@ -36,6 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + PurchaseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + PurchaseEntry.COLUMN_TITLE + " TEXT NOT NULL, "
                 + PurchaseEntry.COLUMN_CATEGORY + " TEXT NOT NULL, "
+                + PurchaseEntry.COLUMN_INITIAL + " TEXT NOT NULL, "
                 + PurchaseEntry.COLUMN_AMOUNT + " NUMERIC, "
                 + PurchaseEntry.COLUMN_PRICE + " NUMERIC, "
                 + PurchaseEntry.COLUMN_SUM + " NUMERIC);";

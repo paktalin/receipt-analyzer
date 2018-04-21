@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextRecognizer;
-import com.paktalin.receiptanalyzer.receipts.Receipt;
+import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 import java.util.ArrayList;
 

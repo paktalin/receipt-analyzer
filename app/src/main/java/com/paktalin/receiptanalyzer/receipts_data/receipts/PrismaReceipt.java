@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.receipts;
+package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
 /**
  * Created by Paktalin on 21-Mar-18.

@@ -1,9 +1,8 @@
 package com.paktalin.receiptanalyzer;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.paktalin.receiptanalyzer.receipts.Receipt;
+import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 import static com.paktalin.receiptanalyzer.Supermarkets.*;
 

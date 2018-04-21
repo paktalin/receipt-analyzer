@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.receipts;
+package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
 import android.util.Log;
 

@@ -1,9 +1,10 @@
-package com.paktalin.receiptanalyzer.receipts;
+package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
+import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +56,7 @@ public class Receipt {
             String[] string_arr = lines[i].split(" ");
             if (Purchase.purchase(string_arr[0])) {
                 Purchase purchase = new Purchase(new ArrayList<>(Arrays.asList(string_arr)), context);
+                purchase.setInilial(initialLines.get(i));
                 purchases.add(purchase);
             }
         }

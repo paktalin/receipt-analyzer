@@ -11,8 +11,10 @@ class StringFilter {
     private static final String TAG = StringFilter.class.getSimpleName();
 
     private static StringBuilder builder;
+    private static ArrayList<String> list;
 
-    static String[] filter(ArrayList<String> list) {
+    static Object[] filter(ArrayList<String> l) {
+        StringFilter.list = l;
         String string = toString(list);
         string = string.toLowerCase();
 
@@ -21,7 +23,7 @@ class StringFilter {
         removeSpaces();
         removeWrecks();
         string = builder.toString();
-        return string.split(" ");
+        return new Object[]{string.split("\\n"), list};
     }
 
     private static String toString(ArrayList<String> list) {
@@ -97,6 +99,7 @@ class StringFilter {
                 firstLinePassed = true;
             } else {
                 builder.delete(0, endIndex + 1);
+                list.remove(list.get(0));
             }
         }
     }

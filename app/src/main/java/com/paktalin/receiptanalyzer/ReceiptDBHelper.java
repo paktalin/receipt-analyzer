@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
-import com.paktalin.receiptanalyzer.receipts.Receipt;
+import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 import com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry;
 

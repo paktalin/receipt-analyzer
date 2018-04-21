@@ -2,12 +2,7 @@ package com.paktalin.receiptanalyzer;
 
 import android.util.Log;
 
-import com.paktalin.receiptanalyzer.receipts.KonsumReceipt;
-import com.paktalin.receiptanalyzer.receipts.MaximaReceipt;
-import com.paktalin.receiptanalyzer.receipts.PrismaReceipt;
-import com.paktalin.receiptanalyzer.receipts.Receipt;
-import com.paktalin.receiptanalyzer.receipts.RimiReceipt;
-import com.paktalin.receiptanalyzer.receipts.SelverReceipt;
+import com.paktalin.receiptanalyzer.receipts_data.receipts.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,9 +26,10 @@ class ReceiptCreator {
 
     static Receipt createReceipt(ArrayList<String> list) {
 
+        Object[] object = StringFilter.filter(list);
 
-
-        String[] filteredStrings = StringFilter.filter(list);
+        String[] filteredStrings = (String[]) object[0];
+        ArrayList<String> initialLines = (ArrayList<String>) object[1];
         String firstLine = StringManager.clean(filteredStrings[0]);
         String supermarket = getStoreName(firstLine);
 
@@ -57,8 +53,10 @@ class ReceiptCreator {
             default:
                 receipt = null;
         }
-        if (receipt != null)
+        if (receipt != null) {
             receipt.setSupermarket(supermarket);
+            receipt.setInitialLines(initialLines);
+        }
         return receipt;
     }
 
