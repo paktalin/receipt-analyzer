@@ -8,7 +8,7 @@ import android.util.Log;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.receipts.Receipt;
 
-import com.paktalin.receiptanalyzer.data.ReceiptContract.ReceiptEntry;
+import com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry;
 
 /**
  * Created by Paktalin on 22-Mar-18.

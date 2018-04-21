@@ -5,7 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.paktalin.receiptanalyzer.data.ReceiptContract.ReceiptEntry;
+import com.paktalin.receiptanalyzer.data.Contracts.*;
+
 
 /**
  * Created by Paktalin on 10/04/2018.
@@ -31,7 +32,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ReceiptEntry.COLUMN_FINAL_PRICE + " NUMERIC, "
                 + ReceiptEntry.COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP);";
 
+        String SQL_CREATE_PURCHASES_TABLE = "CREATE TABLE " + PurchaseEntry.TABLE_NAME + " ("
+                + PurchaseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + PurchaseEntry.COLUMN_TITLE + " TEXT NOT NULL, "
+                + PurchaseEntry.COLUMN_CATEGORY + " TEXT NOT NULL, "
+                + PurchaseEntry.COLUMN_AMOUNT + " NUMERIC, "
+                + PurchaseEntry.COLUMN_PRICE + " NUMERIC, "
+                + PurchaseEntry.COLUMN_SUM + " NUMERIC);";
+
         db.execSQL(SQL_CREATE_RECEIPTS_TABLE);
+        db.execSQL(SQL_CREATE_PURCHASES_TABLE);
     }
 
     @Override

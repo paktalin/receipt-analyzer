@@ -22,6 +22,7 @@ public class Receipt {
     float finalPrice = -1;
     String priceFlag;
     ArrayList<Purchase> purchases;
+    private ArrayList<String> initialLines;
 
     Receipt(String[] lines) {
         this.lines = lines;
@@ -109,5 +110,9 @@ public class Receipt {
     }
     public ArrayList<Purchase> getPurchases() {
         return purchases;
+    }
+
+    public void setInitialLines(ArrayList<String> initialLines) {
+        this.initialLines = initialLines;
     }
 }

@@ -30,27 +30,29 @@ class ReceiptCreator {
     private final static String konsumString = "harjutarbijateuhistu";
 
     static Receipt createReceipt(ArrayList<String> list) {
-        String filteredString = StringFilter.filter(list);
-        String[] linesArray = filteredString.split("\n");
-        String firstLine = StringManager.clean(linesArray[0]);
+
+
+
+        String[] filteredStrings = StringFilter.filter(list);
+        String firstLine = StringManager.clean(filteredStrings[0]);
         String supermarket = getStoreName(firstLine);
 
         Receipt receipt;
         switch (supermarket) {
             case SELVER:
-                receipt = new SelverReceipt(linesArray);
+                receipt = new SelverReceipt(filteredStrings);
                 break;
             case PRISMA:
-                receipt = new PrismaReceipt(linesArray);
+                receipt = new PrismaReceipt(filteredStrings);
                 break;
             case RIMI:
-                receipt = new RimiReceipt(linesArray);
+                receipt = new RimiReceipt(filteredStrings);
                 break;
             case KONSUM:
-                receipt = new KonsumReceipt(linesArray);
+                receipt = new KonsumReceipt(filteredStrings);
                 break;
             case MAXIMA:
-                receipt = new MaximaReceipt(linesArray);
+                receipt = new MaximaReceipt(filteredStrings);
                 break;
             default:
                 receipt = null;

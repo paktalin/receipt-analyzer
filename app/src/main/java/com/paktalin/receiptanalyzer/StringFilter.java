@@ -12,7 +12,7 @@ class StringFilter {
 
     private static StringBuilder builder;
 
-    static String filter(ArrayList<String> list) {
+    static String[] filter(ArrayList<String> list) {
         String string = toString(list);
         string = string.toLowerCase();
 
@@ -21,7 +21,7 @@ class StringFilter {
         removeSpaces();
         removeWrecks();
         string = builder.toString();
-        return string;
+        return string.split(" ");
     }
 
     private static String toString(ArrayList<String> list) {
