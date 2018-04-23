@@ -21,7 +21,7 @@ public class Receipt {
     int purchasesStart, purchasesEnd;
     float finalPrice = -1;
     String priceFlag;
-    ArrayList<Purchase> purchases;
+    private ArrayList<Purchase> purchases;
     private ArrayList<String> initialLines;
 
     Receipt(String[] lines) {
@@ -33,6 +33,7 @@ public class Receipt {
     }
 
     int startLine(String startString, int number) {
+        //TODO check other lines if startLine isn't found
         if (StringManager.similar(lines[number], startString))
             return number + 1;
         return -1;

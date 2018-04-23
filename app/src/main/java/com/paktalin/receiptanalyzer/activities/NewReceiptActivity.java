@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,7 +27,6 @@ import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
-import static com.paktalin.receiptanalyzer.DataKeeper.*;
 import com.paktalin.receiptanalyzer.data.Contracts.*;
 
 import java.util.ArrayList;
@@ -40,8 +40,9 @@ public class NewReceiptActivity extends AppCompatActivity {
     private static final String TAG = NewReceiptActivity.class.getSimpleName();
 
     Receipt receipt;
-    SharedPreferences appData;
     private String supermarket, retailer, address;
+
+    EditText textViewFinalPrice;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             TextView textViewSupermarket = findViewById(R.id.supermarket);
             TextView textViewRetailer = findViewById(R.id.retailer);
             TextView textViewAddress = findViewById(R.id.address);
-            TextView textViewFinalPrice = findViewById(R.id.final_price);
+            textViewFinalPrice = findViewById(R.id.final_price);
 
             if (receipt != null) {
                 supermarket = receipt.getSupermarket();
@@ -98,6 +99,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                         "Sorry, we couldn't scan the receipt. Please, try again", Toast.LENGTH_SHORT);
                 toast.show();
             }
+            (findViewById(R.id.kokku)).setVisibility(View.VISIBLE);
 
             Button buttonOk = findViewById(R.id.button_ok);
             buttonOk.setVisibility(View.VISIBLE);
@@ -117,32 +119,37 @@ public class NewReceiptActivity extends AppCompatActivity {
     }
 
     View.OnClickListener buttonOkListener = v -> {
-        saveToDB();
-        syncData(APP_PREFERENCES, supermarket);
-        syncData(RETAILERS_PREFERENCES, retailer);
-        syncData(ADDRESSES_PREFERENCES, address);
-        Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
-        startActivity(mainActivityIntent);
+        if(saveToDB()) {
+            syncData();
+            Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
+            startActivity(mainActivityIntent);
+        }
     };
 
-    private void saveToDB() {
+    private boolean saveToDB() {
         DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ReceiptEntry.COLUMN_SUPERMARKET, receipt.getSupermarket());
         values.put(ReceiptEntry.COLUMN_RETAILER, receipt.getRetailer());
         values.put(ReceiptEntry.COLUMN_ADDRESS, receipt.getAddress());
-        values.put(ReceiptEntry.COLUMN_FINAL_PRICE, receipt.getFinalPrice());
+        try {
+            float finalPrice = Float.parseFloat(String.valueOf(textViewFinalPrice.getText()));
+            values.put(ReceiptEntry.COLUMN_FINAL_PRICE, finalPrice);
+        } catch (Exception e) {
+            Toast toast = Toast.makeText(NewReceiptActivity.this, "Wrong format of the final price!", Toast.LENGTH_LONG);
+            toast.show();
+            return false;
+        }
         long newRowId = db.insert(ReceiptEntry.TABLE_NAME, null, values);
-        if (newRowId == -1)
-            Log.e(TAG, "Couldn't insert the receipt into DB");
+        return newRowId != -1;
     }
 
-    private void syncData(String preferences, String key) {
-        appData = getSharedPreferences(preferences, Context.MODE_PRIVATE);
-        int counter = appData.getInt(key, 0) + 1;
+    private void syncData() {
+        SharedPreferences appData = getSharedPreferences("app_data", Context.MODE_PRIVATE);
+        int counter = appData.getInt(supermarket, 0) + 1;
         SharedPreferences.Editor editor = appData.edit();
-        editor.putInt(key, counter);
+        editor.putInt(supermarket, counter);
         editor.apply();
     }
 }

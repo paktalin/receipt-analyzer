@@ -20,10 +20,7 @@ import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 
 import java.io.File;
-import java.util.Hashtable;
 import java.util.Map;
-
-import static com.paktalin.receiptanalyzer.DataKeeper.*;
 
 /**
  * Created by Paktalin on 12/04/2018.
@@ -35,28 +32,18 @@ public class MainActivity extends AppCompatActivity {
     Uri imageUri;
     private static final int REQUEST_GET_FROM_CAMERA = 30;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
-    SharedPreferences appData;
-    SharedPreferences retailersData;
-    SharedPreferences addressesData;
-    TextView textViewSupermarkets, textViewRetailers, textViewAddresses;
+    TextView textViewSupermarkets;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textViewSupermarkets = findViewById(R.id.text_view_supermarkets);
-        textViewRetailers = findViewById(R.id.text_view_retailers);
-        textViewAddresses = findViewById(R.id.text_view_addresses);
 
         Button buttonNewReceipt = findViewById(R.id.button_new_receipt);
         FileManager.setUpAppDir(MainActivity.this);
 
-        appData = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         (new SupermarketLoader()).execute();
-        /*retailersData = this.getSharedPreferences(RETAILERS_PREFERENCES, Context.MODE_PRIVATE);
-        (new RetailersLoader()).execute();
-        addressesData = this.getSharedPreferences(ADDRESSES_PREFERENCES, Context.MODE_PRIVATE);
-        (new AddressesLoader()).execute();*/
 
         buttonNewReceipt.setOnClickListener(v -> createDialog(MainActivity.this));
     }
@@ -100,36 +87,13 @@ public class MainActivity extends AppCompatActivity {
     class SupermarketLoader extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
+            SharedPreferences appData = getSharedPreferences("app_data", Context.MODE_PRIVATE);
             return extractMap(percentage(appData.getAll()));
         }
 
         @Override
         protected void onPostExecute(String strings) {
             textViewSupermarkets.setText(strings);
-        }
-    }
-
-    class RetailersLoader extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... voids) {
-            return extractMap(retailersData.getAll());
-        }
-
-        @Override
-        protected void onPostExecute(String strings) {
-            textViewRetailers.setText(strings);
-        }
-    }
-
-    class AddressesLoader extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... voids) {
-            return extractMap(addressesData.getAll());
-        }
-
-        @Override
-        protected void onPostExecute(String strings) {
-            textViewAddresses.setText(strings);
         }
     }
 

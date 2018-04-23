@@ -30,13 +30,13 @@
         android:id="@+id/address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@id/supermarket" />
 
     <Space
         android:id="@+id/space"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="10dp"
         android:layout_below="@+id/retailer"/>
 
     <ListView
@@ -53,15 +53,17 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_ok"
         android:text="Kokku"
-        android:textSize="20sp" />
+        android:visibility="invisible"
+        android:textSize="30sp" />
 
-    <TextView
+    <EditText
         android:id="@+id/final_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_ok"
         android:layout_alignParentEnd="true"
-        android:textSize="20sp" />
+        android:background="@android:color/transparent"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/button_ok"
