@@ -3,137 +3,78 @@ package com.paktalin.receiptanalyzer.receipts_data;
 import android.content.Context;
 import android.util.Log;
 
-import com.paktalin.receiptanalyzer.FileManager;
-import com.paktalin.receiptanalyzer.StringManager;
-
-import java.util.ArrayList;
+import static com.paktalin.receiptanalyzer.FileManager.getStringFromTextFile;
+import static com.paktalin.receiptanalyzer.StringManager.similar;
 
 /**
- * Created by Paktalin on 24-Mar-18.
+ * Created by Paktalin on 23/04/2018.
  */
 
 public class Purchase {
     private static final String TAG = Purchase.class.getSimpleName();
 
-    private String title = "";
-    private float amount = -1;
-    private float price = -1;
-    private float sum = -1;
+    private String title = null;
     private String category = null;
-    private ArrayList<String> items;
-    private String last;
-    private String inilial;
+    private float price = 0;
 
-    public Purchase(ArrayList<String> items, Context context) {
-        this.items = items;
-        if (items.size() == 6)
-            if(!purchase(items.get(4))) {
-                items.remove(items.get(5));
-                items.remove(items.get(4));
-            }
-        while(items.size() > 0) {
-            last = last();
-            if (!set(sum)) {
-                sum = tryToCast();
-                checkIfCasted(sum, false);
-            } else if (!set(price)) {
-                price = tryToCast();
-                checkIfCasted(price, false);
-            } else if(!set(amount)) {
-                amount = tryToCast();
-                checkIfCasted(amount, true);
-            } else {
-                int size = items.size();
-                if(size == 1){
-                    title = last;
-                    items.remove(last);
-                } else {
-                    ArrayList<String> titleList = (ArrayList<String>)items.clone();
-                    for (String string : titleList)
-                        title += string;
-                    items.clear();
-                }
-            }
-        }
-        category = setCategory(context);
+    public Purchase(Context context, String line, String initial) {
+        title = initial;
+        setCategory(context, line);
+        extractPrice(line.split(" "));
     }
 
     public static boolean purchase(String string){
-        return !StringManager.similar(string, "pusikliendivoit");
+        return !similar(string, "pusikliendivoit");
     }
 
-    private boolean set(float f){
-        return f != -1;
+    private void extractPrice(String[] items) {
+        for (int i = items.length - 1; i >= 0; i--) {
+            if (casted(items[i]))
+                return;
+        }
     }
 
-    private float tryToCast(){
+    private boolean casted(String string) {
         try {
-            return Float.parseFloat(last);
+            price = Float.parseFloat(string);
+            return true;
         } catch (NumberFormatException e) {
-            return -1;
+            string = string.replaceAll("o", "0");
+            string = string.replaceAll("g", "9");
+            string = string.replaceAll(" ", "");
+            try {
+                price = Float.parseFloat(string);
+                return true;
+            } catch (NumberFormatException ignored){
+            }
         }
+        return false;
     }
 
-    private String last() {
-        return items.get(items.size()-1);
-    }
-
-    private void checkIfCasted(float field, boolean amount){
-        if (set(field))
-            items.remove(last);
-        else {
-            tryToSplit(last);
-            if (amount && last.equals(last()))
-                items.add("1");
-        }
-    }
-
-    private void tryToSplit(String string) {
-        if(string.contains("."))  {
-            String cut = string.substring(2, string.length());
-            int index = cut.indexOf('.') + 2;
-            String first = string.substring(0, index - 1);
-            String second = string.substring(index - 1, string.length());
-            items.remove(last);
-            items.add(first);
-            items.add(second);
-            Log.d(TAG, "first: " + first + " ; second: " + second);
-        }
-    }
-
-    public String purchaseInfo(){
-        return  "title: " + title +
-                "; amount: " + amount +
-                "; price: " + price +
-                "; sum: " + sum +
-                "; initial: " + inilial +
-                "; category: " + category + "\n";
-    }
-
-    private String setCategory(Context context) {
-        String[] tags = FileManager.getStringFromTextFile(context, "categories/tags");
-        String category = null;
+    private void setCategory(Context context, String string) {
+        String[] tags = getStringFromTextFile(context, "categories/tags");
+        String currentCategory = null;
         for (String line : tags) {
             if (line.substring(0, 2).equals("__"))
-                category = line.substring(2, line.length());
-            else
-                if (title.contains(line))
-                    return category;
+                currentCategory = line.substring(2, line.length());
+            else if (string.contains(line))
+                category = currentCategory;
         }
-        return null;
     }
 
-    public void setInilial(String inilial) {
-        this.inilial = inilial;
+    public void purchaseInfo(){
+        Log.d(TAG, "title: " + title +
+                "; price: " + price +
+                "; category: " + category + "\n");
     }
 
-    public float getSum() {
-        return sum;
+    public String getTitle() {
+        return title;
     }
     public String getCategory() {
         return category;
     }
-    public String getInilial() {
-        return inilial;
+    public float getPrice() {
+        return price;
     }
 }

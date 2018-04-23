@@ -7,7 +7,6 @@ import com.paktalin.receiptanalyzer.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Paktalin on 08/04/2018.
@@ -52,14 +51,11 @@ public class Receipt {
 
     public void extractPurchases(Context context) {
         purchases = new ArrayList<>();
-        for (int i = purchasesStart; i <= purchasesEnd; i++) {
-            String[] string_arr = lines[i].split(" ");
-            if (Purchase.purchase(string_arr[0])) {
-                Purchase purchase = new Purchase(new ArrayList<>(Arrays.asList(string_arr)), context);
-                purchase.setInilial(initialLines.get(i));
+        for (int i = purchasesStart; i <= purchasesEnd; i++)
+            if (Purchase.purchase(lines[i].split(" ")[0])) {
+                Purchase purchase = new Purchase(context, lines[i], initialLines.get(i));
                 purchases.add(purchase);
             }
-        }
     }
 
     public void logReceipt() {

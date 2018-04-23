@@ -51,9 +51,7 @@ public class StringManager {
             string = removeLetters(string);
             try {
                 f = Float.parseFloat(string);
-            } catch (NumberFormatException ignored){
-
-            }
+            } catch (NumberFormatException ignored){}
         }
         return f;
     }

@@ -47,13 +47,12 @@ public class ListViewAdapter extends BaseAdapter {
         }
 
         Purchase p = getPurchase(position);
-        ((TextView) convertView.findViewById(R.id.initial_string)).setText(p.getInilial());
+        ((TextView) convertView.findViewById(R.id.initial_string)).setText(p.getTitle());
         ((TextView) convertView.findViewById(R.id.category)).setText(p.getCategory());
-        ((TextView) convertView.findViewById(R.id.price)).setText(p.getSum() + "");
+        ((TextView) convertView.findViewById(R.id.price)).setText(p.getPrice() + "");
         return convertView;
     }
 
     private Purchase getPurchase(int position) {
-        return ((Purchase) getItem(position));
-    }
+        return ((Purchase) getItem(position));    }
 }
