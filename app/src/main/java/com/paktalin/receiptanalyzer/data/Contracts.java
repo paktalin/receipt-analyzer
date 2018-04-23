@@ -25,9 +25,6 @@ public final class Contracts {
         public final static String _ID = BaseColumns._ID;
         public final static String COLUMN_TITLE = "title";
         public final static String COLUMN_CATEGORY = "category";
-        public final static String COLUMN_INITIAL = "initial";
-        public final static String COLUMN_AMOUNT = "amount";
         public final static String COLUMN_PRICE = "price";
-        public final static String COLUMN_SUM = "sum";
     }
 }
