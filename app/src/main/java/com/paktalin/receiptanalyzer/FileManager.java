@@ -9,16 +9,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import com.paktalin.receiptanalyzer.activities.NewReceiptActivity;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -28,16 +21,13 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class FileManager {
     private static final String TAG = FileManager.class.getSimpleName();
-    private static String appDirPath;
     private static String picturesDirPath;
 
     public static void setUpAppDir(Context context) {
         PermissionManager.checkPermission(WRITE_EXTERNAL_STORAGE, (Activity) context);
         File appDir = new File(Environment.getExternalStorageDirectory(), "ReceiptAnalyzer");
-        if (created(appDir)) {
-            appDirPath = appDir.getAbsolutePath();
+        if (created(appDir))
             picturesDirPath = appDir + "/Pictures";
-        }
     }
 
     private static boolean created(File dir) {
@@ -49,50 +39,6 @@ public class FileManager {
             return true;
         }
         return true;
-    }
-
-    static void saveBitmap(Bitmap bitmap, String name) {
-        File bitmapFile = new File(picturesDirPath);
-        if (created(bitmapFile)) {
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(picturesDirPath + name);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (out != null) {
-                        out.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            Log.d(TAG, "Couldn't save bitmap, because the directory doesn't exists");
-        }
-    }
-
-    public static void saveBitmap(Bitmap bitmap) {
-        String name = "/last.jpg";
-        saveBitmap(bitmap, name);
-    }
-
-    static void saveTextFile(String name, String data) throws IOException {
-        String scannedDirPath = appDirPath + "/ScannedText/";
-        if (created(new File(scannedDirPath))) {
-            FileOutputStream fOut = new FileOutputStream(scannedDirPath + name);
-            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-            myOutWriter.append(data);
-            myOutWriter.close();
-            fOut.flush();
-            fOut.close();
-        }
-    }
-
-    static void saveTextFile(String data) throws IOException {
-        saveTextFile(makeName(), data);
     }
 
     public static String[] getStringFromTextFile(Context context, String fileName) {
@@ -108,10 +54,6 @@ public class FileManager {
             e.printStackTrace();
         }
         return text.split("\\r?\\n");
-    }
-
-    private static String makeName() {
-        return new SimpleDateFormat("ddMMHHmmss").format(new Date()) + ".txt";
     }
 
     public static String getPictureDirPath() {
@@ -137,7 +79,7 @@ public class FileManager {
     }
 
     public static Bitmap decodeBitmapUri_Rotate(int rotation, Uri uri, Context context) {
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         try {
             bitmap = FileManager.decodeBitmapUri(context, uri);
             Matrix matrix = new Matrix();
@@ -148,5 +90,22 @@ public class FileManager {
             return null;
         }
         return bitmap;
+    }
+
+    private static String strSeparator = "__,__";
+    public static String convertArrayToString(long[] array){
+        String str = "";
+        for (int i = 0; i < array.length; i++) {
+            str = str + array[i];
+            if(i < array.length - 1)
+                str = str+strSeparator;
+
+        }
+        return str;
+    }
+
+    public static String[] convertStringToArray(String str){
+        String[] arr = str.split(strSeparator);
+        return arr;
     }
 }

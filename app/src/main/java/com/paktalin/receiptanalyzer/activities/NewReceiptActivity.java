@@ -45,6 +45,8 @@ public class NewReceiptActivity extends AppCompatActivity {
     ListView listView;
     EditText textViewFinalPrice;
     SQLiteDatabase db;
+    long[] purchasesIDs;
+    ArrayList<Purchase> purchases;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,56 +77,48 @@ public class NewReceiptActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            ProgressBar progressBar = findViewById(R.id.progress_bar);
-            progressBar.setVisibility(View.INVISIBLE);
-            ArrayList<Purchase> purchases = new ArrayList<>();
-            TextView textViewSupermarket = findViewById(R.id.supermarket);
-            TextView textViewRetailer = findViewById(R.id.retailer);
-            TextView textViewAddress = findViewById(R.id.address);
+            findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
             textViewFinalPrice = findViewById(R.id.final_price);
 
             if (receipt != null) {
                 supermarket = receipt.getSupermarket();
-                String retailer = receipt.getRetailer();
-                String address = receipt.getAddress();
                 receipt.extractPurchases(NewReceiptActivity.this);
                 purchases = receipt.getPurchases();
                 for (Purchase p : purchases)
                     p.purchaseInfo();
 
-                textViewSupermarket.setText(supermarket);
-                textViewRetailer.setText(retailer);
-                textViewAddress.setText(address);
+                ((TextView)findViewById(R.id.supermarket)).setText(supermarket);
+                ((TextView)findViewById(R.id.retailer)).setText(receipt.getRetailer());
+                ((TextView)findViewById(R.id.address)).setText(receipt.getAddress());
+                (findViewById(R.id.kokku)).setVisibility(View.VISIBLE);
                 String finalPrice = String.valueOf(receipt.getFinalPrice());
                 textViewFinalPrice.setText(finalPrice);
+
+                adapter = new ListViewAdapter(NewReceiptActivity.this, purchases);
+                listView = findViewById(R.id.list_view);
+                listView.setAdapter(adapter);
+
+                Button buttonOk = findViewById(R.id.button_ok);
+                buttonOk.setVisibility(View.VISIBLE);
+                buttonOk.setOnClickListener(buttonOkListener);
+
+                Button buttonCancel = findViewById(R.id.button_cancel);
+                buttonCancel.setVisibility(View.VISIBLE);
+                buttonCancel.setOnClickListener(v -> {
+                    Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
+                    startActivity(mainActivityIntent);
+                });
             } else {
-                Toast toast = Toast.makeText(NewReceiptActivity.this,
-                        "Sorry, we couldn't scan the receipt. Please, try again", Toast.LENGTH_SHORT);
-                toast.show();
+                (Toast.makeText(NewReceiptActivity.this,
+                        "Sorry, we couldn't scan the receipt. Please, try again", Toast.LENGTH_SHORT)).show();
             }
-            (findViewById(R.id.kokku)).setVisibility(View.VISIBLE);
-
-            Button buttonOk = findViewById(R.id.button_ok);
-            buttonOk.setVisibility(View.VISIBLE);
-            buttonOk.setOnClickListener(buttonOkListener);
-
-            Button buttonCancel = findViewById(R.id.button_cancel);
-            buttonCancel.setVisibility(View.VISIBLE);
-            buttonCancel.setOnClickListener(v -> {
-                Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
-                startActivity(mainActivityIntent);
-            });
-
-            adapter = new ListViewAdapter(NewReceiptActivity.this, purchases);
-            listView = findViewById(R.id.list_view);
-            listView.setAdapter(adapter);
         }
     }
 
     View.OnClickListener buttonOkListener = v -> {
         DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
         db = dbHelper.getWritableDatabase();
-
+        purchasesIDs = new long[purchases.size()];
         if(saveReceipt()) {
             for (int i = 0; i < adapter.getCount(); i++)
                 if (!savePurchases(i)) {
@@ -136,7 +130,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
             startActivity(mainActivityIntent);
         } else {
-            Toast toast = Toast.makeText(NewReceiptActivity.this, "Something went wrong!", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(NewReceiptActivity.this, "The app's Database has changed. Update your app, please!", Toast.LENGTH_LONG);
             toast.show();
         }
     };
@@ -146,6 +140,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(ReceiptEntry.COLUMN_SUPERMARKET, receipt.getSupermarket());
         values.put(ReceiptEntry.COLUMN_RETAILER, receipt.getRetailer());
         values.put(ReceiptEntry.COLUMN_ADDRESS, receipt.getAddress());
+        values.put(ReceiptEntry.COLUMN_PURCHASES, FileManager.convertArrayToString(purchasesIDs));
         try {
             float finalPrice = Float.parseFloat(String.valueOf(textViewFinalPrice.getText()));
             values.put(ReceiptEntry.COLUMN_FINAL_PRICE, finalPrice);
@@ -165,6 +160,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(PurchaseEntry.COLUMN_CATEGORY, p.getCategory());
         values.put(PurchaseEntry.COLUMN_PRICE, p.getPrice());
         long newRowId = db.insert(PurchaseEntry.TABLE_NAME, null, values);
+        purchasesIDs[i] = newRowId;
         return newRowId != -1;
     }
 
