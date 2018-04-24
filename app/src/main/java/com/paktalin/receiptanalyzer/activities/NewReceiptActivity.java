@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +43,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     ListViewAdapter adapter;
     ListView listView;
     EditText textViewFinalPrice;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,14 +120,17 @@ public class NewReceiptActivity extends AppCompatActivity {
     }
 
     View.OnClickListener buttonOkListener = v -> {
-        if(saveToDB()) {
+        DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
+        db = dbHelper.getWritableDatabase();
+
+        if(saveReceipt()) {
             for (int i = 0; i < adapter.getCount(); i++)
                 if (!savePurchases(i)) {
                     Toast toast = Toast.makeText(NewReceiptActivity.this, "Something went wrong!", Toast.LENGTH_LONG);
                     toast.show();
                     return;
                 }
-            syncData();
+            updateSharedPreferences();
             Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
             startActivity(mainActivityIntent);
         } else {
@@ -136,9 +139,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         }
     };
 
-    private boolean saveToDB() {
-        DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+    private boolean saveReceipt() {
         ContentValues values = new ContentValues();
         values.put(ReceiptEntry.COLUMN_SUPERMARKET, receipt.getSupermarket());
         values.put(ReceiptEntry.COLUMN_RETAILER, receipt.getRetailer());
@@ -157,8 +158,6 @@ public class NewReceiptActivity extends AppCompatActivity {
 
     private boolean savePurchases(int i) {
         Purchase p = (Purchase) listView.getItemAtPosition(i);
-        DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PurchaseEntry.COLUMN_TITLE, p.getTitle());
         values.put(PurchaseEntry.COLUMN_CATEGORY, p.getCategory());
@@ -167,7 +166,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         return newRowId != -1;
     }
 
-    private void syncData() {
+    private void updateSharedPreferences() {
         SharedPreferences appData = getSharedPreferences("app_data", Context.MODE_PRIVATE);
         int counter = appData.getInt(supermarket, 0) + 1;
         SharedPreferences.Editor editor = appData.edit();

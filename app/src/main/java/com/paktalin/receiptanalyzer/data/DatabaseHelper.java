@@ -27,15 +27,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String SQL_CREATE_RECEIPTS_TABLE = "CREATE TABLE " + ReceiptEntry.TABLE_NAME + " ("
                 + ReceiptEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ReceiptEntry.COLUMN_SUPERMARKET + " TEXT NOT NULL, "
-                + ReceiptEntry.COLUMN_RETAILER + " TEXT NOT NULL, "
-                + ReceiptEntry.COLUMN_ADDRESS + " TEXT NOT NULL, "
+                + ReceiptEntry.COLUMN_RETAILER + " TEXT, "
+                + ReceiptEntry.COLUMN_ADDRESS + " TEXT, "
                 + ReceiptEntry.COLUMN_FINAL_PRICE + " NUMERIC, "
                 + ReceiptEntry.COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP);";
 
         String SQL_CREATE_PURCHASES_TABLE = "CREATE TABLE " + PurchaseEntry.TABLE_NAME + " ("
                 + PurchaseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + PurchaseEntry.COLUMN_TITLE + " TEXT NOT NULL, "
-                + PurchaseEntry.COLUMN_CATEGORY + " TEXT NOT NULL, "
+                + PurchaseEntry.COLUMN_CATEGORY + " TEXT, "
                 + PurchaseEntry.COLUMN_PRICE + " NUMERIC);";
 
         db.execSQL(SQL_CREATE_RECEIPTS_TABLE);
