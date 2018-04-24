@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.similarity;
+package com.paktalin.receiptanalyzer.recognition.similarity;
 
 import java.io.Serializable;
 

@@ -1,8 +1,6 @@
 package com.paktalin.receiptanalyzer;
 
-import android.util.Log;
-
-import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
+import com.paktalin.receiptanalyzer.recognition.similarity.JaroWinkler;
 
 /**
  * Created by Paktalin on 19-Mar-18.

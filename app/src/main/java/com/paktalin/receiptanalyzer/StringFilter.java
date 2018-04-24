@@ -1,6 +1,6 @@
 package com.paktalin.receiptanalyzer;
 
-import com.paktalin.receiptanalyzer.similarity.JaroWinkler;
+import com.paktalin.receiptanalyzer.recognition.similarity.JaroWinkler;
 import java.util.ArrayList;
 
 /**
