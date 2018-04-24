@@ -121,10 +121,18 @@ public class NewReceiptActivity extends AppCompatActivity {
 
     View.OnClickListener buttonOkListener = v -> {
         if(saveToDB()) {
+            for (int i = 0; i < adapter.getCount(); i++)
+                if (!savePurchases(i)) {
+                    Toast toast = Toast.makeText(NewReceiptActivity.this, "Something went wrong!", Toast.LENGTH_LONG);
+                    toast.show();
+                    return;
+                }
             syncData();
-            savePurchases();
             Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
             startActivity(mainActivityIntent);
+        } else {
+            Toast toast = Toast.makeText(NewReceiptActivity.this, "Something went wrong!", Toast.LENGTH_LONG);
+            toast.show();
         }
     };
 
@@ -147,32 +155,16 @@ public class NewReceiptActivity extends AppCompatActivity {
         return newRowId != -1;
     }
 
-    private boolean savePurchases() {
-        for (int i = 0; i < adapter.getCount(); i++) {
-            Purchase p = (Purchase) listView.getItemAtPosition(i);
-            Log.d(TAG, "title: " + String.valueOf(p.getPrice()));
-        }
-        return true;
-        /*DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
+    private boolean savePurchases(int i) {
+        Purchase p = (Purchase) listView.getItemAtPosition(i);
+        DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        for (int i = 0; i < adapter.getCount(); i++) {
-            ContentValues values = new ContentValues();
-            Purchase p = (Purchase) adapter.getItem(i);
-            values.put(PurchaseEntry.COLUMN_TITLE, p.getTitle());
-            values.put(PurchaseEntry.COLUMN_CATEGORY, p.getCategory());
-            try {
-                float price = Float.parseFloat(String.valueOf(p.getPrice()));
-                values.put(PurchaseEntry.COLUMN_PRICE, price);
-            } catch (Exception e) {
-                Toast toast = Toast.makeText(NewReceiptActivity.this, "Wrong format of the final price!", Toast.LENGTH_LONG);
-                toast.show();
-                return false;
-            }
-            long newRowId = db.insert(ReceiptEntry.TABLE_NAME, null, values);
-            return newRowId != -1;
-        }
-        return true;*/
+        ContentValues values = new ContentValues();
+        values.put(PurchaseEntry.COLUMN_TITLE, p.getTitle());
+        values.put(PurchaseEntry.COLUMN_CATEGORY, p.getCategory());
+        values.put(PurchaseEntry.COLUMN_PRICE, p.getPrice());
+        long newRowId = db.insert(PurchaseEntry.TABLE_NAME, null, values);
+        return newRowId != -1;
     }
 
     private void syncData() {
