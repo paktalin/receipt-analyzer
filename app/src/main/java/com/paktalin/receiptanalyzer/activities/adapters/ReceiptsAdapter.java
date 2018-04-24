@@ -1,5 +1,6 @@
 package com.paktalin.receiptanalyzer.activities.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,10 @@ import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 /**
  * Created by Paktalin on 24/04/2018.
@@ -41,6 +46,7 @@ public class ReceiptsAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -49,9 +55,11 @@ public class ReceiptsAdapter extends BaseAdapter {
 
         Receipt r = (Receipt) getItem(position);
 
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy");
+
         ((TextView)convertView.findViewById(R.id.supermarket_2)).setText(r.getSupermarket());
-        //((TextView)convertView.findViewById(R.id.date)).setText(r.getDate());
-        ((TextView)convertView.findViewById(R.id.final_price_2)).setText(String.valueOf(r.getFinalPrice()));
+        ((TextView)convertView.findViewById(R.id.date)).setText(sdf.format(new Date(r.getDate())));
+        ((TextView)convertView.findViewById(R.id.final_price_2)).setText(r.getFinalPrice() + "€");
         return convertView;
     }
 }

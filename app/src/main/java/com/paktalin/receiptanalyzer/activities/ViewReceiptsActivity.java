@@ -18,8 +18,8 @@ import com.paktalin.receiptanalyzer.data.Contracts.*;
  * Created by Paktalin on 24/04/2018.
  */
 
-public class ViewReceipts extends AppCompatActivity{
-    private static final String TAG = ViewReceipts.class.getSimpleName();
+public class ViewReceiptsActivity extends AppCompatActivity{
+    private static final String TAG = ViewReceiptsActivity.class.getSimpleName();
 
     Receipt[] receipts;
 
@@ -29,12 +29,12 @@ public class ViewReceipts extends AppCompatActivity{
         setContentView(R.layout.activity_view_receipts);
 
         extractReceipts();
-        ReceiptsAdapter adapter = new ReceiptsAdapter(ViewReceipts.this, receipts);
+        ReceiptsAdapter adapter = new ReceiptsAdapter(ViewReceiptsActivity.this, receipts);
         ((ListView)findViewById(R.id.all_receipts)).setAdapter(adapter);
     }
 
     private void extractReceipts() {
-        DatabaseHelper dbHelper = new DatabaseHelper(ViewReceipts.this);
+        DatabaseHelper dbHelper = new DatabaseHelper(ViewReceiptsActivity.this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String[] projection = {
@@ -47,7 +47,7 @@ public class ViewReceipts extends AppCompatActivity{
         receipts = new Receipt[cursor.getCount()];
         int supermarketColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_SUPERMARKET);
         int finalPriceColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_FINAL_PRICE);
-        //int dateColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_DATE);
+        int dateColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_DATE);
 
         int i = 0;
         while (cursor.moveToNext()) {
@@ -55,8 +55,8 @@ public class ViewReceipts extends AppCompatActivity{
 
             receipts[i].setSupermarket(cursor.getString(supermarketColumnIndex));
             receipts[i].setFinalPrice(cursor.getFloat(finalPriceColumnIndex));
+            receipts[i].setDate(cursor.getLong(dateColumnIndex));
             Log.d(TAG, receipts[i].getSupermarket());
-            //receipt.setDate(cursor.getString(dateColumnIndex));
             i++;
         }
         cursor.close();

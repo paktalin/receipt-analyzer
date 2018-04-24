@@ -141,6 +141,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(ReceiptEntry.COLUMN_RETAILER, receipt.getRetailer());
         values.put(ReceiptEntry.COLUMN_ADDRESS, receipt.getAddress());
         values.put(ReceiptEntry.COLUMN_PURCHASES, FileManager.convertArrayToString(purchasesIDs));
+        values.put(ReceiptEntry.COLUMN_DATE, System.currentTimeMillis());
         try {
             float finalPrice = Float.parseFloat(String.valueOf(textViewFinalPrice.getText()));
             values.put(ReceiptEntry.COLUMN_FINAL_PRICE, finalPrice);

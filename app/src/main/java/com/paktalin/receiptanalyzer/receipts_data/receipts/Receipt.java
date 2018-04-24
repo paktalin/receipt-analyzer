@@ -23,6 +23,7 @@ public class Receipt {
     String priceFlag;
     private ArrayList<Purchase> purchases;
     private ArrayList<String> initialLines;
+    private long date;
 
     Receipt(String[] lines) {
         this.lines = lines;
@@ -99,6 +100,9 @@ public class Receipt {
     public void setFinalPrice(float finalPrice) {
         this.finalPrice = finalPrice;
     }
+    public void setDate(long date) {
+        this.date = date;
+    }
 
     public String getSupermarket() {
         return supermarket;
@@ -117,5 +121,8 @@ public class Receipt {
     }
     public ArrayList<Purchase> getPurchases() {
         return purchases;
+    }
+    public long getDate() {
+        return date;
     }
 }

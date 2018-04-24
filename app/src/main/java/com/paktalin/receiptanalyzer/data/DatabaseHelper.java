@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ReceiptEntry.COLUMN_RETAILER + " TEXT, "
                 + ReceiptEntry.COLUMN_ADDRESS + " TEXT, "
                 + ReceiptEntry.COLUMN_FINAL_PRICE + " NUMERIC, "
-                + ReceiptEntry.COLUMN_DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
+                + ReceiptEntry.COLUMN_DATE + " INTEGER, "
                 + ReceiptEntry.COLUMN_PURCHASES + " TEXT);";
 
         String SQL_CREATE_PURCHASES_TABLE = "CREATE TABLE " + PurchaseEntry.TABLE_NAME + " ("
