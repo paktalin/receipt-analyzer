@@ -2,16 +2,19 @@ package com.paktalin.receiptanalyzer.activities;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 
 /**
@@ -19,8 +22,11 @@ import java.util.ArrayList;
  */
 
 public class ListViewAdapter extends BaseAdapter {
+    private static final String TAG = ListViewAdapter.class.getSimpleName();
+
     private ArrayList<Purchase> purchases;
     private LayoutInflater inflater;
+    private int position;
 
     ListViewAdapter(Context context, ArrayList<Purchase> purchases) {
         this.purchases = purchases;
@@ -37,6 +43,7 @@ public class ListViewAdapter extends BaseAdapter {
         return purchases.get(position);
     }
 
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -44,6 +51,7 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        this.position = position;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.purchase, null);
         }
@@ -52,17 +60,70 @@ public class ListViewAdapter extends BaseAdapter {
         String category = p.getCategory();
         float price = p.getPrice();
 
-        EditText priceView = convertView.findViewById(R.id.price);
-        EditText categoryView = convertView.findViewById(R.id.category);
+        final EditText titleView = convertView.findViewById(R.id.title);
+        titleView.setTag(position);
+        titleView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        ((EditText) convertView.findViewById(R.id.title)).setText(p.getTitle());
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int p = Integer.parseInt(titleView.getTag().toString());
+                purchases.get(p).setTitle(String.valueOf(s));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        titleView.setText(p.getTitle());
+
+        final EditText categoryView = convertView.findViewById(R.id.category);
+        categoryView.setTag(position);
+        categoryView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int p = Integer.parseInt(categoryView.getTag().toString());
+                purchases.get(p).setCategory(String.valueOf(s));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         if (category == null) {
             categoryView.setHint("Category");
             categoryView.setHintTextColor(Color.MAGENTA);
         }
-        categoryView.setText(p.getCategory());
 
+        final EditText priceView = convertView.findViewById(R.id.price);
+        priceView.setTag(position);
+        priceView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int p = Integer.parseInt(priceView.getTag().toString());
+                purchases.get(p).setPrice(Float.parseFloat(String.valueOf(s)));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         if(price == 0)
             priceView.setTextColor(Color.MAGENTA);
         priceView.setText(String.valueOf(price));

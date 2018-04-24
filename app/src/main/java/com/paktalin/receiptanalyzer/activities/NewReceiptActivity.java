@@ -40,8 +40,9 @@ public class NewReceiptActivity extends AppCompatActivity {
     private static final String TAG = NewReceiptActivity.class.getSimpleName();
 
     Receipt receipt;
-    private String supermarket, retailer, address;
-
+    private String supermarket;
+    ListViewAdapter adapter;
+    ListView listView;
     EditText textViewFinalPrice;
 
     @Override
@@ -74,7 +75,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             ProgressBar progressBar = findViewById(R.id.progress_bar);
             progressBar.setVisibility(View.INVISIBLE);
-            ArrayList<Purchase> purchases = null;
+            ArrayList<Purchase> purchases = new ArrayList<>();
             TextView textViewSupermarket = findViewById(R.id.supermarket);
             TextView textViewRetailer = findViewById(R.id.retailer);
             TextView textViewAddress = findViewById(R.id.address);
@@ -82,8 +83,8 @@ public class NewReceiptActivity extends AppCompatActivity {
 
             if (receipt != null) {
                 supermarket = receipt.getSupermarket();
-                retailer = receipt.getRetailer();
-                address = receipt.getAddress();
+                String retailer = receipt.getRetailer();
+                String address = receipt.getAddress();
                 receipt.extractPurchases(NewReceiptActivity.this);
                 purchases = receipt.getPurchases();
                 for (Purchase p : purchases)
@@ -112,8 +113,8 @@ public class NewReceiptActivity extends AppCompatActivity {
                 startActivity(mainActivityIntent);
             });
 
-            ListViewAdapter adapter = new ListViewAdapter(NewReceiptActivity.this, purchases);
-            ListView listView = findViewById(R.id.list_view);
+            adapter = new ListViewAdapter(NewReceiptActivity.this, purchases);
+            listView = findViewById(R.id.list_view);
             listView.setAdapter(adapter);
         }
     }
@@ -121,6 +122,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = v -> {
         if(saveToDB()) {
             syncData();
+            savePurchases();
             Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
             startActivity(mainActivityIntent);
         }
@@ -143,6 +145,34 @@ public class NewReceiptActivity extends AppCompatActivity {
         }
         long newRowId = db.insert(ReceiptEntry.TABLE_NAME, null, values);
         return newRowId != -1;
+    }
+
+    private boolean savePurchases() {
+        for (int i = 0; i < adapter.getCount(); i++) {
+            Purchase p = (Purchase) listView.getItemAtPosition(i);
+            Log.d(TAG, "title: " + String.valueOf(p.getPrice()));
+        }
+        return true;
+        /*DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        for (int i = 0; i < adapter.getCount(); i++) {
+            ContentValues values = new ContentValues();
+            Purchase p = (Purchase) adapter.getItem(i);
+            values.put(PurchaseEntry.COLUMN_TITLE, p.getTitle());
+            values.put(PurchaseEntry.COLUMN_CATEGORY, p.getCategory());
+            try {
+                float price = Float.parseFloat(String.valueOf(p.getPrice()));
+                values.put(PurchaseEntry.COLUMN_PRICE, price);
+            } catch (Exception e) {
+                Toast toast = Toast.makeText(NewReceiptActivity.this, "Wrong format of the final price!", Toast.LENGTH_LONG);
+                toast.show();
+                return false;
+            }
+            long newRowId = db.insert(ReceiptEntry.TABLE_NAME, null, values);
+            return newRowId != -1;
+        }
+        return true;*/
     }
 
     private void syncData() {

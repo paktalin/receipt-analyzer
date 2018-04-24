@@ -23,6 +23,12 @@ public class Purchase {
         extractPrice(line.split(" "));
     }
 
+    public Purchase(Purchase purchase) {
+        title = purchase.getTitle();
+        category = purchase.getCategory();
+        price = purchase.getPrice();
+    }
+
     public static boolean purchase(String string){
         return !similar(string, "pusikliendivoit");
     }
@@ -76,5 +82,15 @@ public class Purchase {
     }
     public float getPrice() {
         return price;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    public void setPrice(float price) {
+        this.price = price;
     }
 }
