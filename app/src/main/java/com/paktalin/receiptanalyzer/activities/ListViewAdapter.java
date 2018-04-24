@@ -26,7 +26,6 @@ public class ListViewAdapter extends BaseAdapter {
 
     private ArrayList<Purchase> purchases;
     private LayoutInflater inflater;
-    private int position;
 
     ListViewAdapter(Context context, ArrayList<Purchase> purchases) {
         this.purchases = purchases;
@@ -51,7 +50,6 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        this.position = position;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.purchase, null);
         }

@@ -64,7 +64,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 bitmap = FileManager.decodeBitmapUri_Rotate(rotation, imageUri, context);
             } catch (OutOfMemoryError e) {
                 e.printStackTrace();
-                Toast toast = Toast.makeText(context, "An error occered. Please, try again", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(context, "An error occured. Please, try again", Toast.LENGTH_SHORT);
                 toast.show();
             }
             receipt = ReceiptExtractor.extract(context, bitmap);
