@@ -116,7 +116,14 @@ public class ListViewAdapter extends BaseAdapter {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int p = Integer.parseInt(priceView.getTag().toString());
-                purchases.get(p).setPrice(Float.parseFloat(String.valueOf(s)));
+                float _price;
+                try {
+                    _price = Float.parseFloat(String.valueOf(s));
+                    purchases.get(p).setPrice(_price);
+                    priceView.setTextColor(Color.BLACK);
+                } catch (Exception e) {
+                    priceView.setTextColor(Color.RED);
+                }
             }
 
             @Override
