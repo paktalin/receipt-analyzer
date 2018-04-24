@@ -1,10 +1,9 @@
-package com.paktalin.receiptanalyzer.activities;
+package com.paktalin.receiptanalyzer.activities.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +13,19 @@ import android.widget.EditText;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 
 /**
  * Created by Paktalin on 21/04/2018.
  */
 
-public class ListViewAdapter extends BaseAdapter {
-    private static final String TAG = ListViewAdapter.class.getSimpleName();
+public class PurchasesAdapter extends BaseAdapter {
+    private static final String TAG = PurchasesAdapter.class.getSimpleName();
 
     private ArrayList<Purchase> purchases;
     private LayoutInflater inflater;
 
-    ListViewAdapter(Context context, ArrayList<Purchase> purchases) {
+    public PurchasesAdapter(Context context, ArrayList<Purchase> purchases) {
         this.purchases = purchases;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

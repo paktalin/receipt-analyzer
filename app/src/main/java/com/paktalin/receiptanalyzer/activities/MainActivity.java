@@ -12,7 +12,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.BuildConfig;
@@ -40,15 +39,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textViewSupermarkets = findViewById(R.id.text_view_supermarkets);
 
-        Button buttonNewReceipt = findViewById(R.id.button_new_receipt);
         FileManager.setUpAppDir(MainActivity.this);
 
         (new SupermarketLoader()).execute();
 
-        buttonNewReceipt.setOnClickListener(v -> createDialog(MainActivity.this));
+        findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ViewReceipts.class);
+            startActivity(intent);
+        });
+        findViewById(R.id.button_new_receipt).setOnClickListener(v -> createDialog(MainActivity.this));
     }
 
-    private void createDialog(Context context) {
+    void createDialog(Context context) {
         String buttonCamera = "From camera";
         String buttonGallery = "From gallery";
 

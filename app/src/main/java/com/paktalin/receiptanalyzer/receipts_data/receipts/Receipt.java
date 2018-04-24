@@ -28,6 +28,8 @@ public class Receipt {
         this.lines = lines;
     }
 
+    public Receipt() {}
+
     public String cutRetailersLine(String line) {
         return line;
     }
@@ -91,6 +93,12 @@ public class Receipt {
     public void setSupermarket(String supermarket) {
         this.supermarket = supermarket;
     }
+    public void setInitialLines(ArrayList<String> initialLines) {
+        this.initialLines = initialLines;
+    }
+    public void setFinalPrice(float finalPrice) {
+        this.finalPrice = finalPrice;
+    }
 
     public String getSupermarket() {
         return supermarket;
@@ -109,9 +117,5 @@ public class Receipt {
     }
     public ArrayList<Purchase> getPurchases() {
         return purchases;
-    }
-
-    public void setInitialLines(ArrayList<String> initialLines) {
-        this.initialLines = initialLines;
     }
 }

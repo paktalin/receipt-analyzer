@@ -16,13 +16,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.ReceiptExtractor;
+import com.paktalin.receiptanalyzer.activities.adapters.PurchasesAdapter;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
@@ -41,7 +41,7 @@ public class NewReceiptActivity extends AppCompatActivity {
 
     Receipt receipt;
     private String supermarket;
-    ListViewAdapter adapter;
+    PurchasesAdapter adapter;
     ListView listView;
     EditText textViewFinalPrice;
     SQLiteDatabase db;
@@ -78,7 +78,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
-            textViewFinalPrice = findViewById(R.id.final_price);
+            textViewFinalPrice = findViewById(R.id.final_price_1);
 
             if (receipt != null) {
                 supermarket = receipt.getSupermarket();
@@ -87,14 +87,14 @@ public class NewReceiptActivity extends AppCompatActivity {
                 for (Purchase p : purchases)
                     p.purchaseInfo();
 
-                ((TextView)findViewById(R.id.supermarket)).setText(supermarket);
+                ((TextView)findViewById(R.id.supermarket_1)).setText(supermarket);
                 ((TextView)findViewById(R.id.retailer)).setText(receipt.getRetailer());
                 ((TextView)findViewById(R.id.address)).setText(receipt.getAddress());
                 (findViewById(R.id.kokku)).setVisibility(View.VISIBLE);
                 String finalPrice = String.valueOf(receipt.getFinalPrice());
                 textViewFinalPrice.setText(finalPrice);
 
-                adapter = new ListViewAdapter(NewReceiptActivity.this, purchases);
+                adapter = new PurchasesAdapter(NewReceiptActivity.this, purchases);
                 listView = findViewById(R.id.list_view);
                 listView.setAdapter(adapter);
 
