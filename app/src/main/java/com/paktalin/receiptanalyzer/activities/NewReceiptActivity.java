@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
-import com.paktalin.receiptanalyzer.ReceiptExtractor;
+import com.paktalin.receiptanalyzer.recognition.ReceiptExtractor;
 import com.paktalin.receiptanalyzer.activities.adapters.PurchasesAdapter;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;

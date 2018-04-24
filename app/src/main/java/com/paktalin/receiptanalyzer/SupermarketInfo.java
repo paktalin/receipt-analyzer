@@ -11,14 +11,14 @@ import static com.paktalin.receiptanalyzer.Supermarkets.*;
  * Created by Paktalin on 08/04/2018.
  */
 
-class SupermarketInfo {
+public class SupermarketInfo {
     private static final String TAG = SupermarketInfo.class.getSimpleName();
 
     private static String supermarket;
     private static int index = -1;
     private static Receipt receipt;
 
-    static Receipt setInfo(Receipt receipt, Context context) {
+    public static Receipt setInfo(Receipt receipt, Context context) {
         SupermarketInfo.receipt = receipt;
         supermarket = receipt.getSupermarket();
 

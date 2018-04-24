@@ -1,9 +1,9 @@
-package com.paktalin.receiptanalyzer;
+package com.paktalin.receiptanalyzer.recognition;
 
-import android.util.Log;
 import android.util.SparseArray;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;

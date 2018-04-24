@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer;
+package com.paktalin.receiptanalyzer.recognition;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.paktalin.receiptanalyzer.SupermarketInfo;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 import java.util.ArrayList;

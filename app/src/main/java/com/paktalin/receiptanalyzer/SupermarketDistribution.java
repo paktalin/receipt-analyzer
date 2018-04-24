@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.analyzer;
+package com.paktalin.receiptanalyzer;
 
 import android.content.Context;
 import android.database.Cursor;

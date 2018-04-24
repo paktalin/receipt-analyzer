@@ -7,13 +7,13 @@ import java.util.ArrayList;
  * Created by Paktalin on 20-Mar-18.
  */
 
-class StringFilter {
+public class StringFilter {
     private static final String TAG = StringFilter.class.getSimpleName();
 
     private static StringBuilder builder;
     private static ArrayList<String> list;
 
-    static Object[] filter(ArrayList<String> l) {
+    public static Object[] filter(ArrayList<String> l) {
         StringFilter.list = l;
         String string = toString(list);
         string = string.toLowerCase();
