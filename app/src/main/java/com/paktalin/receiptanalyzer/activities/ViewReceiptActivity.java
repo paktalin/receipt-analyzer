@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
@@ -35,6 +36,9 @@ public class ViewReceiptActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.supermarket_1)).setText(receipt.getSupermarket());
         ((TextView)findViewById(R.id.retailer)).setText(receipt.getRetailer());
         ((TextView)findViewById(R.id.address)).setText(receipt.getAddress());
+
+        ViewSwitcher switcher = findViewById(R.id.my_switcher);
+        ((TextView)switcher.findViewById(R.id.final_price_tv)).setText("value");
     }
 
 
