@@ -37,8 +37,10 @@ public class AllReceiptsActivity extends AppCompatActivity{
         ListView listView = findViewById(R.id.all_receipts);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
+            Receipt receipt = (Receipt) listView.getItemAtPosition(position);
+
             Intent intent = new Intent(AllReceiptsActivity.this, ViewReceiptActivity.class);
-            intent.putExtra("id", position);
+            intent.putExtra("id", receipt.getID());
             startActivity(intent);
         });
     }
@@ -60,7 +62,6 @@ public class AllReceiptsActivity extends AppCompatActivity{
         int finalPriceColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_FINAL_PRICE);
         int dateColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_DATE);
         int idColumnIndex = cursor.getColumnIndex(ReceiptEntry._ID);
-        Log.d(TAG, "column index: " + idColumnIndex);
 
         int i = 0;
         while (cursor.moveToNext()) {
@@ -69,6 +70,9 @@ public class AllReceiptsActivity extends AppCompatActivity{
             receipts[i].setSupermarket(cursor.getString(supermarketColumnIndex));
             receipts[i].setFinalPrice(cursor.getFloat(finalPriceColumnIndex));
             receipts[i].setDate(cursor.getLong(dateColumnIndex));
+            receipts[i].setID(cursor.getLong(idColumnIndex));
+            Log.d(TAG, "id: " + cursor.getLong(idColumnIndex));
+            Log.d(TAG, "id: " + cursor.getLong(idColumnIndex));
             Log.d(TAG, "id: " + cursor.getLong(idColumnIndex));
             i++;
         }

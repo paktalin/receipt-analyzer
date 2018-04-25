@@ -23,7 +23,7 @@ public final class Contracts {
     public static final class PurchaseEntry implements BaseColumns {
         public final static String TABLE_NAME = "purchases";
 
-        final static String _ID = BaseColumns._ID;
+        public final static String _ID = BaseColumns._ID;
         public final static String COLUMN_TITLE = "title";
         public final static String COLUMN_CATEGORY = "category";
         public final static String COLUMN_PRICE = "price";

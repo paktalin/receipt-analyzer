@@ -26,6 +26,7 @@ public class Receipt {
     private ArrayList<Purchase> purchases;
     private ArrayList<String> initialLines;
     private long date;
+    private long ID;
 
     Receipt(String[] lines) {
         this.lines = lines;
@@ -105,6 +106,9 @@ public class Receipt {
     public void setDate(long date) {
         this.date = date;
     }
+    public void setID(long ID) {
+        this.ID = ID;
+    }
 
     public String getSupermarket() {
         return supermarket;
@@ -126,5 +130,8 @@ public class Receipt {
     }
     public long getDate() {
         return date;
+    }
+    public long getID() {
+        return ID;
     }
 }
