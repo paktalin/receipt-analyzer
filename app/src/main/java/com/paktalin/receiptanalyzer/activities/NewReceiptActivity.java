@@ -110,7 +110,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 });
             } else {
                 (Toast.makeText(NewReceiptActivity.this,
-                        "Sorry, we couldn't scan the receipt. Please, try again", Toast.LENGTH_SHORT)).show();
+                        "Sorry, we couldn't scan the receipt_item. Please, try again", Toast.LENGTH_SHORT)).show();
             }
         }
     }

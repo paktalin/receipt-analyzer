@@ -92,7 +92,7 @@ public class FileManager {
         return bitmap;
     }
 
-    private static String strSeparator = "__,__";
+    public static String strSeparator = "__,__";
     public static String convertArrayToString(long[] array){
         String str = "";
         for (int i = 0; i < array.length; i++) {

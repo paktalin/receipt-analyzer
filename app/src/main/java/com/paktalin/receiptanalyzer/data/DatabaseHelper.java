@@ -15,7 +15,7 @@ import com.paktalin.receiptanalyzer.data.Contracts.*;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = DatabaseHelper.class.getSimpleName();
 
-    private static final String DATABASE_NAME = "receipt.db";
+    private static final String DATABASE_NAME = "receipt_item.db";
     private static final int DATABASE_VERSION = 1;
 
     public DatabaseHelper(Context context) {

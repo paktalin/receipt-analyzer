@@ -3,10 +3,12 @@ package com.paktalin.receiptanalyzer.receipts_data.receipts;
 import android.content.Context;
 import android.util.Log;
 
+import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Paktalin on 08/04/2018.

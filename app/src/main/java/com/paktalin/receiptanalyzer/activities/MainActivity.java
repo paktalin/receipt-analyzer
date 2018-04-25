@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         (new SupermarketLoader()).execute();
 
         findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ViewReceiptsActivity.class);
+            Intent intent = new Intent(MainActivity.this, AllReceiptsActivity.class);
             startActivity(intent);
         });
         findViewById(R.id.button_new_receipt).setOnClickListener(v -> createDialog(MainActivity.this));

@@ -1,11 +1,14 @@
 package com.paktalin.receiptanalyzer.activities;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.paktalin.receiptanalyzer.R;
@@ -18,8 +21,8 @@ import com.paktalin.receiptanalyzer.data.Contracts.*;
  * Created by Paktalin on 24/04/2018.
  */
 
-public class ViewReceiptsActivity extends AppCompatActivity{
-    private static final String TAG = ViewReceiptsActivity.class.getSimpleName();
+public class AllReceiptsActivity extends AppCompatActivity{
+    private static final String TAG = AllReceiptsActivity.class.getSimpleName();
 
     Receipt[] receipts;
 
@@ -29,18 +32,26 @@ public class ViewReceiptsActivity extends AppCompatActivity{
         setContentView(R.layout.activity_view_receipts);
 
         extractReceipts();
-        ReceiptsAdapter adapter = new ReceiptsAdapter(ViewReceiptsActivity.this, receipts);
-        ((ListView)findViewById(R.id.all_receipts)).setAdapter(adapter);
+        ReceiptsAdapter adapter = new ReceiptsAdapter(AllReceiptsActivity.this, receipts);
+
+        ListView listView = findViewById(R.id.all_receipts);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(AllReceiptsActivity.this, ViewReceiptActivity.class);
+            intent.putExtra("id", position);
+            startActivity(intent);
+        });
     }
 
     private void extractReceipts() {
-        DatabaseHelper dbHelper = new DatabaseHelper(ViewReceiptsActivity.this);
+        DatabaseHelper dbHelper = new DatabaseHelper(AllReceiptsActivity.this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String[] projection = {
                 ReceiptEntry.COLUMN_SUPERMARKET,
                 ReceiptEntry.COLUMN_FINAL_PRICE,
-                ReceiptEntry.COLUMN_DATE};
+                ReceiptEntry.COLUMN_DATE,
+                ReceiptEntry._ID};
 
         Cursor cursor = db.query(ReceiptEntry.TABLE_NAME, projection, null, null, null, null, null);
 
@@ -48,6 +59,8 @@ public class ViewReceiptsActivity extends AppCompatActivity{
         int supermarketColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_SUPERMARKET);
         int finalPriceColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_FINAL_PRICE);
         int dateColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_DATE);
+        int idColumnIndex = cursor.getColumnIndex(ReceiptEntry._ID);
+        Log.d(TAG, "column index: " + idColumnIndex);
 
         int i = 0;
         while (cursor.moveToNext()) {
@@ -56,7 +69,7 @@ public class ViewReceiptsActivity extends AppCompatActivity{
             receipts[i].setSupermarket(cursor.getString(supermarketColumnIndex));
             receipts[i].setFinalPrice(cursor.getFloat(finalPriceColumnIndex));
             receipts[i].setDate(cursor.getLong(dateColumnIndex));
-            Log.d(TAG, receipts[i].getSupermarket());
+            Log.d(TAG, "id: " + cursor.getLong(idColumnIndex));
             i++;
         }
         cursor.close();
