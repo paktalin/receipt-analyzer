@@ -105,7 +105,6 @@ public class ViewReceiptActivity extends AppCompatActivity {
         int titleIndex = cursor.getColumnIndex(COLUMN_TITLE);
         int categoryIndex = cursor.getColumnIndex(COLUMN_CATEGORY);
         int priceIndex = cursor.getColumnIndex(COLUMN_PRICE);
-        cursor.close();
 
         purchases = new Purchase[cursor.getCount()];
         int i = 0;
@@ -116,5 +115,6 @@ public class ViewReceiptActivity extends AppCompatActivity {
             purchases[i].setPrice(cursor.getFloat(priceIndex));
             i++;
         }
+        cursor.close();
     }
 }
