@@ -23,6 +23,8 @@ public class Purchase {
         extractPrice(line.split(" "));
     }
 
+    public Purchase() {}
+
     public Purchase(Purchase purchase) {
         title = purchase.getTitle();
         category = purchase.getCategory();

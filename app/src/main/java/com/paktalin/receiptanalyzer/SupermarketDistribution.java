@@ -38,7 +38,7 @@ public class SupermarketDistribution {
     private static int count(String supermarket) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String queryString = "SELECT count(*) FROM " + ReceiptEntry.TABLE_NAME +
+        String queryString = "SELECT count(*) FROM " + ReceiptEntry.TABLE_NAME_RECEIPT +
                 " WHERE " + ReceiptEntry.COLUMN_SUPERMARKET + " = ?;";
         Cursor cursor = db.rawQuery(queryString, new String[]{supermarket});
 

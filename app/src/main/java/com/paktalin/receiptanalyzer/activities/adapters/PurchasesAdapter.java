@@ -22,22 +22,23 @@ import java.util.ArrayList;
 public class PurchasesAdapter extends BaseAdapter {
     private static final String TAG = PurchasesAdapter.class.getSimpleName();
 
-    private ArrayList<Purchase> purchases;
+    private ArrayList<Purchase> purchasesList;
+    private Purchase[] purchasesArray;
     private LayoutInflater inflater;
 
     public PurchasesAdapter(Context context, ArrayList<Purchase> purchases) {
-        this.purchases = purchases;
+        this.purchasesList = purchases;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return purchases.size();
+        return purchasesList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return purchases.get(position);
+        return purchasesList.get(position);
     }
 
 
@@ -49,7 +50,7 @@ public class PurchasesAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.purchase_item, null);
+            convertView = inflater.inflate(R.layout.purchase_item_et, null);
         }
 
         Purchase p = ((Purchase) getItem(position));
@@ -67,7 +68,7 @@ public class PurchasesAdapter extends BaseAdapter {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int p = Integer.parseInt(titleView.getTag().toString());
-                purchases.get(p).setTitle(String.valueOf(s));
+                purchasesList.get(p).setTitle(String.valueOf(s));
             }
 
             @Override
@@ -88,7 +89,7 @@ public class PurchasesAdapter extends BaseAdapter {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int p = Integer.parseInt(categoryView.getTag().toString());
-                purchases.get(p).setCategory(String.valueOf(s));
+                purchasesList.get(p).setCategory(String.valueOf(s));
             }
 
             @Override
@@ -115,7 +116,7 @@ public class PurchasesAdapter extends BaseAdapter {
                 float _price;
                 try {
                     _price = Float.parseFloat(String.valueOf(s));
-                    purchases.get(p).setPrice(_price);
+                    purchasesList.get(p).setPrice(_price);
                     priceView.setTextColor(Color.BLACK);
                 } catch (Exception e) {
                     priceView.setTextColor(Color.RED);

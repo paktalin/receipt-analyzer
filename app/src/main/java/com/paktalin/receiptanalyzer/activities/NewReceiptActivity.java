@@ -47,6 +47,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     SQLiteDatabase db;
     long[] purchasesIDs;
     ArrayList<Purchase> purchases;
+    long firstPurchaseID;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -142,6 +143,8 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(ReceiptEntry.COLUMN_ADDRESS, receipt.getAddress());
         values.put(ReceiptEntry.COLUMN_PURCHASES, FileManager.convertArrayToString(purchasesIDs));
         values.put(ReceiptEntry.COLUMN_DATE, System.currentTimeMillis());
+        values.put(ReceiptEntry.COLUMN_FIRST_PURCHASE_ID, firstPurchaseID);
+        values.put(ReceiptEntry.COLUMN_PURCHASES_LENGTH, purchases.size());
         try {
             float finalPrice = Float.parseFloat(String.valueOf(textViewFinalPrice.getText()));
             values.put(ReceiptEntry.COLUMN_FINAL_PRICE, finalPrice);
@@ -150,7 +153,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             toast.show();
             return false;
         }
-        long newRowId = db.insert(ReceiptEntry.TABLE_NAME, null, values);
+        long newRowId = db.insert(ReceiptEntry.TABLE_NAME_RECEIPT, null, values);
         return newRowId != -1;
     }
 
@@ -160,8 +163,10 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(PurchaseEntry.COLUMN_TITLE, p.getTitle());
         values.put(PurchaseEntry.COLUMN_CATEGORY, p.getCategory());
         values.put(PurchaseEntry.COLUMN_PRICE, p.getPrice());
-        long newRowId = db.insert(PurchaseEntry.TABLE_NAME, null, values);
+        long newRowId = db.insert(PurchaseEntry.TABLE_NAME_PURCHASE, null, values);
         purchasesIDs[i] = newRowId;
+        if(i == 0)
+            firstPurchaseID = newRowId;
         return newRowId != -1;
     }
 

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.paktalin.receiptanalyzer.R;
@@ -55,7 +53,7 @@ public class AllReceiptsActivity extends AppCompatActivity{
                 ReceiptEntry.COLUMN_DATE,
                 ReceiptEntry._ID};
 
-        Cursor cursor = db.query(ReceiptEntry.TABLE_NAME, projection, null, null, null, null, null);
+        Cursor cursor = db.query(ReceiptEntry.TABLE_NAME_RECEIPT, projection, null, null, null, null, null);
 
         receipts = new Receipt[cursor.getCount()];
         int supermarketColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_SUPERMARKET);

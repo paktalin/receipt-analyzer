@@ -24,16 +24,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String SQL_CREATE_RECEIPTS_TABLE = "CREATE TABLE " + ReceiptEntry.TABLE_NAME + " ("
+        String SQL_CREATE_RECEIPTS_TABLE = "CREATE TABLE " + ReceiptEntry.TABLE_NAME_RECEIPT + " ("
                 + ReceiptEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ReceiptEntry.COLUMN_SUPERMARKET + " TEXT NOT NULL, "
                 + ReceiptEntry.COLUMN_RETAILER + " TEXT, "
                 + ReceiptEntry.COLUMN_ADDRESS + " TEXT, "
                 + ReceiptEntry.COLUMN_FINAL_PRICE + " NUMERIC, "
                 + ReceiptEntry.COLUMN_DATE + " INTEGER, "
+                + ReceiptEntry.COLUMN_FIRST_PURCHASE_ID + " INTEGER, "
+                + ReceiptEntry.COLUMN_PURCHASES_LENGTH + " INTEGER, "
                 + ReceiptEntry.COLUMN_PURCHASES + " TEXT);";
 
-        String SQL_CREATE_PURCHASES_TABLE = "CREATE TABLE " + PurchaseEntry.TABLE_NAME + " ("
+        String SQL_CREATE_PURCHASES_TABLE = "CREATE TABLE " + PurchaseEntry.TABLE_NAME_PURCHASE + " ("
                 + PurchaseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + PurchaseEntry.COLUMN_TITLE + " TEXT NOT NULL, "
                 + PurchaseEntry.COLUMN_CATEGORY + " TEXT, "
@@ -46,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w("SQLite", "Updating from version " + oldVersion + " to version " + newVersion);
-        db.execSQL("DROP TABLE IF EXISTS " + ReceiptEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ReceiptEntry.TABLE_NAME_RECEIPT);
         onCreate(db);
     }
 }
