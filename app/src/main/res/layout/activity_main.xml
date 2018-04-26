@@ -25,4 +25,11 @@
         android:layout_alignParentBottom="true"
         android:text="View receipts"/>
 
+    <Button
+        android:id="@+id/button_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Overview"
+        android:layout_above="@id/button_view_receipts"/>
+
 </RelativeLayout>

@@ -12,6 +12,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.paktalin.receiptanalyzer.BuildConfig;
@@ -48,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
         findViewById(R.id.button_new_receipt).setOnClickListener(v -> createDialog(MainActivity.this));
+        findViewById(R.id.button_overview).setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, OverviewActivity.class);
+            startActivity(intent);
+        });
     }
 
     void createDialog(Context context) {
