@@ -3,12 +3,10 @@ package com.paktalin.receiptanalyzer.receipts_data.receipts;
 import android.content.Context;
 import android.util.Log;
 
-import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Paktalin on 08/04/2018.
@@ -23,7 +21,7 @@ public class Receipt {
     int purchasesStart, purchasesEnd;
     float finalPrice = -1;
     String priceFlag;
-    private ArrayList<Purchase> purchases;
+    private Purchase[] purchases;
     private ArrayList<String> initialLines;
     private long date;
     private long ID;
@@ -57,12 +55,13 @@ public class Receipt {
     }
 
     public void extractPurchases(Context context) {
-        purchases = new ArrayList<>();
+        ArrayList<Purchase> purchases = new ArrayList<>();
         for (int i = purchasesStart; i <= purchasesEnd; i++)
             if (Purchase.purchase(lines[i].split(" ")[0])) {
                 Purchase purchase = new Purchase(context, lines[i], initialLines.get(i));
                 purchases.add(purchase);
             }
+        this.purchases = purchases.toArray(new Purchase[purchases.size()]);
     }
 
     public void logReceipt() {
@@ -125,7 +124,7 @@ public class Receipt {
     public String getLine(int index) {
         return lines[index];
     }
-    public ArrayList<Purchase> getPurchases() {
+    public Purchase[] getPurchases() {
         return purchases;
     }
     public long getDate() {

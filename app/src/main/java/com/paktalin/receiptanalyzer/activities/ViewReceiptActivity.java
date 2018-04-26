@@ -9,15 +9,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.activities.adapters.PurchasesAdapter;
-import com.paktalin.receiptanalyzer.data.Contracts;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -52,10 +49,9 @@ public class ViewReceiptActivity extends AppCompatActivity {
         ViewSwitcher switcher = findViewById(R.id.my_switcher);
         ((TextView) switcher.findViewById(R.id.final_price_tv)).setText(String.valueOf(receipt.getFinalPrice()));
 
-        /*ArrayList<Purchase> purchasesList = Arrays.asList(purchases);
-        PurchasesAdapter adapter = new PurchasesAdapter(ViewReceiptActivity.this, Arrays.asList(purchases));
+        PurchasesAdapter adapter = new PurchasesAdapter(ViewReceiptActivity.this, purchases);
         ListView listView = findViewById(R.id.list_view);
-        listView.setAdapter(adapter);*/
+        listView.setAdapter(adapter);
     }
 
 

@@ -13,8 +13,6 @@ import android.widget.EditText;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
-import java.util.ArrayList;
-
 /**
  * Created by Paktalin on 21/04/2018.
  */
@@ -22,23 +20,22 @@ import java.util.ArrayList;
 public class PurchasesAdapter extends BaseAdapter {
     private static final String TAG = PurchasesAdapter.class.getSimpleName();
 
-    private ArrayList<Purchase> purchasesList;
-    private Purchase[] purchasesArray;
+    private Purchase[] purchases;
     private LayoutInflater inflater;
 
-    public PurchasesAdapter(Context context, ArrayList<Purchase> purchases) {
-        this.purchasesList = purchases;
+    public PurchasesAdapter(Context context, Purchase[] purchases) {
+        this.purchases = purchases;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return purchasesList.size();
+        return purchases.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return purchasesList.get(position);
+        return purchases[position];
     }
 
 
@@ -68,7 +65,7 @@ public class PurchasesAdapter extends BaseAdapter {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int p = Integer.parseInt(titleView.getTag().toString());
-                purchasesList.get(p).setTitle(String.valueOf(s));
+                purchases[p].setTitle(String.valueOf(s));
             }
 
             @Override
@@ -89,7 +86,7 @@ public class PurchasesAdapter extends BaseAdapter {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int p = Integer.parseInt(categoryView.getTag().toString());
-                purchasesList.get(p).setCategory(String.valueOf(s));
+                purchases[p].setCategory(String.valueOf(s));
             }
 
             @Override
@@ -116,7 +113,7 @@ public class PurchasesAdapter extends BaseAdapter {
                 float _price;
                 try {
                     _price = Float.parseFloat(String.valueOf(s));
-                    purchasesList.get(p).setPrice(_price);
+                    purchases[p].setPrice(_price);
                     priceView.setTextColor(Color.BLACK);
                 } catch (Exception e) {
                     priceView.setTextColor(Color.RED);

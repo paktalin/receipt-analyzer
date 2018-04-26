@@ -46,7 +46,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     EditText textViewFinalPrice;
     SQLiteDatabase db;
     long[] purchasesIDs;
-    ArrayList<Purchase> purchases;
+    Purchase[] purchases;
     long firstPurchaseID;
 
     @Override
@@ -119,7 +119,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = v -> {
         DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
         db = dbHelper.getWritableDatabase();
-        purchasesIDs = new long[purchases.size()];
+        purchasesIDs = new long[purchases.length];
         if(saveReceipt()) {
             for (int i = 0; i < adapter.getCount(); i++)
                 if (!savePurchases(i)) {
@@ -144,7 +144,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(ReceiptEntry.COLUMN_PURCHASES, FileManager.convertArrayToString(purchasesIDs));
         values.put(ReceiptEntry.COLUMN_DATE, System.currentTimeMillis());
         values.put(ReceiptEntry.COLUMN_FIRST_PURCHASE_ID, firstPurchaseID);
-        values.put(ReceiptEntry.COLUMN_PURCHASES_LENGTH, purchases.size());
+        values.put(ReceiptEntry.COLUMN_PURCHASES_LENGTH, purchases.length);
         try {
             float finalPrice = Float.parseFloat(String.valueOf(textViewFinalPrice.getText()));
             values.put(ReceiptEntry.COLUMN_FINAL_PRICE, finalPrice);
