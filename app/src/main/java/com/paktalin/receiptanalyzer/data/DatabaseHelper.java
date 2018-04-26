@@ -32,8 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ReceiptEntry.COLUMN_FINAL_PRICE + " NUMERIC, "
                 + ReceiptEntry.COLUMN_DATE + " INTEGER, "
                 + ReceiptEntry.COLUMN_FIRST_PURCHASE_ID + " INTEGER, "
-                + ReceiptEntry.COLUMN_PURCHASES_LENGTH + " INTEGER, "
-                + ReceiptEntry.COLUMN_PURCHASES + " TEXT);";
+                + ReceiptEntry.COLUMN_PURCHASES_LENGTH + " INTEGER);";
 
         String SQL_CREATE_PURCHASES_TABLE = "CREATE TABLE " + PurchaseEntry.TABLE_NAME_PURCHASE + " ("
                 + PurchaseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "

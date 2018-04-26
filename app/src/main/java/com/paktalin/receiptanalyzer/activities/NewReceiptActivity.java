@@ -45,7 +45,6 @@ public class NewReceiptActivity extends AppCompatActivity {
     ListView listView;
     EditText textViewFinalPrice;
     SQLiteDatabase db;
-    long[] purchasesIDs;
     Purchase[] purchases;
     long firstPurchaseID;
 
@@ -119,7 +118,6 @@ public class NewReceiptActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = v -> {
         DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
         db = dbHelper.getWritableDatabase();
-        purchasesIDs = new long[purchases.length];
         if(saveReceipt()) {
             for (int i = 0; i < adapter.getCount(); i++)
                 if (!savePurchases(i)) {
@@ -141,7 +139,6 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(ReceiptEntry.COLUMN_SUPERMARKET, receipt.getSupermarket());
         values.put(ReceiptEntry.COLUMN_RETAILER, receipt.getRetailer());
         values.put(ReceiptEntry.COLUMN_ADDRESS, receipt.getAddress());
-        values.put(ReceiptEntry.COLUMN_PURCHASES, FileManager.convertArrayToString(purchasesIDs));
         values.put(ReceiptEntry.COLUMN_DATE, System.currentTimeMillis());
         values.put(ReceiptEntry.COLUMN_FIRST_PURCHASE_ID, firstPurchaseID);
         values.put(ReceiptEntry.COLUMN_PURCHASES_LENGTH, purchases.length);
@@ -164,7 +161,6 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(PurchaseEntry.COLUMN_CATEGORY, p.getCategory());
         values.put(PurchaseEntry.COLUMN_PRICE, p.getPrice());
         long newRowId = db.insert(PurchaseEntry.TABLE_NAME_PURCHASE, null, values);
-        purchasesIDs[i] = newRowId;
         if(i == 0)
             firstPurchaseID = newRowId;
         return newRowId != -1;

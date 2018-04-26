@@ -16,7 +16,6 @@ public final class Contracts {
         public final static String COLUMN_ADDRESS = "address";
         public final static String COLUMN_FINAL_PRICE = "final_price";
         public final static String COLUMN_DATE = "creation_date";
-        public final static String COLUMN_PURCHASES = "purchases";
         public final static String COLUMN_FIRST_PURCHASE_ID = "first_purchase_id";
         public final static String COLUMN_PURCHASES_LENGTH = "purchases_number";
     }

@@ -15,9 +15,6 @@ import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.*;
 import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
 
@@ -61,7 +58,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
         String[] projection = new String[]
                 {_ID, COLUMN_SUPERMARKET, COLUMN_RETAILER,
-                        COLUMN_ADDRESS, COLUMN_PURCHASES,
+                        COLUMN_ADDRESS,
                         COLUMN_DATE, COLUMN_FINAL_PRICE,
                         COLUMN_FIRST_PURCHASE_ID, COLUMN_PURCHASES_LENGTH};
 
