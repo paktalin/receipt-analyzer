@@ -29,27 +29,13 @@ public class OverviewActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
+        long[] periods = {7776000000L, 2592000000L, 1209600000L, 604800000L};
         Spinner spinner = findViewById(R.id.spinner);
         spinner.setSelection(1);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String expenses;
-                switch (position) {
-                    case 0:
-                        expenses = "You spent " + getExpenses(7776000000L) + "€ ";
-                        break;
-                    case 2:
-                        expenses = "You spent " + getExpenses(1209600000L) + "€ ";
-                        break;
-                    case 3:
-                        expenses = "You spent " + getExpenses(604800000L) + "€ ";
-                        break;
-                    default:
-                        expenses = "You spent " + getExpenses(2592000000L) + "€ ";
-                        break;
-                }
-
+                String expenses = "You spent " + getExpenses(periods[position]) + "€ ";
                 ((TextView)findViewById(R.id.expenses)).setText(expenses);
             }
 
