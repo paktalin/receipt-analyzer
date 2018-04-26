@@ -1,13 +1,15 @@
 package com.paktalin.receiptanalyzer.activities;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.activities.adapters.PurchasesAdapter;
@@ -26,33 +28,36 @@ public class ViewReceiptActivity extends AppCompatActivity {
     private static final String TAG = ViewReceiptActivity.class.getSimpleName();
 
     SQLiteDatabase db;
-
-    long id;
     Purchase[] purchases;
+    Receipt receipt;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt);
-        purchases = new Purchase[5];
-
-        this.id = getIntent().getLongExtra("id", 1);
-        Receipt receipt = getReceipt();
+        extractReceipt(getIntent().getLongExtra("id", 1));
 
         ((TextView)findViewById(R.id.supermarket_1)).setText(receipt.getSupermarket());
         ((TextView)findViewById(R.id.retailer)).setText(receipt.getRetailer());
         ((TextView)findViewById(R.id.address)).setText(receipt.getAddress());
-
-        ViewSwitcher switcher = findViewById(R.id.my_switcher);
-        ((TextView) switcher.findViewById(R.id.final_price_tv)).setText(String.valueOf(receipt.getFinalPrice()));
+        ((EditText)findViewById(R.id.final_price_et)).setText(String.valueOf(receipt.getFinalPrice()));
 
         PurchasesAdapter adapter = new PurchasesAdapter(ViewReceiptActivity.this, purchases);
         ListView listView = findViewById(R.id.list_view);
         listView.setAdapter(adapter);
+
+        (findViewById(R.id.button_ok)).setOnClickListener(listener);
+        (findViewById(R.id.button_cancel)).setOnClickListener(listener);
     }
 
+    View.OnClickListener listener = v -> {
+        //TODO SaveReceipt
+        Intent intent = new Intent(ViewReceiptActivity.this, AllReceiptsActivity.class);
+        startActivity(intent);
+    };
 
-    private Receipt getReceipt() {
+
+    private void extractReceipt(long id) {
         DatabaseHelper dbHelper = new DatabaseHelper(ViewReceiptActivity.this);
         db = dbHelper.getReadableDatabase();
 
@@ -79,7 +84,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
         int startIdIndex = cursor.getColumnIndex(COLUMN_FIRST_PURCHASE_ID);
         int lengthIndex = cursor.getColumnIndex(COLUMN_PURCHASES_LENGTH);
 
-        Receipt receipt = new Receipt();
+        receipt = new Receipt();
         receipt.setSupermarket(cursor.getString(supermarketIndex));
         receipt.setRetailer(cursor.getString(retailerIndex));
         receipt.setAddress(cursor.getString(addressIndex));
@@ -88,7 +93,6 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
         unpackPurchases(cursor.getLong(startIdIndex), cursor.getInt(lengthIndex));
         cursor.close();
-        return receipt;
     }
 
     void unpackPurchases(long startId, int length) {
@@ -101,6 +105,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
         int titleIndex = cursor.getColumnIndex(COLUMN_TITLE);
         int categoryIndex = cursor.getColumnIndex(COLUMN_CATEGORY);
         int priceIndex = cursor.getColumnIndex(COLUMN_PRICE);
+        cursor.close();
 
         purchases = new Purchase[cursor.getCount()];
         int i = 0;
