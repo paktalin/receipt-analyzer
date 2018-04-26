@@ -29,8 +29,6 @@ import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 import com.paktalin.receiptanalyzer.data.Contracts.*;
 
-import java.util.ArrayList;
-
 
 /**
  * Created by Paktalin on 12/04/2018.
@@ -51,7 +49,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_receipt);
+        setContentView(R.layout.receipt);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         MyAsyncTask task = new MyAsyncTask();
         task.execute();

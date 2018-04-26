@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,18 +37,24 @@ public class ViewReceiptActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt);
         extractReceipt(getIntent().getLongExtra("id", 1));
+        findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
 
         ((TextView)findViewById(R.id.supermarket_1)).setText(receipt.getSupermarket());
         ((TextView)findViewById(R.id.retailer)).setText(receipt.getRetailer());
         ((TextView)findViewById(R.id.address)).setText(receipt.getAddress());
-        ((EditText)findViewById(R.id.final_price_et)).setText(String.valueOf(receipt.getFinalPrice()));
+        ((EditText)findViewById(R.id.final_price_1)).setText(String.valueOf(receipt.getFinalPrice()));
 
         PurchasesAdapter adapter = new PurchasesAdapter(ViewReceiptActivity.this, purchases);
         ListView listView = findViewById(R.id.list_view);
         listView.setAdapter(adapter);
 
-        (findViewById(R.id.button_ok)).setOnClickListener(listener);
-        (findViewById(R.id.button_cancel)).setOnClickListener(listener);
+        Button buttonOk = findViewById(R.id.button_ok);
+        buttonOk.setVisibility(View.VISIBLE);
+        buttonOk.setOnClickListener(listener);
+
+        Button buttonCancel = findViewById(R.id.button_cancel);
+        buttonCancel.setVisibility(View.VISIBLE);
+        buttonCancel.setOnClickListener(listener);
     }
 
     View.OnClickListener listener = v -> {

@@ -27,7 +27,7 @@ public class AllReceiptsActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_receipts);
+        setContentView(R.layout.activity_all_receipts);
 
         extractReceipts();
         ReceiptsAdapter adapter = new ReceiptsAdapter(AllReceiptsActivity.this, receipts);

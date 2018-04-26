@@ -29,7 +29,6 @@
         android:layout_alignBottom="@+id/category"
         android:layout_alignParentEnd="true"
         android:background="@android:color/transparent"
-        android:text="0,64"
         android:textSize="20sp" />
 
 </RelativeLayout>

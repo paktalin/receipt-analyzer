@@ -47,7 +47,7 @@ public class PurchasesAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.purchase_item_et, null);
+            convertView = inflater.inflate(R.layout.purchase_item, null);
         }
 
         Purchase p = ((Purchase) getItem(position));
