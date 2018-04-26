@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">ReceiptAnalyzer</string>
+    <string-array name="periods">
+        <item>in the last 90 days</item>
+        <item>in the last 30 days</item>
+        <item>in the last 14 days</item>
+        <item>in the last 7 days</item>
+    </string-array>
 
 </resources>
