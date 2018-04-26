@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -116,20 +117,19 @@ public class NewReceiptActivity extends AppCompatActivity {
     View.OnClickListener buttonOkListener = v -> {
         DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
         db = dbHelper.getWritableDatabase();
-        if(saveReceipt()) {
-            for (int i = 0; i < adapter.getCount(); i++)
-                if (!savePurchases(i)) {
-                    Toast toast = Toast.makeText(NewReceiptActivity.this, "Something went wrong!", Toast.LENGTH_LONG);
-                    toast.show();
-                    return;
-                }
-            updateSharedPreferences();
-            Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
-            startActivity(mainActivityIntent);
-        } else {
+        for (int i = 0; i < adapter.getCount(); i++)
+            if (!savePurchases(i)) {
+                Toast toast = Toast.makeText(NewReceiptActivity.this, "Something went wrong!", Toast.LENGTH_LONG);
+                toast.show();
+                return;
+            }
+        if(!saveReceipt()) {
             Toast toast = Toast.makeText(NewReceiptActivity.this, "The app's Database has changed. Update your app, please!", Toast.LENGTH_LONG);
             toast.show();
         }
+        updateSharedPreferences();
+        Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
+        startActivity(mainActivityIntent);
     };
 
     private boolean saveReceipt() {
@@ -161,6 +161,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         long newRowId = db.insert(PurchaseEntry.TABLE_NAME_PURCHASE, null, values);
         if(i == 0)
             firstPurchaseID = newRowId;
+        Log.d(TAG, "i = " + i + "; id = " + newRowId);
         return newRowId != -1;
     }
 

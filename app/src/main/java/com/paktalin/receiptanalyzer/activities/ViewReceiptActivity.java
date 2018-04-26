@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -97,6 +98,8 @@ public class ViewReceiptActivity extends AppCompatActivity {
         receipt.setAddress(cursor.getString(addressIndex));
         receipt.setFinalPrice(cursor.getFloat(finalPriceIndex));
         receipt.setDate(Long.parseLong(cursor.getString(dateIndex)));
+
+        Log.d(TAG, "start index: " + cursor.getLong(startIdIndex));
 
         unpackPurchases(cursor.getLong(startIdIndex), cursor.getInt(lengthIndex));
         cursor.close();
