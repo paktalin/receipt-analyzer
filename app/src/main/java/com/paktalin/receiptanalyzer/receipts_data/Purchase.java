@@ -25,12 +25,6 @@ public class Purchase {
 
     public Purchase() {}
 
-    public Purchase(Purchase purchase) {
-        title = purchase.getTitle();
-        category = purchase.getCategory();
-        price = purchase.getPrice();
-    }
-
     public static boolean purchase(String string){
         return !similar(string, "pusikliendivoit");
     }
@@ -65,9 +59,12 @@ public class Purchase {
         for (String line : tags) {
             if (line.substring(0, 2).equals("__"))
                 currentCategory = line.substring(2, line.length());
-            else if (string.contains(line))
+            else if (string.contains(line)) {
                 category = currentCategory;
+                break;
+            }
         }
+        Log.d(TAG, "category: " + category);
     }
 
     public void purchaseInfo(){

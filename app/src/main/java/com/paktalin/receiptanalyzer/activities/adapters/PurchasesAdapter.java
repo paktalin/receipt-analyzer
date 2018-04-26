@@ -98,6 +98,7 @@ public class PurchasesAdapter extends BaseAdapter {
             categoryView.setHint("Category");
             categoryView.setHintTextColor(Color.MAGENTA);
         }
+        else categoryView.setText(category);
 
         final EditText priceView = convertView.findViewById(R.id.price);
         priceView.setTag(position);
