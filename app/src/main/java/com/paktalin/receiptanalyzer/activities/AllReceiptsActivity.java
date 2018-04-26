@@ -69,9 +69,6 @@ public class AllReceiptsActivity extends AppCompatActivity{
             receipts[i].setFinalPrice(cursor.getFloat(finalPriceColumnIndex));
             receipts[i].setDate(cursor.getLong(dateColumnIndex));
             receipts[i].setID(cursor.getLong(idColumnIndex));
-            Log.d(TAG, "id: " + cursor.getLong(idColumnIndex));
-            Log.d(TAG, "id: " + cursor.getLong(idColumnIndex));
-            Log.d(TAG, "id: " + cursor.getLong(idColumnIndex));
             i++;
         }
         cursor.close();

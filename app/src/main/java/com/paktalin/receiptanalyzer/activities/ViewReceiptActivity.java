@@ -39,10 +39,10 @@ public class ViewReceiptActivity extends AppCompatActivity {
         extractReceipt(getIntent().getLongExtra("id", 1));
         findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
 
-        ((TextView)findViewById(R.id.supermarket_1)).setText(receipt.getSupermarket());
+        ((TextView)findViewById(R.id.supermarket)).setText(receipt.getSupermarket());
         ((TextView)findViewById(R.id.retailer)).setText(receipt.getRetailer());
         ((TextView)findViewById(R.id.address)).setText(receipt.getAddress());
-        ((EditText)findViewById(R.id.final_price_1)).setText(String.valueOf(receipt.getFinalPrice()));
+        ((EditText)findViewById(R.id.final_price)).setText(String.valueOf(receipt.getFinalPrice()));
 
         PurchasesAdapter adapter = new PurchasesAdapter(ViewReceiptActivity.this, purchases);
         ListView listView = findViewById(R.id.list_view);
@@ -95,7 +95,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
         receipt.setSupermarket(cursor.getString(supermarketIndex));
         receipt.setRetailer(cursor.getString(retailerIndex));
         receipt.setAddress(cursor.getString(addressIndex));
-        receipt.setFinalPrice(Float.parseFloat(cursor.getString(finalPriceIndex)));
+        receipt.setFinalPrice(cursor.getFloat(finalPriceIndex));
         receipt.setDate(Long.parseLong(cursor.getString(dateIndex)));
 
         unpackPurchases(cursor.getLong(startIdIndex), cursor.getInt(lengthIndex));

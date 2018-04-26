@@ -76,7 +76,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
-            textViewFinalPrice = findViewById(R.id.final_price_1);
+            textViewFinalPrice = findViewById(R.id.final_price);
 
             if (receipt != null) {
                 supermarket = receipt.getSupermarket();
@@ -85,7 +85,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 for (Purchase p : purchases)
                     p.purchaseInfo();
 
-                ((TextView)findViewById(R.id.supermarket_1)).setText(supermarket);
+                ((TextView)findViewById(R.id.supermarket)).setText(supermarket);
                 ((TextView)findViewById(R.id.retailer)).setText(receipt.getRetailer());
                 ((TextView)findViewById(R.id.address)).setText(receipt.getAddress());
                 (findViewById(R.id.kokku)).setVisibility(View.VISIBLE);
