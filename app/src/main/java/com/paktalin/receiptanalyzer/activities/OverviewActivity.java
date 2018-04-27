@@ -1,5 +1,7 @@
 package com.paktalin.receiptanalyzer.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,8 +13,12 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -22,7 +28,6 @@ import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -52,10 +57,7 @@ public class OverviewActivity extends AppCompatActivity{
         spinner.setOnItemSelectedListener(periodListener);
 
         setCategories();
-        //setPieChart();
-
-
-
+        setPieChart();
     }
 
     AdapterView.OnItemSelectedListener periodListener = new AdapterView.OnItemSelectedListener() {
@@ -84,9 +86,9 @@ public class OverviewActivity extends AppCompatActivity{
         int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
 
         float expenses = 0;
-        while (cursor.moveToNext()) {
+        while (cursor.moveToNext())
             expenses += cursor.getFloat(finalPriceIndex);
-        }
+        cursor.close();
         return expenses;
     }
 
@@ -113,7 +115,7 @@ public class OverviewActivity extends AppCompatActivity{
     }
 
     private void setPieChart() {
-        PieChart pieChart = findViewById(R.id.chart);
+        PieChart pieChart = findViewById(R.id.pie_chart);
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
 
@@ -129,5 +131,25 @@ public class OverviewActivity extends AppCompatActivity{
         PieData data = new PieData(dataSet);
 
         pieChart.setData(data);
+    }
+
+    private void setBarChart() {
+        HorizontalBarChart barChart = findViewById(R.id.bar_chart);
+
+        ArrayList<BarEntry> yValues = new ArrayList<>();
+        SharedPreferences appData = getSharedPreferences("app_data", Context.MODE_PRIVATE);
+        int i = 0;
+        for (Map.Entry<String, ?> entry : appData.getAll().entrySet()) {
+            String key = entry.getKey();
+            float value = (float)(Integer)entry.getValue();
+            yValues.add(new BarEntry(value, i));
+            Log.d(TAG, "value: " + value + "; i = " + i);
+            i++;
+        }
+
+        BarDataSet dataSet = new BarDataSet(yValues, "Supermarkets");
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        BarData data = new BarData(dataSet);
+        barChart.setData(data);
     }
 }

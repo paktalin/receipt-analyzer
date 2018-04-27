@@ -18,13 +18,14 @@
         android:entries="@array/periods"/>
 
     <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/supermarket_distribution"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <!--<com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/chart"
+        android:id="@+id/bar_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/supermarket_distribution"/>-->
+        android:layout_below="@+id/pie_chart"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/spinner"/>
 </RelativeLayout>
