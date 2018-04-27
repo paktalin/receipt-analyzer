@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -23,6 +22,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
@@ -57,7 +57,8 @@ public class OverviewActivity extends AppCompatActivity{
         spinner.setOnItemSelectedListener(periodListener);
 
         setCategories();
-        setPieChart();
+        //setPieChart();
+        setBarChart();
     }
 
     AdapterView.OnItemSelectedListener periodListener = new AdapterView.OnItemSelectedListener() {
@@ -114,7 +115,7 @@ public class OverviewActivity extends AppCompatActivity{
         cursor.close();
     }
 
-    private void setPieChart() {
+    /*private void setPieChart() {
         PieChart pieChart = findViewById(R.id.pie_chart);
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
@@ -131,25 +132,28 @@ public class OverviewActivity extends AppCompatActivity{
         PieData data = new PieData(dataSet);
 
         pieChart.setData(data);
-    }
+    }*/
 
     private void setBarChart() {
         HorizontalBarChart barChart = findViewById(R.id.bar_chart);
 
         ArrayList<BarEntry> yValues = new ArrayList<>();
+        ArrayList<String> supermarkets = new ArrayList<>();
         SharedPreferences appData = getSharedPreferences("app_data", Context.MODE_PRIVATE);
         int i = 0;
         for (Map.Entry<String, ?> entry : appData.getAll().entrySet()) {
-            String key = entry.getKey();
             float value = (float)(Integer)entry.getValue();
-            yValues.add(new BarEntry(value, i));
-            Log.d(TAG, "value: " + value + "; i = " + i);
+            yValues.add(new BarEntry(i, value));
+            supermarkets.add(entry.getKey());
             i++;
         }
 
         BarDataSet dataSet = new BarDataSet(yValues, "Supermarkets");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         BarData data = new BarData(dataSet);
+
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(supermarkets));
         barChart.setData(data);
+        barChart.invalidate();
     }
 }
