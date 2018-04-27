@@ -14,8 +14,10 @@ import android.widget.TextView;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.*;
+import java.util.TreeMap;
 
+import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.*;
+import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
 
 /**
  * Created by Paktalin on 26/04/2018.
@@ -24,33 +26,38 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.*;
 public class OverviewActivity extends AppCompatActivity{
     private static final String TAG = ViewReceiptActivity.class.getSimpleName();
 
+    long[] periods = {7776000000L, 2592000000L, 1209600000L, 604800000L};
+    TreeMap<String, Integer> categories;
+    SQLiteDatabase db;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
-        long[] periods = {7776000000L, 2592000000L, 1209600000L, 604800000L};
+        DatabaseHelper helper = new DatabaseHelper(OverviewActivity.this);
+        db = helper.getReadableDatabase();
+
         Spinner spinner = findViewById(R.id.spinner);
         spinner.setSelection(1);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String expenses = "You spent " + getExpenses(periods[position]) + "€ ";
-                ((TextView)findViewById(R.id.expenses)).setText(expenses);
-            }
+        spinner.setOnItemSelectedListener(periodListener);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-        String expenses = "You spent " + getExpenses(0) + "€ in the last 30 days";
-        ((TextView)findViewById(R.id.expenses)).setText(expenses);
+        setCategories();
+        Log.d(TAG, String.valueOf(categories));
     }
 
-    private float getExpenses(long period) {
-        DatabaseHelper helper = new DatabaseHelper(OverviewActivity.this);
-        SQLiteDatabase db = helper.getReadableDatabase();
+    AdapterView.OnItemSelectedListener periodListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String expenses = "You spent " + setExpenses(periods[position]) + "€ ";
+            ((TextView)findViewById(R.id.expenses)).setText(expenses);
+        }
 
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {}
+    };
+
+    private float setExpenses(long period) {
         long currentTime = System.currentTimeMillis();
         long startingTime = currentTime - period;
 
@@ -67,5 +74,27 @@ public class OverviewActivity extends AppCompatActivity{
             expenses += cursor.getFloat(finalPriceIndex);
         }
         return expenses;
+    }
+
+    private void setCategories() {
+        categories = new TreeMap<>();
+
+        Cursor cursor = db.query(TABLE_NAME_PURCHASE,
+                new String[] {COLUMN_CATEGORY},
+                null, null, null, null, null);
+
+        int categoryIndex = cursor.getColumnIndex(COLUMN_CATEGORY);
+
+        while (cursor.moveToNext()) {
+            String key = cursor.getString(categoryIndex);
+            if (key == null)
+                key = "Unknown";
+            if (categories.containsKey(key)) {
+                int currentValue = categories.get(key);
+                categories.put(key, currentValue + 1);
+            } else
+                categories.put(key, 1);
+        }
+        cursor.close();
     }
 }
