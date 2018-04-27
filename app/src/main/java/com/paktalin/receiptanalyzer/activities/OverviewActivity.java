@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -22,11 +24,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -138,13 +142,14 @@ public class OverviewActivity extends AppCompatActivity{
         HorizontalBarChart barChart = findViewById(R.id.bar_chart);
 
         ArrayList<BarEntry> yValues = new ArrayList<>();
-        ArrayList<String> supermarkets = new ArrayList<>();
         SharedPreferences appData = getSharedPreferences("app_data", Context.MODE_PRIVATE);
+        String[] supermarkets = new String[appData.getAll().size()];
         int i = 0;
         for (Map.Entry<String, ?> entry : appData.getAll().entrySet()) {
-            float value = (float)(Integer)entry.getValue();
-            yValues.add(new BarEntry(i, value));
-            supermarkets.add(entry.getKey());
+            int value = (Integer)entry.getValue();
+            BarEntry e = new BarEntry(i, value, 3);
+            yValues.add(e);
+            supermarkets[i] = entry.getKey();
             i++;
         }
 
@@ -152,8 +157,35 @@ public class OverviewActivity extends AppCompatActivity{
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         BarData data = new BarData(dataSet);
 
-        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(supermarkets));
+        barChart.getXAxis().setDrawGridLines(false);
+        barChart.getXAxis().setDrawAxisLine(false);
+
+        barChart.getAxisLeft().setDrawGridLines(false);
+        barChart.getAxisRight().setEnabled(false);
+        barChart.getAxisLeft().setEnabled(false);
+
+        barChart.getAxisRight().setDrawGridLines(false);
+        barChart.getAxisLeft().setAxisMinimum(0);
+        barChart.getAxisRight().setAxisMinimum(0);
+
+        barChart.getXAxis().setValueFormatter(new LabelFormatter(supermarkets));
+        barChart.getXAxis().setGranularity(1);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+
         barChart.setData(data);
-        barChart.invalidate();
+    }
+
+    public class LabelFormatter implements IAxisValueFormatter {
+        private final String[] mLabels;
+
+        LabelFormatter(String[] labels) {
+            mLabels = labels;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            return mLabels[(int) value];
+        }
     }
 }
+
