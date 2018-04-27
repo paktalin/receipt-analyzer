@@ -36,10 +36,6 @@ class Line {
         return height;
     }
 
-    String getFilling() {
-        return filling;
-    }
-
     static int getMeanTop(ArrayList<Line> lines) {
         if (lines.size() == 1) {
             return lines.get(0).top;

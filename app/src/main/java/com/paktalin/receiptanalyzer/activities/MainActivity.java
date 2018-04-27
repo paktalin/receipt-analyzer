@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
     private String extractMap(Map<String, ?> map) {
         StringBuilder builder = new StringBuilder();
         for (Map.Entry entry : map.entrySet()) {
-            Log.d(TAG, "key: " + entry.getKey());
             builder
                     .append(entry.getKey())
                     .append(" = ")

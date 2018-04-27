@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
 
+import java.util.Arrays;
+
 /**
  * Created by Paktalin on 22-Mar-18.
  */
@@ -13,10 +15,15 @@ public class RimiReceipt extends Receipt {
 
     public RimiReceipt(String[] lines) {
         super(lines);
+        Log.d(TAG, "lines:\n" + Arrays.toString(lines));
         purchasesStart = startLine("klient", 6);
         purchasesEnd = endLine("kaardimakse", false);
         priceFlag = "kokku";
         calculateFinalPrice();
+        if (finalPrice == -1) {
+            priceFlag = "kaardimakse";
+            calculateFinalPrice();
+        }
     }
 
     @Override

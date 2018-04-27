@@ -64,7 +64,6 @@ public class Purchase {
                 break;
             }
         }
-        Log.d(TAG, "category: " + category);
     }
 
     public void purchaseInfo(){

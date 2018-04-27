@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
-import com.paktalin.receiptanalyzer.recognition.ReceiptExtractor;
+import com.paktalin.receiptanalyzer.recognition.ReceiptRecognizer;
 import com.paktalin.receiptanalyzer.activities.adapters.PurchasesAdapter;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
@@ -70,7 +70,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(context, "An error occured. Please, try again", Toast.LENGTH_SHORT);
                 toast.show();
             }
-            receipt = ReceiptExtractor.extract(context, bitmap);
+            receipt = ReceiptRecognizer.extract(context, bitmap);
             return null;
         }
 

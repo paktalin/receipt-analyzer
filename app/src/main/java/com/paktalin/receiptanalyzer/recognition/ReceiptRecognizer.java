@@ -15,8 +15,8 @@ import java.util.ArrayList;
  * Created by Paktalin on 12/04/2018.
  */
 
-public class ReceiptExtractor {
-    private static final String TAG = ReceiptExtractor.class.getSimpleName();
+public class ReceiptRecognizer {
+    private static final String TAG = ReceiptRecognizer.class.getSimpleName();
 
     public static Receipt extract(Context context, Bitmap bitmap) {
         if (bitmap != null) {
