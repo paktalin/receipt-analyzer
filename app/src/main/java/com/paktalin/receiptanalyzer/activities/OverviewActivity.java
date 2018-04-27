@@ -36,11 +36,8 @@ import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
 public class OverviewActivity extends AppCompatActivity{
     private static final String TAG = ViewReceiptActivity.class.getSimpleName();
 
-    long[] periods = {7776000000L, 2592000000L, 1209600000L, 604800000L};
     TreeMap<String, Integer> categories;
     SQLiteDatabase db;
-
-    PieChart pieChart;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,27 +52,15 @@ public class OverviewActivity extends AppCompatActivity{
         spinner.setOnItemSelectedListener(periodListener);
 
         setCategories();
+        //setPieChart();
 
-        pieChart = findViewById(R.id.chart);
-        pieChart.setUsePercentValues(true);
-        pieChart.getDescription().setEnabled(false);
 
-        ArrayList<PieEntry> yValues = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : categories.entrySet()) {
-            String key = entry.getKey();
-            float value = (float)entry.getValue();
-            yValues.add(new PieEntry(value, key));
-        }
-
-        PieDataSet dataSet = new PieDataSet(yValues, "Categories");
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        PieData data = new PieData(dataSet);
-
-        pieChart.setData(data);
 
     }
 
     AdapterView.OnItemSelectedListener periodListener = new AdapterView.OnItemSelectedListener() {
+        long[] periods = {7776000000L, 2592000000L, 1209600000L, 604800000L};
+
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String expenses = "You spent " + setExpenses(periods[position]) + "€ ";
@@ -125,5 +110,24 @@ public class OverviewActivity extends AppCompatActivity{
                 categories.put(key, 1);
         }
         cursor.close();
+    }
+
+    private void setPieChart() {
+        PieChart pieChart = findViewById(R.id.chart);
+        pieChart.setUsePercentValues(true);
+        pieChart.getDescription().setEnabled(false);
+
+        ArrayList<PieEntry> yValues = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : categories.entrySet()) {
+            String key = entry.getKey();
+            float value = (float)entry.getValue();
+            yValues.add(new PieEntry(value, key));
+        }
+
+        PieDataSet dataSet = new PieDataSet(yValues, "Categories");
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        PieData data = new PieData(dataSet);
+
+        pieChart.setData(data);
     }
 }
