@@ -11,9 +11,19 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.*;
@@ -30,6 +40,8 @@ public class OverviewActivity extends AppCompatActivity{
     TreeMap<String, Integer> categories;
     SQLiteDatabase db;
 
+    PieChart pieChart;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +55,24 @@ public class OverviewActivity extends AppCompatActivity{
         spinner.setOnItemSelectedListener(periodListener);
 
         setCategories();
-        Log.d(TAG, String.valueOf(categories));
+
+        pieChart = findViewById(R.id.chart);
+        pieChart.setUsePercentValues(true);
+        pieChart.getDescription().setEnabled(false);
+
+        ArrayList<PieEntry> yValues = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : categories.entrySet()) {
+            String key = entry.getKey();
+            float value = (float)entry.getValue();
+            yValues.add(new PieEntry(value, key));
+        }
+
+        PieDataSet dataSet = new PieDataSet(yValues, "Categories");
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        PieData data = new PieData(dataSet);
+
+        pieChart.setData(data);
+
     }
 
     AdapterView.OnItemSelectedListener periodListener = new AdapterView.OnItemSelectedListener() {
