@@ -1,9 +1,12 @@
 package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
+import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -63,7 +66,6 @@ public class SelverReceipt extends Receipt {
         }
         return price;
     }
-
     private float getSum() {
         String bonusPointString = "boonusmakse";
         float bonusPoints = getPayment(bonusPointString, IDENTICAL);
@@ -71,5 +73,18 @@ public class SelverReceipt extends Receipt {
         if (!(bonusPoints  < 0))
             sum = sum - bonusPoints;
         return sum;
+    }
+
+    @Override
+    public void extractPurchases(Context context) {
+        ArrayList<Purchase> purchases = new ArrayList<>();
+        for (int i = purchasesStart; i <= purchasesEnd; i++) {
+            String[] split = lines[i].split(" ");
+            if (Purchase.purchase(split[0], "pusikliendivoit")) {
+                Purchase purchase = new Purchase(context, lines[i], initialLines.get(i));
+                purchases.add(purchase);
+            }
+        }
+        this.purchases = purchases.toArray(new Purchase[purchases.size()]);
     }
 }

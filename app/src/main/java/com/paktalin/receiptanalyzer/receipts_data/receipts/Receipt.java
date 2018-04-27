@@ -23,8 +23,8 @@ public class Receipt {
     int purchasesStart, purchasesEnd;
     float finalPrice = -1;
     String priceFlag;
-    private Purchase[] purchases;
-    private ArrayList<String> initialLines;
+    Purchase[] purchases;
+    ArrayList<String> initialLines;
     private long date;
     private long ID;
 
@@ -58,22 +58,11 @@ public class Receipt {
 
     public void extractPurchases(Context context) {
         ArrayList<Purchase> purchases = new ArrayList<>();
-        for (int i = purchasesStart; i <= purchasesEnd; i++)
-            if (Purchase.purchase(lines[i].split(" ")[0])) {
-                Purchase purchase = new Purchase(context, lines[i], initialLines.get(i));
-                purchases.add(purchase);
-            }
+        for (int i = purchasesStart; i <= purchasesEnd; i++) {
+            Purchase purchase = new Purchase(context, lines[i], initialLines.get(i));
+            purchases.add(purchase);
+        }
         this.purchases = purchases.toArray(new Purchase[purchases.size()]);
-    }
-
-    public void logReceipt() {
-        Log.d(TAG, "\n\n______RECEIPT______");
-        Log.d(TAG, "Name = " + supermarket);
-        Log.d(TAG, "retailer = " + retailer);
-        Log.d(TAG, "address = " + address);
-        Log.d(TAG, "final price = " + finalPrice);
-        //Log.d(TAG, "purchasesStart = " + purchasesStart + "");
-        //Log.d(TAG, "purchasesEnd = " + purchasesEnd + "");
     }
 
     void calculateFinalPrice() {

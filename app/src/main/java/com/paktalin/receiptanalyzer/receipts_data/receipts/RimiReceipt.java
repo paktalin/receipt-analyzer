@@ -1,9 +1,12 @@
 package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringManager;
+import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -51,8 +54,46 @@ public class RimiReceipt extends Receipt {
                     finalPrice = StringManager.extractFloat(line, priceFlag.length());
                     break;
                 }
-            }catch (StringIndexOutOfBoundsException ignored) {
+            } catch (StringIndexOutOfBoundsException ignored) {
             }
         }
     }
+
+    @Override
+    public void extractPurchases(Context context) {
+        ArrayList<Purchase> purchases = new ArrayList<>();
+        int beginning = -1;
+        for (int i = purchasesStart; i <= purchasesEnd; i++) {
+            String[] split = lines[i].split(" ");
+            if (Purchase.purchase(split[0], "allah.")) {
+                if (!containsPrice(split))
+                    beginning = i;
+                else {
+                    Purchase purchase = new Purchase(context, lines[i], initialLines.get(i));
+                    if (beginning != -1) {
+                        purchase.setTitle(initialLines.get(beginning) + " " + purchase.getTitle());
+                        beginning = -1;
+                    }
+                    purchases.add(purchase);
+                }
+            }
+        }
+        this.purchases = purchases.toArray(new Purchase[purchases.size()]);
+    }
+
+    private boolean containsPrice(String[] split) {
+        try {
+            Float.parseFloat(split[split.length - 1]);
+        } catch (NumberFormatException e) {
+            if (split.length > 1) {
+                try {
+                    Float.parseFloat(split[split.length - 2]);
+                } catch (NumberFormatException ee) {
+                    return false;
+                }
+            } else return false;
+        }
+        return true;
+    }
+
 }

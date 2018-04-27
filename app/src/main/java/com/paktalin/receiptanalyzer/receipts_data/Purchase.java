@@ -3,6 +3,8 @@ package com.paktalin.receiptanalyzer.receipts_data;
 import android.content.Context;
 import android.util.Log;
 
+import com.paktalin.receiptanalyzer.StringManager;
+
 import static com.paktalin.receiptanalyzer.FileManager.getStringFromTextFile;
 import static com.paktalin.receiptanalyzer.StringManager.similar;
 
@@ -25,32 +27,32 @@ public class Purchase {
 
     public Purchase() {}
 
-    public static boolean purchase(String string){
-        return !similar(string, "pusikliendivoit");
+    public static boolean purchase(String string, String discountString){
+        return !similar(string, discountString);
     }
 
     private void extractPrice(String[] items) {
         for (int i = items.length - 1; i >= 0; i--) {
-            if (casted(items[i]))
+            price = cast(items[i]);
+            if (price != 0)
                 return;
         }
     }
 
-    private boolean casted(String string) {
+    private static float cast(String string) {
         try {
-            price = Float.parseFloat(string);
-            return true;
+            return Float.parseFloat(string);
         } catch (NumberFormatException e) {
             string = string.replaceAll("o", "0");
             string = string.replaceAll("g", "9");
             string = string.replaceAll(" ", "");
+            string = StringManager.removeLetters(string);
+            Log.d(TAG, "casting results: " + string);
             try {
-                price = Float.parseFloat(string);
-                return true;
-            } catch (NumberFormatException ignored){
-            }
+                return Float.parseFloat(string);
+            } catch (NumberFormatException ignored){}
         }
-        return false;
+        return 0;
     }
 
     private void setCategory(Context context, String string) {
