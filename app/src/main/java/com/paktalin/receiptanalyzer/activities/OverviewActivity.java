@@ -25,12 +25,12 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -156,6 +156,7 @@ public class OverviewActivity extends AppCompatActivity{
         BarDataSet dataSet = new BarDataSet(yValues, "Supermarkets");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         BarData data = new BarData(dataSet);
+        data.setValueFormatter(new MyValueFormatter());
 
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getXAxis().setDrawAxisLine(false);
@@ -185,6 +186,13 @@ public class OverviewActivity extends AppCompatActivity{
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
             return mLabels[(int) value];
+        }
+    }
+
+    public class MyValueFormatter implements IValueFormatter {
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return "" + (int)value;
         }
     }
 }
