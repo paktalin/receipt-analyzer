@@ -31,17 +31,13 @@ public class MainActivity extends AppCompatActivity {
     Uri imageUri;
     private static final int REQUEST_GET_FROM_CAMERA = 30;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
-    TextView textViewSupermarkets;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textViewSupermarkets = findViewById(R.id.text_view_supermarkets);
 
         FileManager.setUpAppDir(MainActivity.this);
-
-        (new SupermarketLoader()).execute();
 
         findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AllReceiptsActivity.class);
@@ -88,44 +84,5 @@ public class MainActivity extends AppCompatActivity {
             editIntent.putExtra("uri", imageUri);
             startActivity(editIntent);
         }
-    }
-
-    class SupermarketLoader extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... voids) {
-            SharedPreferences appData = getSharedPreferences("app_data", Context.MODE_PRIVATE);
-            return extractMap(percentage(appData.getAll()));
-        }
-
-        @Override
-        protected void onPostExecute(String strings) {
-            textViewSupermarkets.setText(strings);
-        }
-    }
-
-    private String extractMap(Map<String, ?> map) {
-        StringBuilder builder = new StringBuilder();
-        for (Map.Entry entry : map.entrySet()) {
-            builder
-                    .append(entry.getKey())
-                    .append(" = ")
-                    .append(entry.getValue().toString())
-                    .append("\n");
-        }
-        return builder.toString();
-    }
-
-    private Map<String, ?> percentage(Map<String, ?> map) {
-        float sum = 0;
-        for (Map.Entry entry : map.entrySet()) {
-            sum += (Integer) entry.getValue();
-        }
-        for (Map.Entry entry : map.entrySet()) {
-            int value = (Integer)entry.getValue();
-            float float_value = (float) value;
-            float percent = (float_value / sum) * 100;
-            entry.setValue(percent);
-        }
-        return map;
     }
 }

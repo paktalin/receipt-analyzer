@@ -39,7 +39,6 @@ public class NewReceiptActivity extends AppCompatActivity {
     private static final String TAG = NewReceiptActivity.class.getSimpleName();
 
     Receipt receipt;
-    private String supermarket;
     PurchasesAdapter adapter;
     ListView listView;
     EditText textViewFinalPrice;
@@ -81,7 +80,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             textViewFinalPrice = findViewById(R.id.final_price);
 
             if (receipt != null) {
-                supermarket = receipt.getSupermarket();
+                String supermarket = receipt.getSupermarket();
                 receipt.extractPurchases(NewReceiptActivity.this);
                 purchases = receipt.getPurchases();
                 for (Purchase p : purchases)
@@ -129,7 +128,6 @@ public class NewReceiptActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(NewReceiptActivity.this, "The app's Database has changed. Update your app, please!", Toast.LENGTH_LONG);
             toast.show();
         }
-        updateSharedPreferences();
         Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
         startActivity(mainActivityIntent);
     };
@@ -167,13 +165,5 @@ public class NewReceiptActivity extends AppCompatActivity {
         if(i == 0)
             firstPurchaseID = newRowId;
         return newRowId != -1;
-    }
-
-    private void updateSharedPreferences() {
-        SharedPreferences appData = getSharedPreferences("app_data", Context.MODE_PRIVATE);
-        int counter = appData.getInt(supermarket, 0) + 1;
-        SharedPreferences.Editor editor = appData.edit();
-        editor.putInt(supermarket, counter);
-        editor.apply();
     }
 }

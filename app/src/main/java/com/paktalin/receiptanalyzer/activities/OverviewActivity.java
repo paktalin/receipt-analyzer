@@ -147,13 +147,10 @@ public class OverviewActivity extends AppCompatActivity{
         HorizontalBarChart barChart = findViewById(R.id.bar_chart);
         ArrayList<BarEntry> yValues = new ArrayList<>();
 
-
-
         String[] labels = new String[supermarkets.size()];
         int i = 0;
         for (Map.Entry<String, Integer> entry : supermarkets.entrySet()) {
             int value = entry.getValue();
-            Log.d(TAG, "value: " + value);
             labels[i] = entry.getKey();
             yValues.add(new BarEntry(i, value));
             i++;
