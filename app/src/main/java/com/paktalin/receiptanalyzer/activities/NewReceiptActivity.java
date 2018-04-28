@@ -158,6 +158,8 @@ public class NewReceiptActivity extends AppCompatActivity {
         Purchase p = (Purchase) listView.getItemAtPosition(i);
         ContentValues values = new ContentValues();
         values.put(PurchaseEntry.COLUMN_TITLE, p.getTitle());
+        if (p.getCategory() == null)
+            p.setCategory("Uncategorized");
         values.put(PurchaseEntry.COLUMN_CATEGORY, p.getCategory());
         values.put(PurchaseEntry.COLUMN_PRICE, p.getPrice());
         values.put(PurchaseEntry.COLUMN_DATE_PURCHASE, currentDate);

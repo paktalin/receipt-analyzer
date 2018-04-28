@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -48,6 +49,7 @@ public class OverviewActivity extends AppCompatActivity{
     SQLiteDatabase db;
     int currentPeriod;
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
+    long currentTime, startingTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class OverviewActivity extends AppCompatActivity{
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             currentPeriod = position;
+            currentTime = System.currentTimeMillis();
+            startingTime = currentTime - periodsMillisec[position];
             String expenses = "You spent " + calculateExpenses() + "€ ";
             ((TextView)findViewById(R.id.expenses)).setText(expenses);
             setCategories();
@@ -82,13 +86,9 @@ public class OverviewActivity extends AppCompatActivity{
     };
 
     private float calculateExpenses() {
-        long currentTime = System.currentTimeMillis();
-        long startingTime = currentTime - periodsMillisec[currentPeriod];
-
         String selection = COLUMN_DATE_RECEIPT + ", " + COLUMN_FINAL_PRICE;
         String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
                 + startingTime + " AND " + currentTime;
-
         Cursor cursor = db.rawQuery(query, null);
 
         int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
@@ -101,25 +101,18 @@ public class OverviewActivity extends AppCompatActivity{
     }
 
     private void setCategories() {
-        long currentTime = System.currentTimeMillis();
-        long startingTime = currentTime - periodsMillisec[currentPeriod];
-        categories = new TreeMap<>();
 
         String query = "SELECT " + COLUMN_CATEGORY + " FROM " + TABLE_NAME_PURCHASE + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
                 + startingTime + " AND " + currentTime;
-
         Cursor cursor = db.rawQuery(query, null);
-
         int categoryIndex = cursor.getColumnIndex(COLUMN_CATEGORY);
 
+        categories = new TreeMap<>();
         while (cursor.moveToNext()) {
             String key = cursor.getString(categoryIndex);
-            if (key == null)
-                key = "Unknown";
-            if (categories.containsKey(key)) {
-                int currentValue = categories.get(key);
-                categories.put(key, currentValue + 1);
-            } else
+            if (categories.containsKey(key))
+                categories.put(key, categories.get(key) + 1);
+            else
                 categories.put(key, 1);
         }
         cursor.close();
