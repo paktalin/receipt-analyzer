@@ -1,7 +1,5 @@
 package com.paktalin.receiptanalyzer.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -45,11 +43,11 @@ import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
 public class OverviewActivity extends AppCompatActivity{
     private static final String TAG = ViewReceiptActivity.class.getSimpleName();
 
-    TreeMap<String, Integer> categories;
+    TreeMap<String, Integer> categories, supermarkets;
     SQLiteDatabase db;
-    int currentPeriod;
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
     long currentTime, startingTime;
+    float expenses = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,10 +59,10 @@ public class OverviewActivity extends AppCompatActivity{
 
         Spinner spinner = findViewById(R.id.spinner);
         spinner.setSelection(1);
-        currentPeriod = 1;
         spinner.setOnItemSelectedListener(periodListener);
 
         setCategories();
+        calculateDataInPeriod();
         setPieChart();
         setBarChart();
     }
@@ -72,36 +70,43 @@ public class OverviewActivity extends AppCompatActivity{
     AdapterView.OnItemSelectedListener periodListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            currentPeriod = position;
             currentTime = System.currentTimeMillis();
             startingTime = currentTime - periodsMillisec[position];
-            String expenses = "You spent " + calculateExpenses() + "€ ";
-            ((TextView)findViewById(R.id.expenses)).setText(expenses);
+            calculateDataInPeriod();
             setCategories();
             setPieChart();
+            setBarChart();
+            String expensesStr = "You spent " + expenses + "€ ";
+            ((TextView)findViewById(R.id.expenses)).setText(expensesStr);
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {}
     };
 
-    private float calculateExpenses() {
-        String selection = COLUMN_DATE_RECEIPT + ", " + COLUMN_FINAL_PRICE;
+    private void calculateDataInPeriod() {
+        String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE;
         String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
                 + startingTime + " AND " + currentTime;
         Cursor cursor = db.rawQuery(query, null);
 
         int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
+        int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
 
-        float expenses = 0;
-        while (cursor.moveToNext())
+        supermarkets = new TreeMap<>();
+        expenses = 0;
+        while (cursor.moveToNext()) {
             expenses += cursor.getFloat(finalPriceIndex);
+            String key = cursor.getString(supermarketIndex);
+            if (supermarkets.containsKey(key))
+                supermarkets.put(key, supermarkets.get(key) + 1);
+            else
+                supermarkets.put(key, 1);
+        }
         cursor.close();
-        return expenses;
     }
 
     private void setCategories() {
-
         String query = "SELECT " + COLUMN_CATEGORY + " FROM " + TABLE_NAME_PURCHASE + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
                 + startingTime + " AND " + currentTime;
         Cursor cursor = db.rawQuery(query, null);
@@ -117,6 +122,7 @@ public class OverviewActivity extends AppCompatActivity{
         }
         cursor.close();
     }
+
 
     private void setPieChart() {
         PieChart pieChart = findViewById(R.id.pie_chart);
@@ -139,23 +145,24 @@ public class OverviewActivity extends AppCompatActivity{
 
     private void setBarChart() {
         HorizontalBarChart barChart = findViewById(R.id.bar_chart);
-
         ArrayList<BarEntry> yValues = new ArrayList<>();
-        SharedPreferences appData = getSharedPreferences("app_data", Context.MODE_PRIVATE);
-        String[] supermarkets = new String[appData.getAll().size()];
+
+
+
+        String[] labels = new String[supermarkets.size()];
         int i = 0;
-        for (Map.Entry<String, ?> entry : appData.getAll().entrySet()) {
-            int value = (Integer)entry.getValue();
-            BarEntry e = new BarEntry(i, value, 3);
-            yValues.add(e);
-            supermarkets[i] = entry.getKey();
+        for (Map.Entry<String, Integer> entry : supermarkets.entrySet()) {
+            int value = entry.getValue();
+            Log.d(TAG, "value: " + value);
+            labels[i] = entry.getKey();
+            yValues.add(new BarEntry(i, value));
             i++;
         }
 
         BarDataSet dataSet = new BarDataSet(yValues, "Supermarkets");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         BarData data = new BarData(dataSet);
-        data.setValueFormatter(new MyValueFormatter());
+        data.setValueFormatter(new IntFormatter());
 
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getXAxis().setDrawAxisLine(false);
@@ -168,7 +175,7 @@ public class OverviewActivity extends AppCompatActivity{
         barChart.getAxisLeft().setAxisMinimum(0);
         barChart.getAxisRight().setAxisMinimum(0);
 
-        barChart.getXAxis().setValueFormatter(new LabelFormatter(supermarkets));
+        barChart.getXAxis().setValueFormatter(new LabelFormatter(labels));
         barChart.getXAxis().setGranularity(1);
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
 
@@ -191,7 +198,7 @@ public class OverviewActivity extends AppCompatActivity{
         }
     }
 
-    public class MyValueFormatter implements IValueFormatter {
+    public class IntFormatter implements IValueFormatter {
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
             return "" + (int)value;
