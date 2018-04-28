@@ -46,6 +46,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     SQLiteDatabase db;
     Purchase[] purchases;
     long firstPurchaseID;
+    long currentDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,6 +116,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     }
 
     View.OnClickListener buttonOkListener = v -> {
+        currentDate = System.currentTimeMillis();
         DatabaseHelper dbHelper = new DatabaseHelper(NewReceiptActivity.this);
         db = dbHelper.getWritableDatabase();
         for (int i = 0; i < adapter.getCount(); i++)
@@ -137,7 +139,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(ReceiptEntry.COLUMN_SUPERMARKET, receipt.getSupermarket());
         values.put(ReceiptEntry.COLUMN_RETAILER, receipt.getRetailer());
         values.put(ReceiptEntry.COLUMN_ADDRESS, receipt.getAddress());
-        values.put(ReceiptEntry.COLUMN_DATE, System.currentTimeMillis());
+        values.put(ReceiptEntry.COLUMN_DATE_RECEIPT, currentDate);
         values.put(ReceiptEntry.COLUMN_FIRST_PURCHASE_ID, firstPurchaseID);
         values.put(ReceiptEntry.COLUMN_PURCHASES_LENGTH, purchases.length);
         try {
@@ -158,10 +160,10 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(PurchaseEntry.COLUMN_TITLE, p.getTitle());
         values.put(PurchaseEntry.COLUMN_CATEGORY, p.getCategory());
         values.put(PurchaseEntry.COLUMN_PRICE, p.getPrice());
+        values.put(PurchaseEntry.COLUMN_DATE_PURCHASE, currentDate);
         long newRowId = db.insert(PurchaseEntry.TABLE_NAME_PURCHASE, null, values);
         if(i == 0)
             firstPurchaseID = newRowId;
-        Log.d(TAG, "i = " + i + "; id = " + newRowId);
         return newRowId != -1;
     }
 

@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ListView;
 
 import com.paktalin.receiptanalyzer.R;
@@ -50,7 +49,7 @@ public class AllReceiptsActivity extends AppCompatActivity{
         String[] projection = {
                 ReceiptEntry.COLUMN_SUPERMARKET,
                 ReceiptEntry.COLUMN_FINAL_PRICE,
-                ReceiptEntry.COLUMN_DATE,
+                ReceiptEntry.COLUMN_DATE_RECEIPT,
                 ReceiptEntry._ID};
 
         Cursor cursor = db.query(ReceiptEntry.TABLE_NAME_RECEIPT, projection, null, null, null, null, null);
@@ -58,7 +57,7 @@ public class AllReceiptsActivity extends AppCompatActivity{
         receipts = new Receipt[cursor.getCount()];
         int supermarketColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_SUPERMARKET);
         int finalPriceColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_FINAL_PRICE);
-        int dateColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_DATE);
+        int dateColumnIndex = cursor.getColumnIndex(ReceiptEntry.COLUMN_DATE_RECEIPT);
         int idColumnIndex = cursor.getColumnIndex(ReceiptEntry._ID);
 
         int i = 0;

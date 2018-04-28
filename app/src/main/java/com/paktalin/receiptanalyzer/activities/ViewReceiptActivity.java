@@ -72,7 +72,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
         String[] projection = new String[]
                 {_ID, COLUMN_SUPERMARKET, COLUMN_RETAILER,
                         COLUMN_ADDRESS,
-                        COLUMN_DATE, COLUMN_FINAL_PRICE,
+                        COLUMN_DATE_RECEIPT, COLUMN_FINAL_PRICE,
                         COLUMN_FIRST_PURCHASE_ID, COLUMN_PURCHASES_LENGTH};
 
         Cursor cursor =
@@ -88,7 +88,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
         int retailerIndex = cursor.getColumnIndex(COLUMN_RETAILER);
         int addressIndex = cursor.getColumnIndex(COLUMN_ADDRESS);
         int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
-        int dateIndex = cursor.getColumnIndex(COLUMN_DATE);
+        int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
         int startIdIndex = cursor.getColumnIndex(COLUMN_FIRST_PURCHASE_ID);
         int lengthIndex = cursor.getColumnIndex(COLUMN_PURCHASES_LENGTH);
 

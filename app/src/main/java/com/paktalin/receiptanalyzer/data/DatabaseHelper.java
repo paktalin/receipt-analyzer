@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ReceiptEntry.COLUMN_RETAILER + " TEXT, "
                 + ReceiptEntry.COLUMN_ADDRESS + " TEXT, "
                 + ReceiptEntry.COLUMN_FINAL_PRICE + " NUMERIC, "
-                + ReceiptEntry.COLUMN_DATE + " INTEGER, "
+                + ReceiptEntry.COLUMN_DATE_RECEIPT + " INTEGER, "
                 + ReceiptEntry.COLUMN_FIRST_PURCHASE_ID + " INTEGER, "
                 + ReceiptEntry.COLUMN_PURCHASES_LENGTH + " INTEGER);";
 
@@ -38,6 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + PurchaseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + PurchaseEntry.COLUMN_TITLE + " TEXT NOT NULL, "
                 + PurchaseEntry.COLUMN_CATEGORY + " TEXT, "
+                + PurchaseEntry.COLUMN_DATE_PURCHASE + " INTEGER, "
                 + PurchaseEntry.COLUMN_PRICE + " NUMERIC);";
 
         db.execSQL(SQL_CREATE_RECEIPTS_TABLE);
