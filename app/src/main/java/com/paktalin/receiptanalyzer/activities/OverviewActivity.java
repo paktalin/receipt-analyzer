@@ -61,7 +61,7 @@ public class OverviewActivity extends AppCompatActivity{
         spinner.setOnItemSelectedListener(periodListener);
 
         setCategories();
-        //setPieChart();
+        setPieChart();
         setBarChart();
     }
 
@@ -119,7 +119,7 @@ public class OverviewActivity extends AppCompatActivity{
         cursor.close();
     }
 
-    /*private void setPieChart() {
+    private void setPieChart() {
         PieChart pieChart = findViewById(R.id.pie_chart);
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
@@ -136,7 +136,7 @@ public class OverviewActivity extends AppCompatActivity{
         PieData data = new PieData(dataSet);
 
         pieChart.setData(data);
-    }*/
+    }
 
     private void setBarChart() {
         HorizontalBarChart barChart = findViewById(R.id.bar_chart);
@@ -172,6 +172,9 @@ public class OverviewActivity extends AppCompatActivity{
         barChart.getXAxis().setValueFormatter(new LabelFormatter(supermarkets));
         barChart.getXAxis().setGranularity(1);
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        barChart.getLegend().setEnabled(false);
+        barChart.getDescription().setEnabled(false);
 
         barChart.setData(data);
     }
