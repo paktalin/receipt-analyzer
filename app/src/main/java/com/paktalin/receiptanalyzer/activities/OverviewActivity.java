@@ -26,6 +26,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.paktalin.receiptanalyzer.BuildConfig;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
+import com.paktalin.receiptanalyzer.data.DataExtractor;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
 import java.io.File;
@@ -64,8 +65,10 @@ public class OverviewActivity extends AppCompatActivity{
         spinner.setSelection(1);
         spinner.setOnItemSelectedListener(periodListener);
 
-        setCategories();
-        calculateDataInPeriod();
+        Object[] data = DataExtractor.extractData(db, startingTime, currentTime);
+        supermarkets = (TreeMap<String, Integer>) data[0];
+        categories = (TreeMap<String, Integer>) data[1];
+        expenses = (float) data[2];
         setPieChart();
         setBarChart();
 
@@ -118,8 +121,10 @@ public class OverviewActivity extends AppCompatActivity{
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             currentTime = System.currentTimeMillis();
             startingTime = currentTime - periodsMillisec[position];
-            calculateDataInPeriod();
-            setCategories();
+            Object[] data = DataExtractor.extractData(db, startingTime, currentTime);
+            supermarkets = (TreeMap<String, Integer>) data[0];
+            categories = (TreeMap<String, Integer>) data[1];
+            expenses = (float) data[2];
             setPieChart();
             setBarChart();
             String expensesStr = "You spent " + expenses + "€ ";
@@ -129,46 +134,6 @@ public class OverviewActivity extends AppCompatActivity{
         @Override
         public void onNothingSelected(AdapterView<?> parent) {}
     };
-
-    private void calculateDataInPeriod() {
-        String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE;
-        String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
-                + startingTime + " AND " + currentTime;
-        Cursor cursor = db.rawQuery(query, null);
-
-        int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
-        int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
-
-        supermarkets = new TreeMap<>();
-        expenses = 0;
-        while (cursor.moveToNext()) {
-            expenses += cursor.getFloat(finalPriceIndex);
-            String key = cursor.getString(supermarketIndex);
-            if (supermarkets.containsKey(key))
-                supermarkets.put(key, supermarkets.get(key) + 1);
-            else
-                supermarkets.put(key, 1);
-        }
-        cursor.close();
-    }
-
-    private void setCategories() {
-        String query = "SELECT " + COLUMN_CATEGORY + " FROM " + TABLE_NAME_PURCHASE + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
-                + startingTime + " AND " + currentTime;
-        Cursor cursor = db.rawQuery(query, null);
-        int categoryIndex = cursor.getColumnIndex(COLUMN_CATEGORY);
-
-        categories = new TreeMap<>();
-        while (cursor.moveToNext()) {
-            String key = cursor.getString(categoryIndex);
-            if (categories.containsKey(key))
-                categories.put(key, categories.get(key) + 1);
-            else
-                categories.put(key, 1);
-        }
-        cursor.close();
-    }
-
 
     private void setPieChart() {
         PieChart pieChart = findViewById(R.id.pie_chart);
@@ -196,6 +161,5 @@ public class OverviewActivity extends AppCompatActivity{
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
         params.addRule(RelativeLayout.BELOW, R.id.space1);
         findViewById(R.id.bar_chart_layout).setLayoutParams(params);
-
     }
 }
