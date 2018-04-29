@@ -44,11 +44,9 @@ import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
 public class OverviewActivity extends AppCompatActivity{
     private static final String TAG = ViewReceiptActivity.class.getSimpleName();
 
-    TreeMap<String, Integer> categories, supermarkets;
     SQLiteDatabase db;
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
     long currentTime, startingTime;
-    float expenses = 0;
     Uri imageUri;
     private static final int REQUEST_GET_FROM_CAMERA = 30;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
@@ -64,13 +62,6 @@ public class OverviewActivity extends AppCompatActivity{
         Spinner spinner = findViewById(R.id.spinner);
         spinner.setSelection(1);
         spinner.setOnItemSelectedListener(periodListener);
-
-        Object[] data = DataExtractor.extractData(db, startingTime, currentTime);
-        supermarkets = (TreeMap<String, Integer>) data[0];
-        categories = (TreeMap<String, Integer>) data[1];
-        expenses = (float) data[2];
-        setPieChart();
-        setBarChart();
 
         FileManager.setUpAppDir(OverviewActivity.this);
         findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
@@ -122,12 +113,9 @@ public class OverviewActivity extends AppCompatActivity{
             currentTime = System.currentTimeMillis();
             startingTime = currentTime - periodsMillisec[position];
             Object[] data = DataExtractor.extractData(db, startingTime, currentTime);
-            supermarkets = (TreeMap<String, Integer>) data[0];
-            categories = (TreeMap<String, Integer>) data[1];
-            expenses = (float) data[2];
-            setPieChart();
-            setBarChart();
-            String expensesStr = "You spent " + expenses + "€ ";
+            setPieChart((TreeMap<String, Integer>) data[1]);
+            setBarChart((TreeMap<String, Integer>) data[0]);
+            String expensesStr = "You spent " + data[2] + "€ ";
             ((TextView)findViewById(R.id.expenses)).setText(expensesStr);
         }
 
@@ -135,7 +123,7 @@ public class OverviewActivity extends AppCompatActivity{
         public void onNothingSelected(AdapterView<?> parent) {}
     };
 
-    private void setPieChart() {
+    private void setPieChart(TreeMap<String, Integer> categories) {
         PieChart pieChart = findViewById(R.id.pie_chart);
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
@@ -154,7 +142,7 @@ public class OverviewActivity extends AppCompatActivity{
         pieChart.setData(data);
     }
 
-    private void setBarChart() {
+    private void setBarChart(TreeMap<String, Integer> supermarkets) {
         BarChartSupermarkets.createBarChart(findViewById(R.id.bar_chart), supermarkets);
 
         int height = 50 * supermarkets.size();
