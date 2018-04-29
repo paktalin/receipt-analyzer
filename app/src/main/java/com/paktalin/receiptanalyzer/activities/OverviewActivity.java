@@ -44,6 +44,7 @@ import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
 public class OverviewActivity extends AppCompatActivity{
     private static final String TAG = ViewReceiptActivity.class.getSimpleName();
 
+    //!!!!
     SQLiteDatabase db;
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
     Uri imageUri;
