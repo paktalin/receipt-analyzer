@@ -46,9 +46,7 @@ public class OverviewActivity extends AppCompatActivity{
 
     SQLiteDatabase db;
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
-    long currentTime, startingTime;
     Uri imageUri;
-    private static final int REQUEST_GET_FROM_CAMERA = 30;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
 
     @Override
@@ -74,6 +72,7 @@ public class OverviewActivity extends AppCompatActivity{
     void createDialog(Context context) {
         String buttonCamera = "From camera";
         String buttonGallery = "From gallery";
+        int REQUEST_GET_FROM_CAMERA = 30;
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 
@@ -110,9 +109,8 @@ public class OverviewActivity extends AppCompatActivity{
     AdapterView.OnItemSelectedListener periodListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            currentTime = System.currentTimeMillis();
-            startingTime = currentTime - periodsMillisec[position];
-            Object[] data = DataExtractor.extractData(db, startingTime, currentTime);
+            long currentTime = System.currentTimeMillis();
+            Object[] data = DataExtractor.extractData(db, currentTime, currentTime - periodsMillisec[position]);
             setPieChart((TreeMap<String, Integer>) data[1]);
             setBarChart((TreeMap<String, Integer>) data[0]);
             String expensesStr = "You spent " + data[2] + "€ ";
