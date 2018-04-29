@@ -2,7 +2,6 @@ package com.paktalin.receiptanalyzer.data;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import java.util.TreeMap;
 
 import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.COLUMN_CATEGORY;
@@ -16,7 +15,7 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAM
  * Created by Paktalin on 29/04/2018.
  */
 
-public class DataExtractor {
+public class DataManager {
     private static SQLiteDatabase db;
     private static TreeMap<String, Integer> categories;
     private static TreeMap<String, Integer> supermarkets;
@@ -25,7 +24,7 @@ public class DataExtractor {
     private static long currentTime;
 
     public static Object[] extractData(SQLiteDatabase db, long from, long to) {
-        DataExtractor.db = db;
+        DataManager.db = db;
         startingTime = from;
         currentTime = to;
         supermarkets = new TreeMap<>();
@@ -70,4 +69,5 @@ public class DataExtractor {
         }
         cursor.close();
     }
+
 }

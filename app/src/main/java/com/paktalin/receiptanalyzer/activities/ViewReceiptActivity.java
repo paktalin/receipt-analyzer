@@ -17,7 +17,6 @@ import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.activities.adapters.PurchasesAdapter;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
-import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.*;
 import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
@@ -31,6 +30,8 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
     SQLiteDatabase db;
     Purchase[] purchases;
+    PurchasesAdapter adapter;
+    ListView listView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,8 +40,9 @@ public class ViewReceiptActivity extends AppCompatActivity {
         extractReceipt(getIntent().getLongExtra("id", 1));
         findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
 
-        PurchasesAdapter adapter = new PurchasesAdapter(ViewReceiptActivity.this, purchases);
-        ((ListView)findViewById(R.id.list_view)).setAdapter(adapter);
+        adapter = new PurchasesAdapter(ViewReceiptActivity.this, purchases);
+        listView = findViewById(R.id.list_view);
+        listView.setAdapter(adapter);
 
         Button buttonOk = findViewById(R.id.button_ok);
         buttonOk.setVisibility(View.VISIBLE);
@@ -52,7 +54,6 @@ public class ViewReceiptActivity extends AppCompatActivity {
     }
 
     View.OnClickListener listener = v -> {
-        //TODO SaveReceipt
         Intent intent = new Intent(ViewReceiptActivity.this, AllReceiptsActivity.class);
         startActivity(intent);
     };
@@ -95,7 +96,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
         String selection = _ID + ", " + COLUMN_TITLE + ", " + COLUMN_CATEGORY + ", " + COLUMN_PRICE;
         String query = "SELECT " + selection + " FROM " + TABLE_NAME_PURCHASE + " WHERE " + _ID + " BETWEEN "
-                + startId + " AND " + (startId + length);
+                + startId + " AND " + (startId + length - 1);
         Cursor cursor = db.rawQuery(query, null);
 
         int titleIndex = cursor.getColumnIndex(COLUMN_TITLE);

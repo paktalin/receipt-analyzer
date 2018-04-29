@@ -3,7 +3,6 @@ package com.paktalin.receiptanalyzer.activities;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -41,7 +39,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     Receipt receipt;
     PurchasesAdapter adapter;
     ListView listView;
-    EditText textViewFinalPrice;
+    EditText editTextFinalPrice;
     SQLiteDatabase db;
     Purchase[] purchases;
     long firstPurchaseID;
@@ -77,7 +75,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
-            textViewFinalPrice = findViewById(R.id.final_price);
+            editTextFinalPrice = findViewById(R.id.final_price);
 
             if (receipt != null) {
                 String supermarket = receipt.getSupermarket();
@@ -86,12 +84,12 @@ public class NewReceiptActivity extends AppCompatActivity {
                 for (Purchase p : purchases)
                     p.purchaseInfo();
 
-                ((TextView)findViewById(R.id.supermarket)).setText(supermarket);
-                ((TextView)findViewById(R.id.retailer)).setText(receipt.getRetailer());
-                ((TextView)findViewById(R.id.address)).setText(receipt.getAddress());
+                ((TextView) findViewById(R.id.supermarket)).setText(supermarket);
+                ((TextView) findViewById(R.id.retailer)).setText(receipt.getRetailer());
+                ((TextView) findViewById(R.id.address)).setText(receipt.getAddress());
                 (findViewById(R.id.kokku)).setVisibility(View.VISIBLE);
                 String finalPrice = String.valueOf(receipt.getFinalPrice());
-                textViewFinalPrice.setText(finalPrice);
+                editTextFinalPrice.setText(finalPrice);
 
                 adapter = new PurchasesAdapter(NewReceiptActivity.this, purchases);
                 listView = findViewById(R.id.list_view);
@@ -124,7 +122,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 toast.show();
                 return;
             }
-        if(!saveReceipt()) {
+        if (!saveReceipt()) {
             Toast toast = Toast.makeText(NewReceiptActivity.this, "The app's Database has changed. Update your app, please!", Toast.LENGTH_LONG);
             toast.show();
         }
@@ -141,7 +139,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(ReceiptEntry.COLUMN_FIRST_PURCHASE_ID, firstPurchaseID);
         values.put(ReceiptEntry.COLUMN_PURCHASES_LENGTH, purchases.length);
         try {
-            float finalPrice = Float.parseFloat(String.valueOf(textViewFinalPrice.getText()));
+            float finalPrice = Float.parseFloat(String.valueOf(editTextFinalPrice.getText()));
             values.put(ReceiptEntry.COLUMN_FINAL_PRICE, finalPrice);
         } catch (Exception e) {
             Toast toast = Toast.makeText(NewReceiptActivity.this, "Wrong format of the final price!", Toast.LENGTH_LONG);
@@ -162,7 +160,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         values.put(PurchaseEntry.COLUMN_PRICE, p.getPrice());
         values.put(PurchaseEntry.COLUMN_DATE_PURCHASE, currentDate);
         long newRowId = db.insert(PurchaseEntry.TABLE_NAME_PURCHASE, null, values);
-        if(i == 0)
+        if (i == 0)
             firstPurchaseID = newRowId;
         return newRowId != -1;
     }

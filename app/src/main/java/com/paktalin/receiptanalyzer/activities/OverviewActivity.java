@@ -2,7 +2,6 @@ package com.paktalin.receiptanalyzer.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,16 +25,13 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.paktalin.receiptanalyzer.BuildConfig;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
-import com.paktalin.receiptanalyzer.data.DataExtractor;
+import com.paktalin.receiptanalyzer.data.DataManager;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.*;
-import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
 
 /**
  * Created by Paktalin on 26/04/2018.
@@ -44,7 +40,6 @@ import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
 public class OverviewActivity extends AppCompatActivity{
     private static final String TAG = ViewReceiptActivity.class.getSimpleName();
 
-    //!!!!
     SQLiteDatabase db;
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
     Uri imageUri;
@@ -110,7 +105,7 @@ public class OverviewActivity extends AppCompatActivity{
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             long currentTime = System.currentTimeMillis();
-            Object[] data = DataExtractor.extractData(db, currentTime - periodsMillisec[position], currentTime);
+            Object[] data = DataManager.extractData(db, currentTime - periodsMillisec[position], currentTime);
             setPieChart((TreeMap<String, Integer>) data[1]);
             setBarChart((TreeMap<String, Integer>) data[0]);
             String expensesStr = "You spent " + data[2] + "€ ";
