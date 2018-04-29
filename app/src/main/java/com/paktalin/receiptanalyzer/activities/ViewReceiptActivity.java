@@ -31,7 +31,6 @@ public class ViewReceiptActivity extends AppCompatActivity {
 
     SQLiteDatabase db;
     Purchase[] purchases;
-    Receipt receipt;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,14 +39,8 @@ public class ViewReceiptActivity extends AppCompatActivity {
         extractReceipt(getIntent().getLongExtra("id", 1));
         findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
 
-        ((TextView)findViewById(R.id.supermarket)).setText(receipt.getSupermarket());
-        ((TextView)findViewById(R.id.retailer)).setText(receipt.getRetailer());
-        ((TextView)findViewById(R.id.address)).setText(receipt.getAddress());
-        ((EditText)findViewById(R.id.final_price)).setText(String.valueOf(receipt.getFinalPrice()));
-
         PurchasesAdapter adapter = new PurchasesAdapter(ViewReceiptActivity.this, purchases);
-        ListView listView = findViewById(R.id.list_view);
-        listView.setAdapter(adapter);
+        ((ListView)findViewById(R.id.list_view)).setAdapter(adapter);
 
         Button buttonOk = findViewById(R.id.button_ok);
         buttonOk.setVisibility(View.VISIBLE);
@@ -64,44 +57,37 @@ public class ViewReceiptActivity extends AppCompatActivity {
         startActivity(intent);
     };
 
-
     private void extractReceipt(long id) {
         DatabaseHelper dbHelper = new DatabaseHelper(ViewReceiptActivity.this);
         db = dbHelper.getReadableDatabase();
 
         String[] projection = new String[]
                 {_ID, COLUMN_SUPERMARKET, COLUMN_RETAILER,
-                        COLUMN_ADDRESS,
-                        COLUMN_DATE_RECEIPT, COLUMN_FINAL_PRICE,
+                        COLUMN_ADDRESS, COLUMN_FINAL_PRICE,
                         COLUMN_FIRST_PURCHASE_ID, COLUMN_PURCHASES_LENGTH};
 
-        Cursor cursor =
-                db.query(TABLE_NAME_RECEIPT,
+        Cursor cursor = db.query(TABLE_NAME_RECEIPT,
                         projection,
                         "_id= ?",
                         new String[] { String.valueOf(id) },
                         null, null, null);
 
-        if (cursor != null)
+        if (cursor != null) {
             cursor.moveToFirst();
-        int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
-        int retailerIndex = cursor.getColumnIndex(COLUMN_RETAILER);
-        int addressIndex = cursor.getColumnIndex(COLUMN_ADDRESS);
-        int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
-        int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
-        int startIdIndex = cursor.getColumnIndex(COLUMN_FIRST_PURCHASE_ID);
-        int lengthIndex = cursor.getColumnIndex(COLUMN_PURCHASES_LENGTH);
+            int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
+            int retailerIndex = cursor.getColumnIndex(COLUMN_RETAILER);
+            int addressIndex = cursor.getColumnIndex(COLUMN_ADDRESS);
+            int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
+            int startIdIndex = cursor.getColumnIndex(COLUMN_FIRST_PURCHASE_ID);
+            int lengthIndex = cursor.getColumnIndex(COLUMN_PURCHASES_LENGTH);
 
-        receipt = new Receipt();
-        receipt.setSupermarket(cursor.getString(supermarketIndex));
-        receipt.setRetailer(cursor.getString(retailerIndex));
-        receipt.setAddress(cursor.getString(addressIndex));
-        receipt.setFinalPrice(cursor.getFloat(finalPriceIndex));
-        receipt.setDate(Long.parseLong(cursor.getString(dateIndex)));
+            ((TextView)findViewById(R.id.supermarket)).setText(cursor.getString(supermarketIndex));
+            ((TextView)findViewById(R.id.retailer)).setText(cursor.getString(retailerIndex));
+            ((TextView)findViewById(R.id.address)).setText(cursor.getString(addressIndex));
+            ((EditText)findViewById(R.id.final_price)).setText(String.valueOf(cursor.getFloat(finalPriceIndex)));
 
-        Log.d(TAG, "start index: " + cursor.getLong(startIdIndex));
-
-        unpackPurchases(cursor.getLong(startIdIndex), cursor.getInt(lengthIndex));
+            unpackPurchases(cursor.getLong(startIdIndex), cursor.getInt(lengthIndex));
+        }
         cursor.close();
     }
 
