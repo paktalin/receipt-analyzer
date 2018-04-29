@@ -16,18 +16,18 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="ocr"/>
 
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.NewReceiptActivity" />
+        <activity android:name=".activities.EditActivity" />
+        <activity android:name=".activities.AllReceiptsActivity" />
+        <activity android:name=".activities.ViewReceiptActivity"/>
+        <activity android:name=".activities.OverviewActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".activities.NewReceiptActivity" />
-        <activity android:name=".activities.EditActivity" />
-        <activity android:name=".activities.AllReceiptsActivity" />
-        <activity android:name=".activities.ViewReceiptActivity"/>
-        <activity android:name=".activities.OverviewActivity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
