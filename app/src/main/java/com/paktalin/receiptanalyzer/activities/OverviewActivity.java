@@ -182,8 +182,10 @@ public class OverviewActivity extends AppCompatActivity{
         barChart.getLegend().setEnabled(false);
         barChart.getDescription().setEnabled(false);
 
-        int height = 120 * supermarkets.size();
+
+        int height = 50 * supermarkets.size();
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
+        params.addRule(RelativeLayout.BELOW, R.id.bar_chart_title);
         findViewById(R.id.bar_chart_layout).setLayoutParams(params);
 
         barChart.setData(data);
@@ -209,4 +211,3 @@ public class OverviewActivity extends AppCompatActivity{
         }
     }
 }
-

@@ -5,12 +5,32 @@
     android:layout_height="match_parent"
     android:layout_margin="12dp">
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:entries="@array/periods"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/expenses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/spinner"/>
+
+    <TextView
+        android:id="@+id/bar_chart_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You've been buying from"
+        android:layout_below="@+id/spinner"
+        android:layout_marginBottom="10dp"/>
+
     <LinearLayout
         android:id="@+id/bar_chart_layout"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:orientation="vertical"
-        android:layout_below="@+id/spinner">
+        android:layout_height="wrap_content">
 
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/bar_chart"
@@ -18,18 +38,6 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/expenses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:entries="@array/periods"/>
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pie_chart"
