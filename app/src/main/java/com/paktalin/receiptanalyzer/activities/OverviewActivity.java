@@ -58,8 +58,8 @@ public class OverviewActivity extends AppCompatActivity{
         db = helper.getReadableDatabase();
 
         Spinner spinner = findViewById(R.id.spinner);
-        spinner.setSelection(1);
         spinner.setOnItemSelectedListener(periodListener);
+        spinner.setSelection(1);
 
         FileManager.setUpAppDir(OverviewActivity.this);
         findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
@@ -72,13 +72,12 @@ public class OverviewActivity extends AppCompatActivity{
     void createDialog(Context context) {
         String buttonCamera = "From camera";
         String buttonGallery = "From gallery";
-        int REQUEST_GET_FROM_CAMERA = 30;
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-
         dialog.setCancelable(true);
 
         dialog.setPositiveButton(buttonCamera, (dialog1, which) -> {
+            int REQUEST_GET_FROM_CAMERA = 30;
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File photo = new File(FileManager.getPictureDirPath(), "last.jpg");
             imageUri = FileProvider.getUriForFile(OverviewActivity.this,
@@ -110,7 +109,7 @@ public class OverviewActivity extends AppCompatActivity{
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             long currentTime = System.currentTimeMillis();
-            Object[] data = DataExtractor.extractData(db, currentTime, currentTime - periodsMillisec[position]);
+            Object[] data = DataExtractor.extractData(db, currentTime - periodsMillisec[position], currentTime);
             setPieChart((TreeMap<String, Integer>) data[1]);
             setBarChart((TreeMap<String, Integer>) data[0]);
             String expensesStr = "You spent " + data[2] + "€ ";
