@@ -2,7 +2,6 @@ package com.paktalin.receiptanalyzer.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,20 +17,11 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.paktalin.receiptanalyzer.BuildConfig;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
@@ -39,17 +29,9 @@ import com.paktalin.receiptanalyzer.data.DataManager;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_DATE_RECEIPT;
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_FINAL_PRICE;
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAME_RECEIPT;
 
 /**
  * Created by Paktalin on 26/04/2018.
@@ -62,7 +44,6 @@ public class OverviewActivity extends AppCompatActivity{
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
     Uri imageUri;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
-    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -150,11 +131,11 @@ public class OverviewActivity extends AppCompatActivity{
             float value = (float)entry.getValue();
             yValues.add(new PieEntry(value, key));
         }
-
         PieDataSet dataSet = new PieDataSet(yValues, "Categories");
+        dataSet.setDrawValues(false);
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         PieData data = new PieData(dataSet);
-
+        pieChart.setDrawEntryLabels(false);
         pieChart.setData(data);
     }
 

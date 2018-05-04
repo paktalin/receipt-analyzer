@@ -34,7 +34,8 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAM
  */
 
 public class DetailedExpensesActivity extends AppCompatActivity {
-    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy");
+    SimpleDateFormat sdf = new SimpleDateFormat("d MMM");
+    static ArrayList<Entry> entries;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class DetailedExpensesActivity extends AppCompatActivity {
     private void setLineChart() {
 
         LineChart lineChart = findViewById(R.id.line_chart);
-        ArrayList<Entry> entries = new ArrayList<>();
+        entries = new ArrayList<>();
 
         LinkedHashMap<String, Float> expenses = calculateExpenses();
         String[] labels = new String[expenses.size()];
@@ -66,9 +67,9 @@ public class DetailedExpensesActivity extends AppCompatActivity {
         lineChart.getAxisLeft().setDrawGridLines(false);
         lineChart.getAxisLeft().setAxisMinimum(0);
         lineChart.getXAxis().setDrawGridLines(false);
-        //lineChart.getXAxis().setDrawAxisLine(false);
         lineChart.getXAxis().setGranularity(1);
-        //lineChart.getXAxis().setValueFormatter(new LabelFormatter(labels));
+        lineChart.getXAxis().setValueFormatter(new LabelFormatter(labels));
+        lineChart.getXAxis().setLabelRotationAngle(-45);
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         lineChart.getLegend().setEnabled(false);
         lineChart.getDescription().setEnabled(false);
@@ -84,6 +85,8 @@ public class DetailedExpensesActivity extends AppCompatActivity {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
+            if (entries.get((int)value).getY() == 0)
+                return "";
             return mLabels[(int) value];
         }
     }
