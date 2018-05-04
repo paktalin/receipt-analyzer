@@ -29,6 +29,7 @@ public class DataManager {
         currentTime = to;
         supermarkets = new TreeMap<>();
         categories = new TreeMap<>();
+        expenses = 0;
         setCategories();
         setSupermarketsAndExpenses();
         return new Object[] {supermarkets, categories, expenses};

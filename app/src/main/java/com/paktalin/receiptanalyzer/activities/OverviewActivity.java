@@ -166,6 +166,8 @@ public class OverviewActivity extends AppCompatActivity{
         int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
         int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
         cursorMin.moveToNext();
+        long startDate = cursorMin.getLong(0);
+        cursorMin.close();
 
         LinkedHashMap<String, Float> days = new LinkedHashMap<>();
         while (cursor.moveToNext()) {
@@ -176,7 +178,8 @@ public class OverviewActivity extends AppCompatActivity{
             else
                 days.put(key, value);
         }
-        return sort(days, cursorMin.getLong(0));
+        cursor.close();
+        return sort(days, startDate);
     }
 
     private LinkedHashMap<String, Float> sort(LinkedHashMap<String, Float> days, long startLong) {
@@ -185,7 +188,6 @@ public class OverviewActivity extends AppCompatActivity{
         Calendar end = Calendar.getInstance();
 
         start.setTimeInMillis(startLong);
-        start.set(2018, 3, 27);
         end.setTime(endD);
 
         LinkedHashMap<String, Float> sorted = new LinkedHashMap<>();
