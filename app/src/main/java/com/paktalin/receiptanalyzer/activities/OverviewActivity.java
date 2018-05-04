@@ -2,6 +2,7 @@ package com.paktalin.receiptanalyzer.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -17,7 +19,12 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -29,9 +36,16 @@ import com.paktalin.receiptanalyzer.data.DataManager;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_DATE_RECEIPT;
+import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_FINAL_PRICE;
+import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_SUPERMARKET;
+import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAME_RECEIPT;
 
 /**
  * Created by Paktalin on 26/04/2018.
@@ -44,13 +58,15 @@ public class OverviewActivity extends AppCompatActivity{
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
     Uri imageUri;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
+    TreeMap<String, Float> expenses;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
-        DatabaseHelper helper = new DatabaseHelper(OverviewActivity.this);
+        DatabaseHelper helper = new DatabaseHelper(this);
         db = helper.getReadableDatabase();
 
         Spinner spinner = findViewById(R.id.spinner);
@@ -106,8 +122,10 @@ public class OverviewActivity extends AppCompatActivity{
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             long currentTime = System.currentTimeMillis();
             Object[] data = DataManager.extractData(db, currentTime - periodsMillisec[position], currentTime);
-            setPieChart((TreeMap<String, Integer>) data[1]);
-            setBarChart((TreeMap<String, Integer>) data[0]);
+            //setPieChart((TreeMap<String, Integer>) data[1]);
+            //setBarChart((TreeMap<String, Integer>) data[0]);
+            calculateExpenses();
+            setLineChart();
             String expensesStr = "You spent " + data[2] + "€ ";
             ((TextView)findViewById(R.id.expenses)).setText(expensesStr);
         }
@@ -116,7 +134,7 @@ public class OverviewActivity extends AppCompatActivity{
         public void onNothingSelected(AdapterView<?> parent) {}
     };
 
-    private void setPieChart(TreeMap<String, Integer> categories) {
+    /*private void setPieChart(TreeMap<String, Integer> categories) {
         PieChart pieChart = findViewById(R.id.pie_chart);
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
@@ -142,5 +160,55 @@ public class OverviewActivity extends AppCompatActivity{
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
         params.addRule(RelativeLayout.BELOW, R.id.space1);
         findViewById(R.id.bar_chart_layout).setLayoutParams(params);
+    }*/
+
+    private void calculateExpenses() {
+        String[] projection = new String[]{COLUMN_FINAL_PRICE, COLUMN_DATE_RECEIPT};
+        Cursor cursor = db.query(TABLE_NAME_RECEIPT, projection,
+                null, null, null, null, null, null);
+
+        expenses = new TreeMap<>();
+
+        int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
+        int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
+
+        while (cursor.moveToNext()) {
+            long dateLong = cursor.getLong(dateIndex);
+            float price = cursor.getFloat(priceIndex);
+
+            String stringDate = sdf.format(new Date(dateLong));
+            if (expenses.containsKey(stringDate)) {
+                Float newExpenses = expenses.get(stringDate) + price;
+                expenses.put(stringDate, newExpenses);
+            } else
+                expenses.put(stringDate, price);
+        }
+
+        Log.d(TAG, String.valueOf(expenses));
     }
+
+    private void setLineChart() {
+
+        LineChart lineChart = findViewById(R.id.line_chart);
+
+        ArrayList<Entry> entries = new ArrayList<>();
+
+        int i = 0;
+        for (Map.Entry e : expenses.entrySet()) {
+            entries.add(new Entry(i, (Float)e.getValue()));
+            i++;
+        }
+
+        LineDataSet dataSet = new LineDataSet(entries, "Labelll");
+        LineData data = new LineData(dataSet);
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.getAxisLeft().setEnabled(false);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getXAxis().setDrawAxisLine(false);
+        lineChart.getXAxis().setGranularity(1);
+        lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.setData(data);
+    }
+
+
 }
