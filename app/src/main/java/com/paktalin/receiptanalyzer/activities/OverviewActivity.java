@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -24,6 +23,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.paktalin.receiptanalyzer.BuildConfig;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
@@ -73,6 +74,10 @@ public class OverviewActivity extends AppCompatActivity{
             startActivity(intent);
         });
         findViewById(R.id.button_new_receipt).setOnClickListener(v -> createDialog(OverviewActivity.this));
+        findViewById(R.id.button_more).setOnClickListener(v -> {
+            Intent intent = new Intent(OverviewActivity.this, DetailedExpensesActivity.class);
+            startActivity(intent);
+        });
     }
 
     void createDialog(Context context) {
@@ -196,7 +201,6 @@ public class OverviewActivity extends AppCompatActivity{
         LinkedHashMap<String, Float> sorted = new LinkedHashMap<>();
         for (Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
             String key = sdf.format(date);
-            Log.d(TAG, "Key: " + key);
             if (days.containsKey(sdf.format(date)))
                 sorted.put(key, days.get(key));
             else
@@ -222,6 +226,7 @@ public class OverviewActivity extends AppCompatActivity{
 
         LineDataSet dataSet = new LineDataSet(entries, "Labelll");
         LineData data = new LineData(dataSet);
+        data.setValueFormatter(new IntFormatter());
         lineChart.getAxisRight().setEnabled(false);
         lineChart.getAxisLeft().setEnabled(false);
         lineChart.getAxisLeft().setDrawGridLines(false);
@@ -229,7 +234,7 @@ public class OverviewActivity extends AppCompatActivity{
         lineChart.getXAxis().setDrawGridLines(false);
         //lineChart.getXAxis().setDrawAxisLine(false);
         lineChart.getXAxis().setGranularity(1);
-        lineChart.getXAxis().setValueFormatter(new LabelFormatter(labels));
+        //lineChart.getXAxis().setValueFormatter(new LabelFormatter(labels));
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         lineChart.getLegend().setEnabled(false);
         lineChart.getDescription().setEnabled(false);
@@ -246,6 +251,15 @@ public class OverviewActivity extends AppCompatActivity{
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
             return mLabels[(int) value];
+        }
+    }
+
+    public static class IntFormatter implements IValueFormatter {
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            if (value == 0)
+                return "";
+            return "" + value + "€";
         }
     }
 
