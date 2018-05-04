@@ -171,14 +171,10 @@ public class OverviewActivity extends AppCompatActivity{
             else
                 days.put(key, value);
         }
-        return days;
-    }
-    private class Day {
-        String formattedDate;
-        float price;
+        return sort(days);
     }
 
-    private void sort() {
+    private LinkedHashMap<String, Float> sort(LinkedHashMap<String, Float> days) {
         long startLong;
 
         Date endD = new Date(System.currentTimeMillis());
@@ -190,9 +186,15 @@ public class OverviewActivity extends AppCompatActivity{
         start.set(2018, 3, 27);
         end.setTime(endD);
 
-        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-            Log.d(TAG, sdf.format(date));
+        LinkedHashMap<String, Float> sorted = new LinkedHashMap<>();
+        for (Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+            String key = sdf.format(date);
+            if (days.containsKey(sdf.format(date)))
+                sorted.put(key, days.get(key));
+            else
+                sorted.put(key, 0f);
         }
+        return sorted;
     }
 
     private void setLineChart() {
