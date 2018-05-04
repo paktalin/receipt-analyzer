@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -32,8 +33,10 @@ import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_DATE_RECEIPT;
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_FINAL_PRICE;
@@ -50,7 +53,6 @@ public class OverviewActivity extends AppCompatActivity{
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
     Uri imageUri;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
-    TreeMap<String, Float> expenses;
     SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy");
 
     @Override
@@ -153,53 +155,58 @@ public class OverviewActivity extends AppCompatActivity{
         findViewById(R.id.bar_chart_layout).setLayoutParams(params);
     }*/
 
-    private ArrayList<Day> calculateExpenses() {
+    private LinkedHashMap<String, Float> calculateExpenses() {
         String[] projection = new String[]{COLUMN_FINAL_PRICE, COLUMN_DATE_RECEIPT};
         Cursor cursor = db.query(TABLE_NAME_RECEIPT, projection,
                 null, null, null, null, null, null);
         int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
         int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
 
-        ArrayList<Day> days = new ArrayList<>();
+        LinkedHashMap<String, Float> days = new LinkedHashMap<>();
         while (cursor.moveToNext()) {
-            Day day = new Day();
-            day.formattedDate = sdf.format(new Date(cursor.getLong(dateIndex)));
-            day.price = cursor.getFloat(priceIndex);
-            days.add(day);
+            String key = sdf.format(new Date(cursor.getLong(dateIndex)));
+            Float value = cursor.getFloat(priceIndex);
+            if (days.containsKey(key))
+                days.put(key, value + days.get(key));
+            else
+                days.put(key, value);
         }
-        return sortDays(days);
+        return days;
     }
     private class Day {
         String formattedDate;
         float price;
     }
 
-    private ArrayList<Day> sortDays(ArrayList<Day> days) {
-        if (days.size() != 0) {
-            for (int i = 1; i < days.size(); i++) {
-                Day previous = days.get(i-1);
-                Day current = days.get(i);
-                if (previous.formattedDate.equals(current.formattedDate)) {
-                    previous.price = previous.price + current.price;
-                    days.remove(current);
-                    i--;
-                }
-            }
+    private void sort() {
+        long startLong;
+
+        Date endD = new Date(System.currentTimeMillis());
+
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+
+        //start.setTimeInMillis(startLong);
+        start.set(2018, 3, 27);
+        end.setTime(endD);
+
+        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+            Log.d(TAG, sdf.format(date));
         }
-        return days;
     }
 
     private void setLineChart() {
 
         LineChart lineChart = findViewById(R.id.line_chart);
-        ArrayList<Day> expenses = calculateExpenses();
         ArrayList<Entry> entries = new ArrayList<>();
+
+        LinkedHashMap<String, Float> expenses = calculateExpenses();
         String[] labels = new String[expenses.size()];
 
         int i = 0;
-        for (Day day : expenses) {
-            entries.add(new Entry(i, day.price));
-            labels[i] = day.formattedDate;
+        for (Map.Entry entry : expenses.entrySet()) {
+            entries.add(new Entry(i, (Float)entry.getValue()));
+            labels[i] = (String) entry.getKey();
             i++;
         }
 
@@ -207,11 +214,15 @@ public class OverviewActivity extends AppCompatActivity{
         LineData data = new LineData(dataSet);
         lineChart.getAxisRight().setEnabled(false);
         lineChart.getAxisLeft().setEnabled(false);
-        lineChart.getXAxis().setDrawGridLines(false);
-        lineChart.getXAxis().setDrawAxisLine(false);
-        lineChart.getXAxis().setGranularity(1);
         lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getAxisLeft().setAxisMinimum(0);
+        lineChart.getXAxis().setDrawGridLines(false);
+        //lineChart.getXAxis().setDrawAxisLine(false);
+        lineChart.getXAxis().setGranularity(1);
         lineChart.getXAxis().setValueFormatter(new LabelFormatter(labels));
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getLegend().setEnabled(false);
+        lineChart.getDescription().setEnabled(false);
         lineChart.setData(data);
     }
 
