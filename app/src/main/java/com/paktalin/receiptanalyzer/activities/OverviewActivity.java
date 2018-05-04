@@ -183,16 +183,20 @@ public class OverviewActivity extends AppCompatActivity{
     }
 
     private LinkedHashMap<String, Float> sort(LinkedHashMap<String, Float> days, long startLong) {
-        Date endD = new Date(System.currentTimeMillis());
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
 
         start.setTimeInMillis(startLong);
-        end.setTime(endD);
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+        end.setTimeInMillis(System.currentTimeMillis());
 
         LinkedHashMap<String, Float> sorted = new LinkedHashMap<>();
         for (Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
             String key = sdf.format(date);
+            Log.d(TAG, "Key: " + key);
             if (days.containsKey(sdf.format(date)))
                 sorted.put(key, days.get(key));
             else
