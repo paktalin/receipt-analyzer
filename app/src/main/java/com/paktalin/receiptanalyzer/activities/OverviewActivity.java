@@ -14,21 +14,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.paktalin.receiptanalyzer.BuildConfig;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
@@ -39,12 +33,10 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 import java.util.TreeMap;
 
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_DATE_RECEIPT;
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_FINAL_PRICE;
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_SUPERMARKET;
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAME_RECEIPT;
 
 /**
@@ -124,7 +116,6 @@ public class OverviewActivity extends AppCompatActivity{
             Object[] data = DataManager.extractData(db, currentTime - periodsMillisec[position], currentTime);
             //setPieChart((TreeMap<String, Integer>) data[1]);
             //setBarChart((TreeMap<String, Integer>) data[0]);
-            calculateExpenses();
             setLineChart();
             String expensesStr = "You spent " + data[2] + "€ ";
             ((TextView)findViewById(R.id.expenses)).setText(expensesStr);
@@ -162,40 +153,53 @@ public class OverviewActivity extends AppCompatActivity{
         findViewById(R.id.bar_chart_layout).setLayoutParams(params);
     }*/
 
-    private void calculateExpenses() {
+    private ArrayList<Day> calculateExpenses() {
         String[] projection = new String[]{COLUMN_FINAL_PRICE, COLUMN_DATE_RECEIPT};
         Cursor cursor = db.query(TABLE_NAME_RECEIPT, projection,
                 null, null, null, null, null, null);
-
-        expenses = new TreeMap<>();
-
         int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
         int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
 
+        ArrayList<Day> days = new ArrayList<>();
         while (cursor.moveToNext()) {
-            long dateLong = cursor.getLong(dateIndex);
-            float price = cursor.getFloat(priceIndex);
-
-            String stringDate = sdf.format(new Date(dateLong));
-            if (expenses.containsKey(stringDate)) {
-                Float newExpenses = expenses.get(stringDate) + price;
-                expenses.put(stringDate, newExpenses);
-            } else
-                expenses.put(stringDate, price);
+            Day day = new Day();
+            day.formattedDate = sdf.format(new Date(cursor.getLong(dateIndex)));
+            day.price = cursor.getFloat(priceIndex);
+            days.add(day);
         }
+        return sortDays(days);
+    }
+    private class Day {
+        String formattedDate;
+        float price;
+    }
 
-        Log.d(TAG, String.valueOf(expenses));
+    private ArrayList<Day> sortDays(ArrayList<Day> days) {
+        if (days.size() != 0) {
+            for (int i = 1; i < days.size(); i++) {
+                Day previous = days.get(i-1);
+                Day current = days.get(i);
+                if (previous.formattedDate.equals(current.formattedDate)) {
+                    previous.price = previous.price + current.price;
+                    days.remove(current);
+                    i--;
+                }
+            }
+        }
+        return days;
     }
 
     private void setLineChart() {
 
         LineChart lineChart = findViewById(R.id.line_chart);
-
+        ArrayList<Day> expenses = calculateExpenses();
         ArrayList<Entry> entries = new ArrayList<>();
+        String[] labels = new String[expenses.size()];
 
         int i = 0;
-        for (Map.Entry e : expenses.entrySet()) {
-            entries.add(new Entry(i, (Float)e.getValue()));
+        for (Day day : expenses) {
+            entries.add(new Entry(i, day.price));
+            labels[i] = day.formattedDate;
             i++;
         }
 
@@ -207,8 +211,21 @@ public class OverviewActivity extends AppCompatActivity{
         lineChart.getXAxis().setDrawAxisLine(false);
         lineChart.getXAxis().setGranularity(1);
         lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getXAxis().setValueFormatter(new LabelFormatter(labels));
         lineChart.setData(data);
     }
 
+    public static class LabelFormatter implements IAxisValueFormatter {
+        private final String[] mLabels;
+
+        LabelFormatter(String[] labels) {
+            mLabels = labels;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            return mLabels[(int) value];
+        }
+    }
 
 }
