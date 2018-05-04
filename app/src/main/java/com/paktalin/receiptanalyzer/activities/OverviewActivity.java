@@ -159,8 +159,13 @@ public class OverviewActivity extends AppCompatActivity{
         String[] projection = new String[]{COLUMN_FINAL_PRICE, COLUMN_DATE_RECEIPT};
         Cursor cursor = db.query(TABLE_NAME_RECEIPT, projection,
                 null, null, null, null, null, null);
+
+        Cursor cursorMin = db.query(TABLE_NAME_RECEIPT, new String[] { "min(" + COLUMN_DATE_RECEIPT + ")" }, null, null,
+                null, null, null);
+
         int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
         int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
+        cursorMin.moveToNext();
 
         LinkedHashMap<String, Float> days = new LinkedHashMap<>();
         while (cursor.moveToNext()) {
@@ -171,18 +176,15 @@ public class OverviewActivity extends AppCompatActivity{
             else
                 days.put(key, value);
         }
-        return sort(days);
+        return sort(days, cursorMin.getLong(0));
     }
 
-    private LinkedHashMap<String, Float> sort(LinkedHashMap<String, Float> days) {
-        long startLong;
-
+    private LinkedHashMap<String, Float> sort(LinkedHashMap<String, Float> days, long startLong) {
         Date endD = new Date(System.currentTimeMillis());
-
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
 
-        //start.setTimeInMillis(startLong);
+        start.setTimeInMillis(startLong);
         start.set(2018, 3, 27);
         end.setTime(endD);
 
