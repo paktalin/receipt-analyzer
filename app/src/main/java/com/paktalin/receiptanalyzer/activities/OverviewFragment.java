@@ -1,14 +1,9 @@
 package com.paktalin.receiptanalyzer.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +18,14 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.paktalin.receiptanalyzer.BuildConfig;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.data.DataManager;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Paktalin on 05/05/2018.
@@ -44,8 +35,6 @@ public class OverviewFragment extends Fragment {
 
     SQLiteDatabase db;
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
-    Uri imageUri;
-    private static final int REQUEST_GET_FROM_GALLERY = 40;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,11 +48,6 @@ public class OverviewFragment extends Fragment {
         spinner.setSelection(1);
 
         FileManager.setUpAppDir(getActivity());
-        view.findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
-        });
-        view.findViewById(R.id.button_new_receipt).setOnClickListener(v -> createDialog(getActivity()));
         view.findViewById(R.id.button_more).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), DetailedExpensesActivity.class);
             startActivity(intent);
@@ -88,41 +72,6 @@ public class OverviewFragment extends Fragment {
         public void onNothingSelected(AdapterView<?> parent) {}
     };
 
-    void createDialog(Context context) {
-        String buttonCamera = "From camera";
-        String buttonGallery = "From gallery";
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setCancelable(true);
-
-        dialog.setPositiveButton(buttonCamera, (dialog1, which) -> {
-            int REQUEST_GET_FROM_CAMERA = 30;
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File photo = new File(FileManager.getPictureDirPath(), "last.jpg");
-            imageUri = FileProvider.getUriForFile(getActivity(),
-                    BuildConfig.APPLICATION_ID + ".provider", photo);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            startActivityForResult(intent, REQUEST_GET_FROM_CAMERA);
-        });
-
-        dialog.setNeutralButton(buttonGallery, (dialog12, which) -> {
-            Intent galleryIntent = (new Intent(Intent.ACTION_PICK,
-                    MediaStore.Images.Media.INTERNAL_CONTENT_URI));
-            startActivityForResult(galleryIntent, REQUEST_GET_FROM_GALLERY);
-        });
-        dialog.show();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            Intent editIntent = new Intent(getActivity(), EditActivity.class);
-            if (requestCode == REQUEST_GET_FROM_GALLERY)
-                imageUri = data.getData();
-            editIntent.putExtra("uri", imageUri);
-            startActivity(editIntent);
-        }
-    }
 
     private void setPieChart(TreeMap<String, Integer> categories) {
         PieChart pieChart = getView().findViewById(R.id.pie_chart);

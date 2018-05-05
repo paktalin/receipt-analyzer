@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.paktalin.receiptanalyzer.activities.OverviewFragment;
-import com.paktalin.receiptanalyzer.activities.Tab1;
+import com.paktalin.receiptanalyzer.activities.CreateReceiptFragment;
 import com.paktalin.receiptanalyzer.activities.AllReceiptsFragment;
 
 /**
@@ -13,23 +13,18 @@ import com.paktalin.receiptanalyzer.activities.AllReceiptsFragment;
  */
 
 public class PagerAdapter extends FragmentPagerAdapter {
+    private int numberOfTabs;
 
-    private int mNoOfTabs;
-
-    public PagerAdapter(FragmentManager fm, int NumberOfTabs)
-    {
+    public PagerAdapter(FragmentManager fm, int NumberOfTabs) {
         super(fm);
-        this.mNoOfTabs = NumberOfTabs;
+        this.numberOfTabs = NumberOfTabs;
     }
-
 
     @Override
     public Fragment getItem(int position) {
-        switch(position)
-        {
-
+        switch(position) {
             case 0:
-                return new Tab1();
+                return new CreateReceiptFragment();
             case 1:
                 return  new OverviewFragment();
             case 2:
@@ -41,6 +36,6 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return mNoOfTabs;
+        return numberOfTabs;
     }
 }

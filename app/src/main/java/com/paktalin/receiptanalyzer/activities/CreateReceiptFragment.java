@@ -22,7 +22,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Paktalin on 05/05/2018.
  */
 
-public class Tab1 extends Fragment {
+public class CreateReceiptFragment extends Fragment {
 
     Uri imageUri;
     private static final int REQUEST_GET_FROM_GALLERY = 40;

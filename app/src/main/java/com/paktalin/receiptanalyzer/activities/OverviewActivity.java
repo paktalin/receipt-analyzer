@@ -58,11 +58,11 @@ public class OverviewActivity extends AppCompatActivity{
         spinner.setSelection(1);
 
         FileManager.setUpAppDir(OverviewActivity.this);
-        findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
+        /*findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
             Intent intent = new Intent(OverviewActivity.this, MainActivity.class);
             startActivity(intent);
-        });
-        findViewById(R.id.button_new_receipt).setOnClickListener(v -> createDialog(OverviewActivity.this));
+        });*/
+        //findViewById(R.id.button_new_receipt).setOnClickListener(v -> createDialog(OverviewActivity.this));
         findViewById(R.id.button_more).setOnClickListener(v -> {
             Intent intent = new Intent(OverviewActivity.this, DetailedExpensesActivity.class);
             startActivity(intent);
