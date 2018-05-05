@@ -54,7 +54,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
     }
 
     View.OnClickListener listener = v -> {
-        Intent intent = new Intent(ViewReceiptActivity.this, AllReceiptsActivity.class);
+        Intent intent = new Intent(ViewReceiptActivity.this, MainActivity.class);
         startActivity(intent);
     };
 

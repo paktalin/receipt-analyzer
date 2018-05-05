@@ -18,7 +18,6 @@
 
         <activity android:name=".activities.NewReceiptActivity" />
         <activity android:name=".activities.EditActivity" />
-        <activity android:name=".activities.AllReceiptsActivity" />
         <activity android:name=".activities.ViewReceiptActivity"/>
         <activity android:name=".activities.DetailedExpensesActivity"/>
         <activity android:name=".activities.MainActivity">

@@ -22,7 +22,7 @@ import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 public class AllReceiptsFragment extends Fragment {
 
-    private static final String TAG = AllReceiptsActivity.class.getSimpleName();
+    private static final String TAG = AllReceiptsFragment.class.getSimpleName();
     Receipt[] receipts;
 
     @Override
