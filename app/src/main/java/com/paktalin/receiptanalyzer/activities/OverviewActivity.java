@@ -112,7 +112,8 @@ public class OverviewActivity extends AppCompatActivity{
             Object[] data = DataManager.extractData(db, currentTime - periodsMillisec[position], currentTime);
             setPieChart((TreeMap<String, Integer>) data[1]);
             setBarChart((TreeMap<String, Integer>) data[0]);
-            String expensesStr = "You spent " + data[2] + "€ ";
+            String expenses = String.format("%.2f", (float)data[2]);
+            String expensesStr = "You spent " + expenses + "€ ";
             ((TextView)findViewById(R.id.expenses)).setText(expensesStr);
         }
 
