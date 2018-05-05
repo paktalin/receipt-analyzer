@@ -103,6 +103,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 buttonCancel.setVisibility(View.VISIBLE);
                 buttonCancel.setOnClickListener(v -> {
                     Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
+                    mainActivityIntent.putExtra("position", 1);
                     startActivity(mainActivityIntent);
                 });
             } else {
@@ -127,6 +128,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             toast.show();
         }
         Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
+        mainActivityIntent.putExtra("position", 1);
         startActivity(mainActivityIntent);
     };
 
