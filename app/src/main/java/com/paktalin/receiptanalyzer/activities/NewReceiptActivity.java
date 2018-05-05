@@ -102,7 +102,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 Button buttonCancel = findViewById(R.id.button_cancel);
                 buttonCancel.setVisibility(View.VISIBLE);
                 buttonCancel.setOnClickListener(v -> {
-                    Intent mainActivityIntent = new Intent(NewReceiptActivity.this, OverviewActivity.class);
+                    Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
                     startActivity(mainActivityIntent);
                 });
             } else {
@@ -126,7 +126,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(NewReceiptActivity.this, "The app's Database has changed. Update your app, please!", Toast.LENGTH_LONG);
             toast.show();
         }
-        Intent mainActivityIntent = new Intent(NewReceiptActivity.this, OverviewActivity.class);
+        Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
         startActivity(mainActivityIntent);
     };
 
