@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.paktalin.receiptanalyzer.R;
+import com.paktalin.receiptanalyzer.activities.adapters.PagerAdapter;
 
 /**
  * Created by Paktalin on 05/05/2018.

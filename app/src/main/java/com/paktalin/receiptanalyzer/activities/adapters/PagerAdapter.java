@@ -1,8 +1,12 @@
-package com.paktalin.receiptanalyzer.activities;
+package com.paktalin.receiptanalyzer.activities.adapters;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+
+import com.paktalin.receiptanalyzer.activities.OverviewFragment;
+import com.paktalin.receiptanalyzer.activities.Tab1;
+import com.paktalin.receiptanalyzer.activities.AllReceiptsFragment;
 
 /**
  * Created by Paktalin on 05/05/2018.
@@ -29,7 +33,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return  new OverviewFragment();
             case 2:
-                return new Tab3();
+                return new AllReceiptsFragment();
             default:
                 return null;
         }

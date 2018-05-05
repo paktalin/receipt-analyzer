@@ -21,14 +21,13 @@
         <activity android:name=".activities.AllReceiptsActivity" />
         <activity android:name=".activities.ViewReceiptActivity"/>
         <activity android:name=".activities.DetailedExpensesActivity"/>
-        <activity android:name=".activities.MainActivity"/>
-        <activity android:name=".activities.OverviewActivity">
+        <activity android:name=".activities.OverviewActivity"/>
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <provider

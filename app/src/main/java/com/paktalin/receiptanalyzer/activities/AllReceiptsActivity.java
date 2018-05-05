@@ -20,7 +20,6 @@ import com.paktalin.receiptanalyzer.data.Contracts.*;
 
 public class AllReceiptsActivity extends AppCompatActivity{
     private static final String TAG = AllReceiptsActivity.class.getSimpleName();
-
     Receipt[] receipts;
 
     @Override
