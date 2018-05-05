@@ -4,9 +4,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.paktalin.receiptanalyzer.activities.OverviewFragment;
-import com.paktalin.receiptanalyzer.activities.CreateReceiptFragment;
-import com.paktalin.receiptanalyzer.activities.AllReceiptsFragment;
+import com.paktalin.receiptanalyzer.fragments.OverviewFragment;
+import com.paktalin.receiptanalyzer.fragments.CreateReceiptFragment;
+import com.paktalin.receiptanalyzer.fragments.AllReceiptsFragment;
 
 /**
  * Created by Paktalin on 05/05/2018.

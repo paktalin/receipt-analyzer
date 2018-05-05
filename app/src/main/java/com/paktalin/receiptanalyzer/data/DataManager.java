@@ -18,15 +18,15 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAM
 public class DataManager {
     private static SQLiteDatabase db;
     private static TreeMap<String, Integer> categories;
-    private static TreeMap<String, Integer> supermarkets;
+    private static TreeMap<String, Float> supermarkets;
     private static float expenses = 0;
     private static long startingTime;
     private static long currentTime;
 
-    public static Object[] extractData(SQLiteDatabase db, long from, long to) {
+    public static Object[] extractData(SQLiteDatabase db, long from) {
         DataManager.db = db;
         startingTime = from;
-        currentTime = to;
+        currentTime = System.currentTimeMillis();
         supermarkets = new TreeMap<>();
         categories = new TreeMap<>();
         expenses = 0;
@@ -48,9 +48,9 @@ public class DataManager {
             expenses += cursor.getFloat(finalPriceIndex);
             String key = cursor.getString(supermarketIndex);
             if (supermarkets.containsKey(key))
-                supermarkets.put(key, supermarkets.get(key) + 1);
+                supermarkets.put(key, supermarkets.get(key) + cursor.getFloat(finalPriceIndex));
             else
-                supermarkets.put(key, 1);
+                supermarkets.put(key, cursor.getFloat(finalPriceIndex));
         }
         cursor.close();
     }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.paktalin.receiptanalyzer.activities.CreateReceiptFragment">
+    tools:context="com.paktalin.receiptanalyzer.fragments.CreateReceiptFragment">
 
     <Button
         android:id="@+id/button_camera"

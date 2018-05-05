@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.activities;
+package com.paktalin.receiptanalyzer.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.paktalin.receiptanalyzer.BuildConfig;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
+import com.paktalin.receiptanalyzer.activities.EditActivity;
 
 import java.io.File;
 

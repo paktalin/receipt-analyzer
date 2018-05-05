@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.activities;
+package com.paktalin.receiptanalyzer.fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.paktalin.receiptanalyzer.R;
+import com.paktalin.receiptanalyzer.activities.ViewReceiptActivity;
 import com.paktalin.receiptanalyzer.activities.adapters.ReceiptsAdapter;
 import com.paktalin.receiptanalyzer.data.Contracts;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
