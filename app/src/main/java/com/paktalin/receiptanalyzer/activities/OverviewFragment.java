@@ -6,11 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,12 +34,13 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
- * Created by Paktalin on 26/04/2018.
+ * Created by Paktalin on 05/05/2018.
  */
 
-public class OverviewActivity extends AppCompatActivity{
-    private static final String TAG = ViewReceiptActivity.class.getSimpleName();
+public class OverviewFragment extends Fragment {
 
     SQLiteDatabase db;
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
@@ -46,28 +48,45 @@ public class OverviewActivity extends AppCompatActivity{
     private static final int REQUEST_GET_FROM_GALLERY = 40;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_overview);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_overview, container, false);
 
-        DatabaseHelper helper = new DatabaseHelper(this);
+        DatabaseHelper helper = new DatabaseHelper(getActivity());
         db = helper.getReadableDatabase();
 
-        Spinner spinner = findViewById(R.id.spinner);
+        Spinner spinner = view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(periodListener);
         spinner.setSelection(1);
 
-        FileManager.setUpAppDir(OverviewActivity.this);
-        findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
-            Intent intent = new Intent(OverviewActivity.this, MainActivity.class);
+        FileManager.setUpAppDir(getActivity());
+        view.findViewById(R.id.button_view_receipts).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         });
-        findViewById(R.id.button_new_receipt).setOnClickListener(v -> createDialog(OverviewActivity.this));
-        findViewById(R.id.button_more).setOnClickListener(v -> {
-            Intent intent = new Intent(OverviewActivity.this, DetailedExpensesActivity.class);
+        view.findViewById(R.id.button_new_receipt).setOnClickListener(v -> createDialog(getActivity()));
+        view.findViewById(R.id.button_more).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), DetailedExpensesActivity.class);
             startActivity(intent);
         });
+        return view;
     }
+
+
+    AdapterView.OnItemSelectedListener periodListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            long currentTime = System.currentTimeMillis();
+            Object[] data = DataManager.extractData(db, currentTime - periodsMillisec[position], currentTime);
+            setPieChart((TreeMap<String, Integer>) data[1]);
+            setBarChart((TreeMap<String, Integer>) data[0]);
+            String expenses = String.format("%.2f", (float)data[2]);
+            String expensesStr = "You spent " + expenses + "€ ";
+            ((TextView)getView().findViewById(R.id.expenses)).setText(expensesStr);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {}
+    };
 
     void createDialog(Context context) {
         String buttonCamera = "From camera";
@@ -80,7 +99,7 @@ public class OverviewActivity extends AppCompatActivity{
             int REQUEST_GET_FROM_CAMERA = 30;
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File photo = new File(FileManager.getPictureDirPath(), "last.jpg");
-            imageUri = FileProvider.getUriForFile(OverviewActivity.this,
+            imageUri = FileProvider.getUriForFile(getActivity(),
                     BuildConfig.APPLICATION_ID + ".provider", photo);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(intent, REQUEST_GET_FROM_CAMERA);
@@ -95,9 +114,9 @@ public class OverviewActivity extends AppCompatActivity{
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            Intent editIntent = new Intent(OverviewActivity.this, EditActivity.class);
+            Intent editIntent = new Intent(getActivity(), EditActivity.class);
             if (requestCode == REQUEST_GET_FROM_GALLERY)
                 imageUri = data.getData();
             editIntent.putExtra("uri", imageUri);
@@ -105,24 +124,8 @@ public class OverviewActivity extends AppCompatActivity{
         }
     }
 
-    AdapterView.OnItemSelectedListener periodListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            long currentTime = System.currentTimeMillis();
-            Object[] data = DataManager.extractData(db, currentTime - periodsMillisec[position], currentTime);
-            setPieChart((TreeMap<String, Integer>) data[1]);
-            setBarChart((TreeMap<String, Integer>) data[0]);
-            String expenses = String.format("%.2f", (float)data[2]);
-            String expensesStr = "You spent " + expenses + "€ ";
-            ((TextView)findViewById(R.id.expenses)).setText(expensesStr);
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {}
-    };
-
     private void setPieChart(TreeMap<String, Integer> categories) {
-        PieChart pieChart = findViewById(R.id.pie_chart);
+        PieChart pieChart = getView().findViewById(R.id.pie_chart);
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
 
@@ -141,11 +144,12 @@ public class OverviewActivity extends AppCompatActivity{
     }
 
     private void setBarChart(TreeMap<String, Integer> supermarkets) {
-        BarChartSupermarkets.createBarChart(findViewById(R.id.bar_chart), supermarkets);
+        BarChartSupermarkets.createBarChart(getView().findViewById(R.id.bar_chart), supermarkets);
 
         int height = 50 * supermarkets.size();
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
         params.addRule(RelativeLayout.BELOW, R.id.space1);
-        findViewById(R.id.bar_chart_layout).setLayoutParams(params);
+        getView().findViewById(R.id.bar_chart_layout).setLayoutParams(params);
     }
+
 }
