@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ActionBarThemeOverlay" parent="">
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="colorControlNormal">#ffffff</item>
+        <item name="colorControlHighlight">#ff33b5e5</item>
+    </style>
+
+    <style name="Widget.MyTheme.HeaderBar.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:theme">@style/ActionBarThemeOverlay</item>
+    </style>
+
 </resources>

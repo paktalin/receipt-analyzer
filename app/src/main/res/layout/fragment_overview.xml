@@ -2,28 +2,48 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="12dp">
+    android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:entries="@array/periods" />
+    <RelativeLayout
+        android:id="@+id/ll_period"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_period"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorWhiteTransparent"
+            android:layout_marginStart="18dp"
+            android:text="PERIOD"/>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/periods"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            style="@style/Widget.MyTheme.HeaderBar.Spinner"
+            android:layout_marginEnd="18dp"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/expenses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/spinner"/>
+        android:layout_centerVertical="true"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/button_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_below="@+id/spinner"
+        android:layout_below="@+id/ll_period"
         android:layout_alignParentEnd="true"
         android:text="More" />
 
