@@ -27,7 +27,7 @@ public class AllReceiptsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_all_receipts, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_receipts, container, false);
 
         extractReceipts();
         ReceiptsAdapter adapter = new ReceiptsAdapter(getActivity(), receipts);
