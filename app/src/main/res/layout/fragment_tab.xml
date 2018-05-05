@@ -1,16 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.paktalin.receiptanalyzer.activities.Tab1">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/button_camera"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tab 1"
-        android:layout_centerInParent="true"
-        android:textSize="30dp"
-        />
+        android:layout_weight="1"
+        android:background="@android:color/holo_purple"
+        android:text="Camera"
+        android:textColor="@android:color/white"
+        android:textSize="40sp" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/button_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?attr/colorPrimary"
+        android:text="Gallery"
+        android:textColor="@android:color/white"
+        android:textSize="40sp" />
+</LinearLayout>
