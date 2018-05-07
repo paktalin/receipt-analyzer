@@ -84,8 +84,8 @@ public class OverviewFragment extends Fragment {
             Object[] data = DataManager.extractData(db, currentTime - periodsMillisec[position]);
 
             barChart = ChartManager.setSupermarketsChart(barChart, getActivity(), currentTime - periodsMillisec[position]);
-            /*setPieChart((TreeMap<String, Integer>) data[1]);
-            setBarChart((TreeMap<String, Integer>) data[0]);*/
+            setPieChart((TreeMap<String, Integer>) data[1]);
+            /*setBarChart((TreeMap<String, Integer>) data[0]);*/
             /*String expenses = String.format("%.2f", (float)data[2]);
             String expensesStr = "You spent " + expenses + "€ ";
             ((TextView)getView().findViewById(R.id.expenses)).setText(expensesStr);*/
@@ -96,7 +96,7 @@ public class OverviewFragment extends Fragment {
     };
 
 
-    /*private void setPieChart(TreeMap<String, Integer> categories) {
+    private void setPieChart(TreeMap<String, Integer> categories) {
         PieChart pieChart = getView().findViewById(R.id.pie_chart);
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
@@ -115,7 +115,7 @@ public class OverviewFragment extends Fragment {
         pieChart.setData(data);
     }
 
-    private void setBarChart(TreeMap<String, Integer> supermarkets) {
+    /*private void setBarChart(TreeMap<String, Integer> supermarkets) {
         BarChartSupermarkets.createBarChart(getView().findViewById(R.id.bar_chart), supermarkets);
 
         int height = 50 * supermarkets.size();

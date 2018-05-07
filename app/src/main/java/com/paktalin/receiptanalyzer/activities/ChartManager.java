@@ -33,6 +33,11 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAM
 public class ChartManager {
     private static final String TAG = ChartManager.class.getSimpleName();
 
+    public static void retrieveData() {
+
+    }
+
+
     public static HorizontalBarChart setSupermarketsChart(HorizontalBarChart barChart, Context context, long from) {
         TreeMap<String, Float> supermarkets = getSupermarketsData(context, from);
         ArrayList<BarEntry> entries = new ArrayList<>();
