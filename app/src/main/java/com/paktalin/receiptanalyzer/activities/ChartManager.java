@@ -33,13 +33,19 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAM
 public class ChartManager {
     private static final String TAG = ChartManager.class.getSimpleName();
 
-    public static void retrieveData() {
+    private TreeMap<String, Float> supermarkets;
+    private SQLiteDatabase db;
+
+    public void retrieveData (Context context, long from) {
+        DatabaseHelper helper = new DatabaseHelper(context);
+        db = helper.getReadableDatabase();
+
+        retrieveSupermarkets(from);
 
     }
 
 
-    public static HorizontalBarChart setSupermarketsChart(HorizontalBarChart barChart, Context context, long from) {
-        TreeMap<String, Float> supermarkets = getSupermarketsData(context, from);
+    public HorizontalBarChart setSupermarketsChart(HorizontalBarChart barChart) {
         ArrayList<BarEntry> entries = new ArrayList<>();
         float[] values = new float[supermarkets.size()];
         String[] labels = new String[supermarkets.size()];
@@ -68,10 +74,15 @@ public class ChartManager {
         return barChart;
     }
 
-    static TreeMap<String, Float> getSupermarketsData(Context context, long from) {
-        DatabaseHelper helper = new DatabaseHelper(context);
-        SQLiteDatabase db = helper.getReadableDatabase();
-        TreeMap<String, Float> supermarkets = new TreeMap<>();
+    static class YAxisFormatter implements IAxisValueFormatter{
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            return String.format("%.0f", value) + " €";
+        }
+    }
+
+    private void retrieveSupermarkets(long from) {
+        supermarkets = new TreeMap<>();
         String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE;
         String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
                 + from + " AND " + System.currentTimeMillis();
@@ -88,14 +99,5 @@ public class ChartManager {
                 supermarkets.put(key, cursor.getFloat(finalPriceIndex));
         }
         cursor.close();
-        Log.d(TAG, String.valueOf(supermarkets));
-        return supermarkets;
-    }
-
-    static class YAxisFormatter implements IAxisValueFormatter{
-        @Override
-        public String getFormattedValue(float value, AxisBase axis) {
-            return String.format("%.0f", value) + " €";
-        }
     }
 }
