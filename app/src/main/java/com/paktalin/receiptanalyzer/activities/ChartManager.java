@@ -3,24 +3,27 @@ package com.paktalin.receiptanalyzer.activities;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.COLUMN_CATEGORY;
+import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.COLUMN_PRICE;
+import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.TABLE_NAME_PURCHASE;
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_DATE_RECEIPT;
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_FINAL_PRICE;
 import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_SUPERMARKET;
@@ -33,17 +36,59 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAM
 public class ChartManager {
     private static final String TAG = ChartManager.class.getSimpleName();
 
-    private TreeMap<String, Float> supermarkets;
+    private TreeMap<String, Float> supermarkets, categories;
     private SQLiteDatabase db;
+    private long to, from;
 
-    public void retrieveData (Context context, long from) {
+    public void retrieveData (Context context, long period) {
         DatabaseHelper helper = new DatabaseHelper(context);
         db = helper.getReadableDatabase();
+        to = System.currentTimeMillis();
+        from = to - period;
 
-        retrieveSupermarkets(from);
-
+        retrieveSupermarkets();
+        retrieveCategories();
     }
 
+    private void retrieveSupermarkets() {
+        supermarkets = new TreeMap<>();
+        String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE;
+        String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
+                + from + " AND " + to;
+        Cursor cursor = db.rawQuery(query, null);
+
+        int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
+        int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
+
+        while (cursor.moveToNext()) {
+            String key = cursor.getString(supermarketIndex);
+            if (supermarkets.containsKey(key))
+                supermarkets.put(key, supermarkets.get(key) + cursor.getFloat(finalPriceIndex));
+            else
+                supermarkets.put(key, cursor.getFloat(finalPriceIndex));
+        }
+        cursor.close();
+    }
+
+    private void retrieveCategories() {
+        categories = new TreeMap<>();
+        String selection = COLUMN_CATEGORY + ", " + COLUMN_PRICE;
+        String query = "SELECT " + selection + " FROM " + TABLE_NAME_PURCHASE + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
+                + from + " AND " + to;
+        Cursor cursor = db.rawQuery(query, null);
+
+        int categoryIndex = cursor.getColumnIndex(COLUMN_CATEGORY);
+        int priceIndex = cursor.getColumnIndex(COLUMN_PRICE);
+
+        while (cursor.moveToNext()) {
+            String key = cursor.getString(categoryIndex);
+            if (categories.containsKey(key))
+                categories.put(key, categories.get(key) + cursor.getFloat(priceIndex));
+            else
+                categories.put(key, cursor.getFloat(priceIndex));
+        }
+        cursor.close();
+    }
 
     public HorizontalBarChart setSupermarketsChart(HorizontalBarChart barChart) {
         ArrayList<BarEntry> entries = new ArrayList<>();
@@ -81,23 +126,22 @@ public class ChartManager {
         }
     }
 
-    private void retrieveSupermarkets(long from) {
-        supermarkets = new TreeMap<>();
-        String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE;
-        String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
-                + from + " AND " + System.currentTimeMillis();
-        Cursor cursor = db.rawQuery(query, null);
+    public PieChart setPieChart(PieChart pieChart) {
+        pieChart.setUsePercentValues(true);
+        pieChart.getDescription().setEnabled(false);
 
-        int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
-        int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
-
-        while (cursor.moveToNext()) {
-            String key = cursor.getString(supermarketIndex);
-            if (supermarkets.containsKey(key))
-                supermarkets.put(key, supermarkets.get(key) + cursor.getFloat(finalPriceIndex));
-            else
-                supermarkets.put(key, cursor.getFloat(finalPriceIndex));
+        ArrayList<PieEntry> yValues = new ArrayList<>();
+        for (Map.Entry<String, Float> entry : categories.entrySet()) {
+            String key = entry.getKey();
+            float value = entry.getValue();
+            yValues.add(new PieEntry(value, key));
         }
-        cursor.close();
+        PieDataSet dataSet = new PieDataSet(yValues, "");
+        dataSet.setDrawValues(false);
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        PieData data = new PieData(dataSet);
+        pieChart.setDrawEntryLabels(false);
+        pieChart.setData(data);
+        return pieChart;
     }
 }
