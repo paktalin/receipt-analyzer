@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -32,11 +31,27 @@
             android:layout_marginEnd="18dp"/>
     </RelativeLayout>
 
-    <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/supermarket_bar_chart"
+    <RelativeLayout
+        android:id="@+id/rl_supermarket_bar_chart"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_below="@+id/rl_period"/>
+        android:layout_height="80dp"
+        android:layout_below="@+id/rl_period"
+        android:background="@android:color/holo_blue_bright"
+        android:layout_margin="10dp">
+
+        <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/supermarket_bar_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_below="@id/rl_supermarket_bar_chart"
+        android:layout_centerHorizontal="true"/>
 
     <!--<TextView
         android:id="@+id/expenses"
@@ -54,11 +69,6 @@
         android:layout_alignParentEnd="true"
         android:text="More" />-->
 
-    <Space
-        android:id="@+id/space1"
-        android:layout_width="wrap_content"
-        android:layout_height="15dp"
-        android:layout_below="@+id/rl_period"/>
 
     <!--<LinearLayout
         android:id="@+id/bar_chart_layout"

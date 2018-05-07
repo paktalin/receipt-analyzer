@@ -83,8 +83,6 @@ public class OverviewFragment extends Fragment {
             long currentTime = System.currentTimeMillis();
             Object[] data = DataManager.extractData(db, currentTime - periodsMillisec[position]);
 
-            if (barChart == null)
-                Log.d(TAG, "null!");
             barChart = ChartManager.setSupermarketsChart(barChart, getActivity(), currentTime - periodsMillisec[position]);
             /*setPieChart((TreeMap<String, Integer>) data[1]);
             setBarChart((TreeMap<String, Integer>) data[0]);*/

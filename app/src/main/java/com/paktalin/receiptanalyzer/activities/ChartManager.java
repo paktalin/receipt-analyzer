@@ -46,15 +46,18 @@ public class ChartManager {
         }
         entries.add(new BarEntry(0, values));
 
-        BarDataSet dataSet = new BarDataSet(entries, "Expenses");
+        BarDataSet dataSet = new BarDataSet(entries, "");
         dataSet.setStackLabels(labels);
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         dataSet.setDrawValues(false);
         BarData data = new BarData(dataSet);
         barChart.setData(data);
         barChart.getDescription().setEnabled(false);
-        barChart.getXAxis().setGranularity(1);
-        barChart.getAxisLeft().setEnabled(false);
+
+        barChart.getAxisLeft().setDrawAxisLine(false);
+        barChart.getAxisLeft().setValueFormatter(new YAxisFormatter());
+        barChart.getAxisLeft().setAxisMinimum(1);
+
         barChart.getAxisRight().setEnabled(false);
         barChart.getXAxis().setEnabled(false);
         return barChart;
@@ -84,16 +87,10 @@ public class ChartManager {
         return supermarkets;
     }
 
-    class ValueFormatter implements IAxisValueFormatter{
-        DecimalFormat mFormat;
-
-        ValueFormatter() {
-            mFormat = new DecimalFormat("######.0");
-        }
-
+    static class YAxisFormatter implements IAxisValueFormatter{
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            return mFormat.format(value) + "%%%";
+            return String.format("%.0f", value) + " €";
         }
     }
 }
