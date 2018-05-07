@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -26,6 +28,9 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.activities.BarChartSupermarkets;
+import com.paktalin.receiptanalyzer.activities.ChartManager;
+import com.paktalin.receiptanalyzer.activities.EditActivity;
+import com.paktalin.receiptanalyzer.activities.MainActivity;
 import com.paktalin.receiptanalyzer.data.DataManager;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
@@ -43,11 +48,13 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAM
  */
 
 public class OverviewFragment extends Fragment {
+    private static final String TAG = OverviewFragment.class.getSimpleName();
+
 
     SQLiteDatabase db;
     long[] periodsMillisec = {7776000000L, 2592000000L, 1209600000L, 604800000L};
     TreeMap<String, Float> supermarkets;
-    BarChart barChart;
+    HorizontalBarChart barChart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +62,7 @@ public class OverviewFragment extends Fragment {
 
         DatabaseHelper helper = new DatabaseHelper(getActivity());
         db = helper.getReadableDatabase();
+        barChart = view.findViewById(R.id.supermarket_bar_chart);
 
         Spinner spinner = view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(periodListener);
@@ -75,9 +83,9 @@ public class OverviewFragment extends Fragment {
             long currentTime = System.currentTimeMillis();
             Object[] data = DataManager.extractData(db, currentTime - periodsMillisec[position]);
 
-            setSupermarkets(currentTime - periodsMillisec[position]);
-            barChart = view.findViewById(R.id.supermarket_bar_chart);
-            setBarChart();
+            if (barChart == null)
+                Log.d(TAG, "null!");
+            barChart = ChartManager.setSupermarketsChart(barChart, getActivity(), currentTime - periodsMillisec[position]);
             /*setPieChart((TreeMap<String, Integer>) data[1]);
             setBarChart((TreeMap<String, Integer>) data[0]);*/
             /*String expenses = String.format("%.2f", (float)data[2]);
@@ -117,47 +125,5 @@ public class OverviewFragment extends Fragment {
         params.addRule(RelativeLayout.BELOW, R.id.space1);
         getView().findViewById(R.id.bar_chart_layout).setLayoutParams(params);
     }*/
-
-    private TreeMap<String, Float> setSupermarkets(long from) {
-        DatabaseHelper helper = new DatabaseHelper(getActivity());
-        SQLiteDatabase db = helper.getReadableDatabase();
-        supermarkets = new TreeMap<>();
-        String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE;
-        String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
-                + from + " AND " + System.currentTimeMillis();
-        Cursor cursor = db.rawQuery(query, null);
-
-        int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
-        int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
-
-        while (cursor.moveToNext()) {
-            String key = cursor.getString(supermarketIndex);
-            if (supermarkets.containsKey(key))
-                supermarkets.put(key, supermarkets.get(key) + cursor.getFloat(finalPriceIndex));
-            else
-                supermarkets.put(key, cursor.getFloat(finalPriceIndex));
-        }
-        cursor.close();
-        return supermarkets;
-    }
-
-    void setBarChart() {
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        float[] values = new float[supermarkets.size()];
-        String[] labels = new String[supermarkets.size()];
-        int i = 0;
-        for (Map.Entry entry : supermarkets.entrySet()) {
-            values[i] = (float)entry.getValue();
-            labels[i] = (String) entry.getKey();
-            i++;
-        }
-        entries.add(new BarEntry(0, values));
-
-        BarDataSet dataSet = new BarDataSet(entries, "Expenses");
-        dataSet.setStackLabels(labels);
-        BarData data = new BarData(dataSet);
-        barChart.setData(data);
-
-    }
 
 }

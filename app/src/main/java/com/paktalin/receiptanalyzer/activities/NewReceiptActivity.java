@@ -144,7 +144,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             float finalPrice = Float.parseFloat(String.valueOf(editTextFinalPrice.getText()));
             values.put(ReceiptEntry.COLUMN_FINAL_PRICE, finalPrice);
         } catch (Exception e) {
-            Toast toast = Toast.makeText(NewReceiptActivity.this, "Wrong format of the final price!", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(NewReceiptActivity.this, "Wrong mFormat of the final price!", Toast.LENGTH_LONG);
             toast.show();
             return false;
         }

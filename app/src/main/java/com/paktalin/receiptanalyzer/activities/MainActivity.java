@@ -13,6 +13,8 @@ import com.paktalin.receiptanalyzer.activities.adapters.PagerAdapter;
  */
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     ViewPager viewPager;
 
     @Override
