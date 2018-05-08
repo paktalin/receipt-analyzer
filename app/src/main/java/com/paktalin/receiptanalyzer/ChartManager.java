@@ -137,7 +137,6 @@ public class ChartManager {
     }
 
     public PieChart setPieChart(PieChart pieChart) {
-        pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
 
         ArrayList<PieEntry> yValues = new ArrayList<>();
@@ -153,6 +152,11 @@ public class ChartManager {
         pieChart.setDrawEntryLabels(false);
         pieChart.setExtraLeftOffset(50f);
         pieChart.setData(data);
+
+        String expenses = "109€";
+        pieChart.setCenterText("Total spent\n" + expenses);
+        pieChart.setHoleRadius(70f);
+        pieChart.setHoleColor(Color.TRANSPARENT);
 
         Legend l = pieChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
