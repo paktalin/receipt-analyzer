@@ -3,6 +3,7 @@ package com.paktalin.receiptanalyzer;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -14,7 +15,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
 import java.util.ArrayList;
@@ -35,6 +35,12 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAM
 
 public class ChartManager {
     private static final String TAG = ChartManager.class.getSimpleName();
+    private int[] colors = new int[] {
+            Color.parseColor("#996699"),
+            Color.parseColor("#6161A8"),
+            Color.parseColor("#1F1F54"),
+            Color.parseColor("#006699"),
+            Color.parseColor("#56A3A6")};
 
     private TreeMap<String, Float> supermarkets, categories;
     private SQLiteDatabase db;
@@ -104,7 +110,9 @@ public class ChartManager {
 
         BarDataSet dataSet = new BarDataSet(entries, "");
         dataSet.setStackLabels(labels);
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        //dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+        dataSet.setColors(colors);
+
         dataSet.setDrawValues(false);
         BarData data = new BarData(dataSet);
         barChart.setData(data);
@@ -139,7 +147,7 @@ public class ChartManager {
         }
         PieDataSet dataSet = new PieDataSet(yValues, "");
         dataSet.setDrawValues(false);
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        dataSet.setColors(colors);
         PieData data = new PieData(dataSet);
         pieChart.setDrawEntryLabels(false);
         pieChart.setData(data);

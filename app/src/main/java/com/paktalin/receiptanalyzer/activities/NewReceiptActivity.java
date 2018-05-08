@@ -48,7 +48,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.receipt);
+        setContentView(R.layout.activity_receipt);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         MyAsyncTask task = new MyAsyncTask();
         task.execute();
@@ -108,7 +108,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 });
             } else {
                 (Toast.makeText(NewReceiptActivity.this,
-                        "Sorry, we couldn't scan the receipt_item. Please, try again", Toast.LENGTH_SHORT)).show();
+                        "Sorry, we couldn't scan the item_receipt. Please, try again", Toast.LENGTH_SHORT)).show();
             }
         }
     }
