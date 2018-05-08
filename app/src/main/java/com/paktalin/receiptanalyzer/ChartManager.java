@@ -8,6 +8,7 @@ import android.graphics.Color;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -150,7 +151,16 @@ public class ChartManager {
         dataSet.setColors(colors);
         PieData data = new PieData(dataSet);
         pieChart.setDrawEntryLabels(false);
+        pieChart.setExtraLeftOffset(50f);
         pieChart.setData(data);
+
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setXOffset(20f);
+        l.setYOffset(50f);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
         return pieChart;
     }
 }
