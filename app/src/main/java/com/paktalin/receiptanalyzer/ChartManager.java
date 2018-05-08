@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.activities;
+package com.paktalin.receiptanalyzer;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -116,6 +116,7 @@ public class ChartManager {
 
         barChart.getAxisRight().setEnabled(false);
         barChart.getXAxis().setEnabled(false);
+        barChart.setScaleEnabled(false);
         return barChart;
     }
 
