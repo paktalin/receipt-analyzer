@@ -59,6 +59,10 @@ public class ChartManager {
         retrieveCategories();
     }
 
+    public boolean emptyData() {
+        return supermarkets.isEmpty();
+    }
+
     private void retrieveSupermarkets() {
         supermarkets = new TreeMap<>();
         String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE;
@@ -158,7 +162,7 @@ public class ChartManager {
         pieChart.setExtraLeftOffset(50f);
         pieChart.setData(data);
 
-        pieChart.setCenterText("Total spent\n" + overall);
+        pieChart.setCenterText("Total spent\n" + String.format("%.2f", overall) + " €");
         pieChart.setHoleRadius(70f);
         pieChart.setHoleColor(Color.TRANSPARENT);
 

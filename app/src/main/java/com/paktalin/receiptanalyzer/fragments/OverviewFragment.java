@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -61,6 +62,13 @@ public class OverviewFragment extends Fragment {
 
             ChartManager manager = new ChartManager();
             manager.retrieveData(getActivity(), periodsMillisec[position]);
+            if (manager.emptyData()) {
+                pieChart.setVisibility(View.INVISIBLE);
+                barChart.setVisibility(View.INVISIBLE);
+                Toast toast = Toast.makeText(getActivity(), "No data yet available. Please, add your first receipt", Toast.LENGTH_LONG);
+                toast.show();
+            }
+
             barChart = manager.setSupermarketsChart(barChart);
             pieChart = manager.setPieChart(pieChart);
         }
