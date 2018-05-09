@@ -34,13 +34,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.COLUMN_CATEGORY;
-import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.COLUMN_PRICE;
-import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.TABLE_NAME_PURCHASE;
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_DATE_RECEIPT;
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_FINAL_PRICE;
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.COLUMN_SUPERMARKET;
-import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAME_RECEIPT;
+import static com.paktalin.receiptanalyzer.data.Contracts.PurchaseEntry.*;
+import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.*;
 
 /**
  * Created by Paktalin on 07/05/2018.
@@ -70,41 +65,57 @@ public class ChartManager {
         to = System.currentTimeMillis();
         from = to - period;
 
-        retrieveSupermarkets();
+        retrieveReceiptData();
         retrieveCategories();
-        retrieveExpenses();
-        Log.d(TAG, String.valueOf(expenses));
     }
 
     public boolean emptyData() {
         return supermarkets.isEmpty();
     }
 
-    private void retrieveSupermarkets() {
+    private void retrieveReceiptData() {
         supermarkets = new TreeMap<>();
-        String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE;
+        expenses = new LinkedHashMap<>();
+
+        String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE + ", " + COLUMN_DATE_RECEIPT;
         String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
                 + from + " AND " + to;
         Cursor cursor = db.rawQuery(query, null);
-
-        int finalPriceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
+        int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
+        int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
         int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
+        createExpensesInPeriod();
 
         while (cursor.moveToNext()) {
-            String key = cursor.getString(supermarketIndex);
-            if (supermarkets.containsKey(key))
-                supermarkets.put(key, supermarkets.get(key) + cursor.getFloat(finalPriceIndex));
+            String keyExpenses = sdf.format(new Date(cursor.getLong(dateIndex)));
+            String keySupermarkets = cursor.getString(supermarketIndex);
+            Float value = cursor.getFloat(priceIndex);
+            expenses.put(keyExpenses, value + expenses.get(keyExpenses));
+
+            if (supermarkets.containsKey(keySupermarkets))
+                supermarkets.put(keySupermarkets, supermarkets.get(keySupermarkets) + cursor.getFloat(priceIndex));
             else
-                supermarkets.put(key, cursor.getFloat(finalPriceIndex));
+                supermarkets.put(keySupermarkets, cursor.getFloat(priceIndex));
         }
-        cursor.close();
+    }
+
+    private void createExpensesInPeriod() {
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.setTimeInMillis(from);
+        end.setTimeInMillis(to);
+
+        for (Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+            String key = sdf.format(date);
+            expenses.put(key, 0f);
+        }
     }
 
     private void retrieveCategories() {
         overall = 0;
         categories = new TreeMap<>();
         String selection = COLUMN_CATEGORY + ", " + COLUMN_PRICE;
-        String query = "SELECT " + selection + " FROM " + TABLE_NAME_PURCHASE + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
+        String query = "SELECT " + selection + " FROM " + TABLE_NAME_PURCHASE + " WHERE " + COLUMN_DATE_PURCHASE + " BETWEEN "
                 + from + " AND " + to;
         Cursor cursor = db.rawQuery(query, null);
 
@@ -145,7 +156,6 @@ public class ChartManager {
 
         barChart.getAxisLeft().setDrawAxisLine(false);
         barChart.getAxisLeft().setValueFormatter(new YAxisFormatter());
-        //barChart.getAxisLeft().setAxisMinimum(1);
 
         barChart.getAxisRight().setEnabled(false);
         barChart.getXAxis().setEnabled(false);
@@ -193,32 +203,6 @@ public class ChartManager {
         return pieChart;
     }
 
-    private void retrieveExpenses() {
-        expenses = new LinkedHashMap<>();
-
-        Calendar start = Calendar.getInstance();
-        Calendar end = Calendar.getInstance();
-        start.setTimeInMillis(from);
-        end.setTimeInMillis(to);
-
-        for (Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-            String key = sdf.format(date);
-            expenses.put(key, 0f);
-        }
-
-        String[] projection = new String[]{COLUMN_FINAL_PRICE, COLUMN_DATE_RECEIPT};
-        Cursor cursor = db.query(TABLE_NAME_RECEIPT, projection,
-                null, null, null, null, null, null);
-        int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
-        int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
-
-        while (cursor.moveToNext()) {
-            String key = sdf.format(new Date(cursor.getLong(dateIndex)));
-            Float value = cursor.getFloat(priceIndex);
-            expenses.put(key, value + expenses.get(key));
-        }
-    }
-
     public LineChart setLineChart(LineChart lineChart) {
         entries = new ArrayList<>();
         String[] labels = new String[expenses.size()];
@@ -258,12 +242,10 @@ public class ChartManager {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
             try {
-                if (entries.get((int)value).getY() == 0)
-                    return "";
-                return mLabels[(int) value];
-            } catch (IndexOutOfBoundsException exception) {
-                return "";
-            }
+                if (!(entries.get((int)value).getY() == 0))
+                    return mLabels[(int) value];
+            } catch (IndexOutOfBoundsException ignored) {}
+            return "";
         }
     }
 
