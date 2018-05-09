@@ -255,11 +255,7 @@ public class ChartManager {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            try {
-                if (!(entries.get((int)value).getY() == 0))
-                    return mLabels[(int) value];
-            } catch (IndexOutOfBoundsException ignored) {}
-            return "";
+            return mLabels[(int) value];
         }
     }
 
@@ -270,12 +266,5 @@ public class ChartManager {
                 return "";
             return String.format("%.2f", value) + "€";
         }
-    }
-
-    private int howMany(int numberOfValues) {
-        if (numberOfValues > 10) {
-            return 0;
-        }
-        return 12;
     }
 }

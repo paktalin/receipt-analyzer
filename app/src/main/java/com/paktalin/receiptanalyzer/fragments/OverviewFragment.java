@@ -2,7 +2,6 @@ package com.paktalin.receiptanalyzer.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,7 @@ import java.text.SimpleDateFormat;
 public class OverviewFragment extends Fragment {
     private static final String TAG = OverviewFragment.class.getSimpleName();
 
-    TextView supermarketsTV, productsTV;
+    TextView supermarketsTV, productsTV, spendingTV;
     HorizontalBarChart barChart;
     PieChart pieChart;
     LineChart lineChart;
@@ -41,8 +40,10 @@ public class OverviewFragment extends Fragment {
         barChart = view.findViewById(R.id.supermarket_bar_chart);
         pieChart = view.findViewById(R.id.pie_chart);
         lineChart = view.findViewById(R.id.line_chart);
+
         supermarketsTV = view.findViewById(R.id.tv_supermarkets_period);
         productsTV = view.findViewById(R.id.tv_products_period);
+        spendingTV = view.findViewById(R.id.tv_spending_period);
 
         Spinner spinner = view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(periodListener);
@@ -57,8 +58,10 @@ public class OverviewFragment extends Fragment {
 
             long from = System.currentTimeMillis() - periodsMillisec[position];
             String period = formatter.format(from) + " - " + formatter.format(System.currentTimeMillis());
+
             supermarketsTV.setText(period);
             productsTV.setText(period);
+            spendingTV.setText(period);
 
             barChart.clear();
             pieChart.clear();
