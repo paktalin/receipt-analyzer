@@ -24,7 +24,6 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.paktalin.receiptanalyzer.activities.DetailedExpensesActivity;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
 import java.text.SimpleDateFormat;
@@ -74,6 +73,7 @@ public class ChartManager {
         retrieveSupermarkets();
         retrieveCategories();
         retrieveExpenses();
+        Log.d(TAG, String.valueOf(expenses));
     }
 
     public boolean emptyData() {
@@ -145,7 +145,7 @@ public class ChartManager {
 
         barChart.getAxisLeft().setDrawAxisLine(false);
         barChart.getAxisLeft().setValueFormatter(new YAxisFormatter());
-        barChart.getAxisLeft().setAxisMinimum(1);
+        //barChart.getAxisLeft().setAxisMinimum(1);
 
         barChart.getAxisRight().setEnabled(false);
         barChart.getXAxis().setEnabled(false);
@@ -193,54 +193,30 @@ public class ChartManager {
         return pieChart;
     }
 
-
     private void retrieveExpenses() {
+        expenses = new LinkedHashMap<>();
+
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.setTimeInMillis(from);
+        end.setTimeInMillis(to);
+
+        for (Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+            String key = sdf.format(date);
+            expenses.put(key, 0f);
+        }
+
         String[] projection = new String[]{COLUMN_FINAL_PRICE, COLUMN_DATE_RECEIPT};
         Cursor cursor = db.query(TABLE_NAME_RECEIPT, projection,
                 null, null, null, null, null, null);
-
-        Cursor cursorMin = db.query(TABLE_NAME_RECEIPT, new String[] { "min(" + COLUMN_DATE_RECEIPT + ")" }, null, null,
-                null, null, null);
-
         int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
         int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
-        cursorMin.moveToNext();
-        long startDate = cursorMin.getLong(0);
-        cursorMin.close();
 
-        expenses = new LinkedHashMap<>();
         while (cursor.moveToNext()) {
             String key = sdf.format(new Date(cursor.getLong(dateIndex)));
             Float value = cursor.getFloat(priceIndex);
-            if (expenses.containsKey(key))
-                expenses.put(key, value + expenses.get(key));
-            else
-                expenses.put(key, value);
+            expenses.put(key, value + expenses.get(key));
         }
-        cursor.close();
-        expenses = sort(expenses, startDate);
-    }
-
-    private LinkedHashMap<String, Float> sort(LinkedHashMap<String, Float> days, long startLong) {
-        Calendar start = Calendar.getInstance();
-        Calendar end = Calendar.getInstance();
-
-        start.setTimeInMillis(startLong);
-        start.set(Calendar.HOUR_OF_DAY, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
-        start.set(Calendar.MILLISECOND, 0);
-        end.setTimeInMillis(System.currentTimeMillis());
-
-        LinkedHashMap<String, Float> sorted = new LinkedHashMap<>();
-        for (Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-            String key = sdf.format(date);
-            if (days.containsKey(sdf.format(date)))
-                sorted.put(key, days.get(key));
-            else
-                sorted.put(key, 0f);
-        }
-        return sorted;
     }
 
     public LineChart setLineChart(LineChart lineChart) {
