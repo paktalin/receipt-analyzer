@@ -117,7 +117,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/layout_bg"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
@@ -134,11 +134,21 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_spending_period"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/tv_spending"
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@+id/tv_spending" />
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/line_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_below="@+id/tv_spending"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"/>
             </RelativeLayout>
 
         </LinearLayout>

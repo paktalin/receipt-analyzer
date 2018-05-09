@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
@@ -27,9 +28,10 @@ import java.text.SimpleDateFormat;
 public class OverviewFragment extends Fragment {
     private static final String TAG = OverviewFragment.class.getSimpleName();
 
-    HorizontalBarChart barChart;
     TextView supermarketsTV, productsTV;
+    HorizontalBarChart barChart;
     PieChart pieChart;
+    LineChart lineChart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class OverviewFragment extends Fragment {
 
         barChart = view.findViewById(R.id.supermarket_bar_chart);
         pieChart = view.findViewById(R.id.pie_chart);
+        lineChart = view.findViewById(R.id.line_chart);
         supermarketsTV = view.findViewById(R.id.tv_supermarkets_period);
         productsTV = view.findViewById(R.id.tv_products_period);
 
@@ -59,6 +62,7 @@ public class OverviewFragment extends Fragment {
 
             barChart.clear();
             pieChart.clear();
+            lineChart.clear();
 
             ChartManager manager = new ChartManager();
             manager.retrieveData(getActivity(), periodsMillisec[position]);
@@ -67,10 +71,11 @@ public class OverviewFragment extends Fragment {
                 barChart.setVisibility(View.INVISIBLE);
                 Toast toast = Toast.makeText(getActivity(), "No data yet available. Please, add your first receipt", Toast.LENGTH_LONG);
                 toast.show();
+            } else {
+                barChart = manager.setSupermarketsChart(barChart);
+                pieChart = manager.setPieChart(pieChart);
+                lineChart = manager.setLineChart(lineChart);
             }
-
-            barChart = manager.setSupermarketsChart(barChart);
-            pieChart = manager.setPieChart(pieChart);
         }
 
         @Override

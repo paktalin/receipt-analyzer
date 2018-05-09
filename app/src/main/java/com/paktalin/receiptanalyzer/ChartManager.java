@@ -7,19 +7,31 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.paktalin.receiptanalyzer.activities.DetailedExpensesActivity;
 import com.paktalin.receiptanalyzer.data.DatabaseHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -37,6 +49,9 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.TABLE_NAM
 
 public class ChartManager {
     private static final String TAG = ChartManager.class.getSimpleName();
+    private SimpleDateFormat sdf = new SimpleDateFormat("d MMM");
+    private ArrayList<Entry> entries;
+
     private int[] colors = new int[] {
             Color.parseColor("#996699"),
             Color.parseColor("#6161A8"),
@@ -45,6 +60,7 @@ public class ChartManager {
             Color.parseColor("#56A3A6")};
 
     private TreeMap<String, Float> supermarkets, categories;
+    private LinkedHashMap<String, Float> expenses;
     private SQLiteDatabase db;
     private long to, from;
     private float overall;
@@ -57,6 +73,7 @@ public class ChartManager {
 
         retrieveSupermarkets();
         retrieveCategories();
+        retrieveExpenses();
     }
 
     public boolean emptyData() {
@@ -97,7 +114,6 @@ public class ChartManager {
         while (cursor.moveToNext()) {
             String key = cursor.getString(categoryIndex);
             overall += cursor.getFloat(priceIndex);
-            Log.d(TAG, key + " " + cursor.getFloat(priceIndex));
             if (categories.containsKey(key))
                 categories.put(key, categories.get(key) + cursor.getFloat(priceIndex));
             else
@@ -175,5 +191,112 @@ public class ChartManager {
         legend.setDrawInside(false);
         legend.setForm(Legend.LegendForm.CIRCLE);
         return pieChart;
+    }
+
+
+    private void retrieveExpenses() {
+        String[] projection = new String[]{COLUMN_FINAL_PRICE, COLUMN_DATE_RECEIPT};
+        Cursor cursor = db.query(TABLE_NAME_RECEIPT, projection,
+                null, null, null, null, null, null);
+
+        Cursor cursorMin = db.query(TABLE_NAME_RECEIPT, new String[] { "min(" + COLUMN_DATE_RECEIPT + ")" }, null, null,
+                null, null, null);
+
+        int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
+        int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
+        cursorMin.moveToNext();
+        long startDate = cursorMin.getLong(0);
+        cursorMin.close();
+
+        expenses = new LinkedHashMap<>();
+        while (cursor.moveToNext()) {
+            String key = sdf.format(new Date(cursor.getLong(dateIndex)));
+            Float value = cursor.getFloat(priceIndex);
+            if (expenses.containsKey(key))
+                expenses.put(key, value + expenses.get(key));
+            else
+                expenses.put(key, value);
+        }
+        cursor.close();
+        expenses = sort(expenses, startDate);
+    }
+
+    private LinkedHashMap<String, Float> sort(LinkedHashMap<String, Float> days, long startLong) {
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+
+        start.setTimeInMillis(startLong);
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+        end.setTimeInMillis(System.currentTimeMillis());
+
+        LinkedHashMap<String, Float> sorted = new LinkedHashMap<>();
+        for (Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+            String key = sdf.format(date);
+            if (days.containsKey(sdf.format(date)))
+                sorted.put(key, days.get(key));
+            else
+                sorted.put(key, 0f);
+        }
+        return sorted;
+    }
+
+    public LineChart setLineChart(LineChart lineChart) {
+        entries = new ArrayList<>();
+        String[] labels = new String[expenses.size()];
+
+        int i = 0;
+        for (Map.Entry entry : expenses.entrySet()) {
+            entries.add(new Entry(i, (Float)entry.getValue()));
+            labels[i] = (String) entry.getKey();
+            i++;
+        }
+
+        LineDataSet dataSet = new LineDataSet(entries, "Labelll");
+        LineData data = new LineData(dataSet);
+        data.setValueFormatter(new PriceFormatter());
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.getAxisLeft().setEnabled(false);
+        lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getAxisLeft().setAxisMinimum(0);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getXAxis().setGranularity(1);
+        lineChart.getXAxis().setValueFormatter(new LabelFormatter(labels));
+        lineChart.getXAxis().setLabelRotationAngle(-45);
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getLegend().setEnabled(false);
+        lineChart.getDescription().setEnabled(false);
+        lineChart.setData(data);
+        return lineChart;
+    }
+
+    public class LabelFormatter implements IAxisValueFormatter {
+        private final String[] mLabels;
+
+        LabelFormatter(String[] labels) {
+            mLabels = labels;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            try {
+                if (entries.get((int)value).getY() == 0)
+                    return "";
+                return mLabels[(int) value];
+            } catch (IndexOutOfBoundsException exception) {
+                return "";
+            }
+        }
+    }
+
+    public static class PriceFormatter implements IValueFormatter {
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            if (value == 0)
+                return "";
+            return String.format("%.2f", value) + "€";
+        }
     }
 }
