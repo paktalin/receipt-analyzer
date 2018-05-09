@@ -214,18 +214,25 @@ public class ChartManager {
             i++;
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "Labelll");
+        LineDataSet dataSet = new LineDataSet(entries, "");
+        dataSet.setDrawCircles(false);
+        dataSet.setLineWidth(3f);
+        dataSet.setColor(Color.parseColor("#006699"));
+
         LineData data = new LineData(dataSet);
         data.setValueFormatter(new PriceFormatter());
+
         lineChart.getAxisRight().setEnabled(false);
         lineChart.getAxisLeft().setEnabled(false);
         lineChart.getAxisLeft().setDrawGridLines(false);
-        lineChart.getAxisLeft().setAxisMinimum(0);
+
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setGranularity(1);
         lineChart.getXAxis().setValueFormatter(new LabelFormatter(labels));
         lineChart.getXAxis().setLabelRotationAngle(-45);
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getXAxis().setDrawAxisLine(false);
+
         lineChart.getLegend().setEnabled(false);
         lineChart.getDescription().setEnabled(false);
         lineChart.setData(data);
@@ -256,5 +263,12 @@ public class ChartManager {
                 return "";
             return String.format("%.2f", value) + "€";
         }
+    }
+
+    private int howMany(int numberOfValues) {
+        if (numberOfValues > 10) {
+            return 0;
+        }
+        return 12;
     }
 }
