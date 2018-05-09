@@ -17,134 +17,130 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/colorWhiteTransparent"
             android:layout_marginStart="18dp"
-            android:text="PERIOD"/>
+            android:text="PERIOD"
+            android:textColor="@color/colorWhiteTransparent" />
 
         <Spinner
             android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/periods"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
             style="@style/Widget.MyTheme.HeaderBar.Spinner"
-            android:layout_marginEnd="18dp"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_supermarket_bar_chart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_period"
-        android:layout_margin="10dp"
-        android:background="@drawable/layout_bg">
-
-        <TextView
-            android:id="@+id/tv_supermarkets"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            android:text="Supermarkets"/>
-
-        <TextView
-            android:id="@+id/tv_supermarkets_period"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_alignTop="@+id/tv_supermarkets"
-            android:layout_toEndOf="@+id/tv_supermarkets" />
-
-        <com.github.mikephil.charting.charts.HorizontalBarChart
-            android:id="@+id/supermarket_bar_chart"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="18dp"
-            android:layout_below="@+id/tv_supermarkets"
-            android:layout_centerVertical="true"/>
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="18dp"
+            android:entries="@array/periods" />
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_supermarket_bar_chart"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:background="@drawable/layout_bg">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_period">
 
-        <TextView
-            android:id="@+id/tv_products"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            android:text="Products"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_products_period"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_alignTop="@+id/tv_products"
-            android:layout_toEndOf="@+id/tv_products" />
+            <RelativeLayout
+                android:id="@+id/rl_supermarket_chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/layout_bg">
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pie_chart"
-            android:layout_width="match_parent"
-            android:layout_below="@+id/tv_products"
-            android:layout_marginBottom="18dp"
-            android:layout_height="200dp"
-            android:layout_centerVertical="true"/>
+                <TextView
+                    android:id="@+id/tv_supermarkets"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="18dp"
+                    android:text="Supermarkets"
+                    android:textStyle="bold" />
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_supermarkets_period"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/tv_supermarkets"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/tv_supermarkets" />
 
-    <!--<TextView
-        android:id="@+id/expenses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:textColor="@android:color/white" />
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/supermarket_bar_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/tv_supermarkets"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="18dp" />
 
-    <Button
-        android:id="@+id/button_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:layout_below="@+id/ll_period"
-        android:layout_alignParentEnd="true"
-        android:text="More" />-->
+            </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/rl_products_chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/layout_bg">
 
-    <!--<LinearLayout
-        android:id="@+id/bar_chart_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/space1">
+                <TextView
+                    android:id="@+id/tv_products"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="18dp"
+                    android:text="Products"
+                    android:textStyle="bold" />
 
-        <com.github.mikephil.charting.charts.HorizontalBarChart
-            android:id="@+id/bar_chart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/tv_products_period"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/tv_products"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/tv_products" />
 
-    </LinearLayout>
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pie_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_below="@+id/tv_products"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="18dp" />
 
-    <Space
-        android:id="@+id/space2"
-        android:layout_width="wrap_content"
-        android:layout_height="15dp"
-        android:layout_below="@+id/bar_chart_layout"/>
+            </RelativeLayout>
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pie_chart"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_below="@id/space2"
-        android:layout_centerHorizontal="true"/>-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@drawable/layout_bg"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp">
+
+                <TextView
+                    android:id="@+id/tv_spending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="18dp"
+                    android:text="Spending"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/tv_spending"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/tv_spending" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
