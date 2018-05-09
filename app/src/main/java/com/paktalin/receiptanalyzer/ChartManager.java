@@ -223,15 +223,17 @@ public class ChartManager {
 
         LineDataSet dataSet = new LineDataSet(entries, "");
         dataSet.setDrawCircles(false);
-        dataSet.setLineWidth(3f);
+        dataSet.setLineWidth(2f);
         dataSet.setColor(Color.parseColor("#006699"));
+        dataSet.setDrawValues(false);
 
         LineData data = new LineData(dataSet);
         data.setValueFormatter(new PriceFormatter());
 
         lineChart.getAxisRight().setEnabled(false);
-        lineChart.getAxisLeft().setEnabled(false);
-        lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getAxisLeft().setValueFormatter(new YAxisFormatter());
+        lineChart.getAxisLeft().setDrawAxisLine(false);
+        lineChart.getAxisLeft().setGridColor(Color.parseColor("#9EB9C6"));
 
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setGranularity(1);
