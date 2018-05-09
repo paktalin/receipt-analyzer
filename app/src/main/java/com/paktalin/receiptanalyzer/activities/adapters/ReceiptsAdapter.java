@@ -57,9 +57,9 @@ public class ReceiptsAdapter extends BaseAdapter {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, yyyy");
 
-        ((TextView)convertView.findViewById(R.id.supermarket_2)).setText(r.getSupermarket());
-        ((TextView)convertView.findViewById(R.id.date)).setText(sdf.format(new Date(r.getDate())));
-        ((TextView)convertView.findViewById(R.id.final_price_2)).setText(r.getFinalPrice() + "€");
+        ((TextView)convertView.findViewById(R.id.tv_supermarket)).setText(r.getSupermarket());
+        ((TextView)convertView.findViewById(R.id.tv_date)).setText(sdf.format(new Date(r.getDate())));
+        ((TextView)convertView.findViewById(R.id.tv_final_price)).setText(r.getFinalPrice() + " €");
 
         return convertView;
     }
