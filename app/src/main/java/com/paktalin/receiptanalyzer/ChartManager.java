@@ -97,15 +97,22 @@ public class ChartManager {
             else
                 supermarkets.put(keySupermarkets, cursor.getFloat(priceIndex));
         }
+        cursor.close();
     }
 
     private void createExpensesInPeriod() {
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
+
         start.setTimeInMillis(from);
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+
         end.setTimeInMillis(to);
 
-        for (Date date = start.getTime(); !start.after(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+        for (Date date = start.getTime(); !date.after(end.getTime()); start.add(Calendar.DATE, 1), date = start.getTime()) {
             String key = sdf.format(date);
             expenses.put(key, 0f);
         }
