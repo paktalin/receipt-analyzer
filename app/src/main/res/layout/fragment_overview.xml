@@ -56,8 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_alignTop="@+id/tv_supermarkets"
-            android:layout_toEndOf="@+id/tv_supermarkets"
-            android:text="3 Apr - 10 Apr"/>
+            android:layout_toEndOf="@+id/tv_supermarkets" />
 
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/supermarket_bar_chart"
@@ -94,8 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_alignTop="@+id/tv_products"
-            android:layout_toEndOf="@+id/tv_products"
-            android:text="3 Apr - 10 Apr"/>
+            android:layout_toEndOf="@+id/tv_products" />
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pie_chart"

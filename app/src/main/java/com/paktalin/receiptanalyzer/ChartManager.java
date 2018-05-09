@@ -111,7 +111,6 @@ public class ChartManager {
 
         BarDataSet dataSet = new BarDataSet(entries, "");
         dataSet.setStackLabels(labels);
-        //dataSet.setColors(ColorTemplate.PASTEL_COLORS);
         dataSet.setColors(colors);
 
         dataSet.setDrawValues(false);
