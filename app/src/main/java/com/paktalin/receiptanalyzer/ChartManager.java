@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -46,6 +47,7 @@ public class ChartManager {
     private TreeMap<String, Float> supermarkets, categories;
     private SQLiteDatabase db;
     private long to, from;
+    private float overall;
 
     public void retrieveData (Context context, long period) {
         DatabaseHelper helper = new DatabaseHelper(context);
@@ -78,6 +80,7 @@ public class ChartManager {
     }
 
     private void retrieveCategories() {
+        overall = 0;
         categories = new TreeMap<>();
         String selection = COLUMN_CATEGORY + ", " + COLUMN_PRICE;
         String query = "SELECT " + selection + " FROM " + TABLE_NAME_PURCHASE + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
@@ -89,6 +92,8 @@ public class ChartManager {
 
         while (cursor.moveToNext()) {
             String key = cursor.getString(categoryIndex);
+            overall += cursor.getFloat(priceIndex);
+            Log.d(TAG, key + " " + cursor.getFloat(priceIndex));
             if (categories.containsKey(key))
                 categories.put(key, categories.get(key) + cursor.getFloat(priceIndex));
             else
@@ -147,23 +152,24 @@ public class ChartManager {
         PieDataSet dataSet = new PieDataSet(yValues, "");
         dataSet.setDrawValues(false);
         dataSet.setColors(colors);
+
         PieData data = new PieData(dataSet);
         pieChart.setDrawEntryLabels(false);
         pieChart.setExtraLeftOffset(50f);
         pieChart.setData(data);
 
-        String expenses = "109€";
-        pieChart.setCenterText("Total spent\n" + expenses);
+        pieChart.setCenterText("Total spent\n" + overall);
         pieChart.setHoleRadius(70f);
         pieChart.setHoleColor(Color.TRANSPARENT);
 
-        Legend l = pieChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        l.setXOffset(20f);
-        l.setYOffset(50f);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(false);
+        Legend legend = pieChart.getLegend();
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        legend.setXOffset(20f);
+        legend.setYOffset(50f);
+        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        legend.setDrawInside(false);
+        legend.setForm(Legend.LegendForm.CIRCLE);
         return pieChart;
     }
 }

@@ -35,6 +35,8 @@ public class Purchase {
         for (int i = items.length - 1; i >= 0; i--) {
             price = cast(items[i]);
             if (price != 0)
+                if (price >= 100)
+                    price = price/10;
                 return;
         }
     }
