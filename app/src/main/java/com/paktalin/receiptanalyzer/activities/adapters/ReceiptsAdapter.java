@@ -63,6 +63,4 @@ public class ReceiptsAdapter extends BaseAdapter {
 
         return convertView;
     }
-
-
 }

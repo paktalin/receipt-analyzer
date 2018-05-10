@@ -1,5 +1,6 @@
 package com.paktalin.receiptanalyzer.fragments;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,13 +26,14 @@ public class AllReceiptsFragment extends Fragment {
 
     private static final String TAG = AllReceiptsFragment.class.getSimpleName();
     Receipt[] receipts;
+    ReceiptsAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_receipts, container, false);
 
         extractReceipts();
-        ReceiptsAdapter adapter = new ReceiptsAdapter(getActivity(), receipts);
+        adapter = new ReceiptsAdapter(getActivity(), receipts);
 
         ListView listView = view.findViewById(R.id.all_receipts);
         listView.setAdapter(adapter);
@@ -41,6 +43,21 @@ public class AllReceiptsFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ViewReceiptActivity.class);
             intent.putExtra("id", receipt.getID());
             startActivity(intent);
+        });
+
+        listView.setOnItemLongClickListener((arg0, arg1, pos, id) -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setNeutralButton("Delete", (dialog, which) -> {
+                Receipt receipt = (Receipt) listView.getItemAtPosition(pos);
+                DatabaseHelper dbHelper = new DatabaseHelper(getActivity());
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+                db.delete(Contracts.ReceiptEntry.TABLE_NAME_RECEIPT, "_id=?", new String[]{String.valueOf(receipt.getID())});
+                extractReceipts();
+                adapter = new ReceiptsAdapter(getActivity(), receipts);
+                listView.setAdapter(adapter);
+            });
+            builder.create().show();
+            return true;
         });
 
         return view;
