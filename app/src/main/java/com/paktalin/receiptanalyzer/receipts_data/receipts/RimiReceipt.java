@@ -62,7 +62,7 @@ public class RimiReceipt extends Receipt {
     public void extractPurchases(Context context) {
         ArrayList<Purchase> purchases = new ArrayList<>();
         int beginning = -1;
-        String[] notPurchases = new String[] {"allah.", "www.rimi.ee", "klient944038XXXXXXXXX4461"};
+        String[] notPurchases = new String[] {"allah.", "www.rimi.ee", "klient944038XXXXXXXXX4461", "klient"};
         for (int i = purchasesStart; i <= purchasesEnd; i++) {
             String[] split = lines[i].split(" ");
             boolean isPurchase = true;

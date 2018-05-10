@@ -31,15 +31,17 @@ public class Purchase {
         if (string.length() > notPurchase.length()) {
             string = string.substring(0, notPurchase.length());
         }
-        Log.d(TAG, "if purchase: " + string + " vs " + notPurchase);
         return !similar(string, notPurchase);
     }
 
     private void extractPrice(String[] items) {
         for (int i = items.length - 1; i >= 0; i--) {
             price = cast(items[i]);
+            Log.d(TAG, String.valueOf(price));
             if (price != 0) {
                 if (price >= 100)
+                    price = price/100;
+                else if (price >= 10)
                     price = price/10;
                 return;
             }
