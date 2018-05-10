@@ -21,11 +21,17 @@ public class RimiReceipt extends Receipt {
         Log.d(TAG, "lines:\n" + Arrays.toString(lines));
         purchasesStart = startLine("klient", 6);
         purchasesEnd = endLine("kaardimakse", false);
-        priceFlag = "kokku";
-        calculateFinalPrice();
-        if (finalPrice == -1) {
-            priceFlag = "kaardimakse";
-            calculateFinalPrice();
+
+        String[] priceFlags = new String[]
+                {"kaardimakse", "kokku", "eur", "summa", "kokkueur", "kaardimakseeur", "kokkukaardimakseeur"};
+        String[] startLines = new String[]
+                {"rimieestifoodas. reg. nr. 10263574", "kmknree100062786", "porguvaljatee 3. pildikula. harjumaa", null, null, "www.rim.ee", "klient"};
+
+        for (String flag : priceFlags) {
+            if (finalPrice == -1) {
+                priceFlag = flag;
+                calculateFinalPrice();
+            }
         }
         if (finalPrice == -1)
             finalPrice = 0;

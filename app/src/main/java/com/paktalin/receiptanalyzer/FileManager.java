@@ -73,9 +73,12 @@ public class FileManager {
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
 
-        return BitmapFactory.decodeStream(ctx.getContentResolver()
-                .openInputStream(uri), null, bmOptions);
-
+        try {
+            return BitmapFactory.decodeStream(ctx.getContentResolver()
+                    .openInputStream(uri), null, bmOptions);
+        } catch (OutOfMemoryError error) {
+            return null;
+        }
     }
 
     public static Bitmap decodeBitmapUri_Rotate(int rotation, Uri uri, Context context) {

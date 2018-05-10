@@ -43,7 +43,12 @@ public class EditActivity extends AppCompatActivity{
 
         try {
             bitmap = FileManager.decodeBitmapUri(EditActivity.this, imageUri);
-            image.setImageBitmap(bitmap);
+            if (bitmap != null)
+                image.setImageBitmap(bitmap);
+            else {
+                Toast toast = Toast.makeText(EditActivity.this, "Sorry, we faced a memory error. Please, try again", Toast.LENGTH_LONG);
+                toast.show();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast toast = Toast.makeText(this, "Sorry, an error occured while loading your image. Try again, please", Toast.LENGTH_SHORT);
