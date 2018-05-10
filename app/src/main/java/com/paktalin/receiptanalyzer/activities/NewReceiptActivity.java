@@ -9,7 +9,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -28,6 +30,8 @@ import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 import com.paktalin.receiptanalyzer.data.Contracts.*;
 
+import static com.paktalin.receiptanalyzer.Supermarkets.*;
+
 
 /**
  * Created by Paktalin on 12/04/2018.
@@ -44,6 +48,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     Purchase[] purchases;
     long firstPurchaseID;
     long currentDate;
+    Bitmap bitmap = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +65,6 @@ public class NewReceiptActivity extends AppCompatActivity {
             int rotation = getIntent().getIntExtra("rotation", 0);
             Uri imageUri = getIntent().getParcelableExtra("uri");
             Context context = NewReceiptActivity.this;
-            Bitmap bitmap = null;
             try {
                 bitmap = FileManager.decodeBitmapUri_Rotate(rotation, imageUri, context);
             } catch (OutOfMemoryError e) {
@@ -78,42 +82,61 @@ public class NewReceiptActivity extends AppCompatActivity {
             editTextFinalPrice = findViewById(R.id.final_price);
 
             if (receipt != null) {
-                String supermarket = receipt.getSupermarket();
-                receipt.extractPurchases(NewReceiptActivity.this);
-                purchases = receipt.getPurchases();
-                for (Purchase p : purchases)
-                    p.purchaseInfo();
-
-                ((TextView) findViewById(R.id.supermarket)).setText(supermarket);
-                ((TextView) findViewById(R.id.retailer)).setText(receipt.getRetailer());
-                ((TextView) findViewById(R.id.address)).setText(receipt.getAddress());
-                String finalPrice = String.valueOf(receipt.getFinalPrice());
-                editTextFinalPrice.setText(finalPrice);
-
-                adapter = new PurchasesAdapter(NewReceiptActivity.this, purchases);
-                listView = findViewById(R.id.list_view);
-                listView.setAdapter(adapter);
-                findViewById(R.id.euro_sign).setVisibility(View.VISIBLE);
-
-                Button buttonOk = findViewById(R.id.button_ok);
-                buttonOk.setVisibility(View.VISIBLE);
-                buttonOk.setOnClickListener(buttonOkListener);
-
-                Button buttonCancel = findViewById(R.id.button_cancel);
-                buttonCancel.setVisibility(View.VISIBLE);
-                buttonCancel.setOnClickListener(v -> {
-                    Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
-                    mainActivityIntent.putExtra("position", 1);
-                    startActivity(mainActivityIntent);
-                });
+                showReceipt();
             } else {
-                (Toast.makeText(NewReceiptActivity.this,
-                        "Unfortunately, we couldn't scan the receipt. Please, try again", Toast.LENGTH_SHORT)).show();
-                Intent intent = new Intent(NewReceiptActivity.this, MainActivity.class);
-                startActivity(intent);
+                createDialog();
             }
         }
     }
+
+    private void showReceipt() {
+        String supermarket = receipt.getSupermarket();
+        receipt.extractPurchases(NewReceiptActivity.this);
+        purchases = receipt.getPurchases();
+        for (Purchase p : purchases)
+            p.purchaseInfo();
+
+        ((TextView) findViewById(R.id.supermarket)).setText(supermarket);
+        ((TextView) findViewById(R.id.retailer)).setText(receipt.getRetailer());
+        ((TextView) findViewById(R.id.address)).setText(receipt.getAddress());
+        String finalPrice = String.valueOf(receipt.getFinalPrice());
+        editTextFinalPrice.setText(finalPrice);
+
+        adapter = new PurchasesAdapter(NewReceiptActivity.this, purchases);
+        listView = findViewById(R.id.list_view);
+        listView.setAdapter(adapter);
+        findViewById(R.id.euro_sign).setVisibility(View.VISIBLE);
+
+        Button buttonOk = findViewById(R.id.button_ok);
+        buttonOk.setVisibility(View.VISIBLE);
+        buttonOk.setOnClickListener(buttonOkListener);
+
+        Button buttonCancel = findViewById(R.id.button_cancel);
+        buttonCancel.setVisibility(View.VISIBLE);
+        buttonCancel.setOnClickListener(v -> {
+            Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
+            mainActivityIntent.putExtra("position", 1);
+            startActivity(mainActivityIntent);
+        });
+    }
+
+    private void createDialog() {
+        String[] items = new String[]{MAXIMA, RIMI, SELVER, PRISMA, KONSUM};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(NewReceiptActivity.this);
+        builder.setTitle("We couldn't identify the supermarket. Could you help us?");
+        builder.setCancelable(true);
+        builder.setSingleChoiceItems(items, -1, (dialog, which) -> {
+            receipt = ReceiptRecognizer.extract(NewReceiptActivity.this, items[which]);
+            dialog.dismiss();
+            showReceipt();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
+
+
 
     View.OnClickListener buttonOkListener = v -> {
         currentDate = System.currentTimeMillis();

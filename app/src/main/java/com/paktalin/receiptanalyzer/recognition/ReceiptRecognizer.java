@@ -18,16 +18,21 @@ import java.util.ArrayList;
 public class ReceiptRecognizer {
     private static final String TAG = ReceiptRecognizer.class.getSimpleName();
 
+    private static ArrayList<String> lines;
+    private static Receipt receipt = null;
+
     public static Receipt extract(Context context, Bitmap bitmap) {
         if (bitmap != null) {
-            ArrayList<String> lines = recognize(context, bitmap);
-            Receipt receipt = ReceiptCreator.createReceipt(lines);
+            lines = recognize(context, bitmap);
+            receipt = ReceiptCreator.createReceipt(lines);
             if (receipt != null)
                 receipt = SupermarketInfo.setInfo(receipt, context);
             return receipt;
         }
         return null;
     }
+
+
 
     private static ArrayList<String> recognize(Context context, Bitmap bitmap) {
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
@@ -41,5 +46,12 @@ public class ReceiptRecognizer {
             Log.d(TAG, "Could not set up the detector!");
             return null;
         }
+    }
+
+    public static Receipt extract(Context context, String supermarket) {
+        receipt = ReceiptCreator.createReceipt(lines, supermarket);
+        if (receipt != null)
+            receipt = SupermarketInfo.setInfo(receipt, context);
+        return receipt;
     }
 }

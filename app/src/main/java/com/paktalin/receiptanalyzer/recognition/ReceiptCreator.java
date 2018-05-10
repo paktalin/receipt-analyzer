@@ -1,7 +1,5 @@
 package com.paktalin.receiptanalyzer.recognition;
 
-import android.util.Log;
-
 import com.paktalin.receiptanalyzer.StringFilter;
 import com.paktalin.receiptanalyzer.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.*;
@@ -18,51 +16,60 @@ import static com.paktalin.receiptanalyzer.Supermarkets.*;
 
 class ReceiptCreator {
     private static final String TAG = ReceiptCreator.class.getSimpleName();
-    static private String name = null;
+    static private String supermarket = null;
     private static String input;
 
     private final static String rimiString = "rimieestifoodasregnr10263574";
     private final static String maximaString = "maximaeestiouregnr10765896";
     private final static String konsumString = "harjutarbijateuhistu";
 
+    private static String[] filteredLines;
+    private static ArrayList<String> initialLines, list;
+    private static Receipt receipt = null;
+
     static Receipt createReceipt(ArrayList<String> list) {
-
-        Object[] object = StringFilter.filter(list);
-
-        String[] filteredStrings = (String[]) object[0];
-        ArrayList<String> initialLines = (ArrayList<String>) object[1];
-        String firstLine = StringManager.clean(filteredStrings[0]);
-        String supermarket = getStoreName(firstLine);
-        Log.d(TAG, "supermarket: " + supermarket);
-        Receipt receipt = null;
-        if (supermarket != null) {
-            switch (supermarket) {
-                case SELVER:
-                    receipt = new SelverReceipt(filteredStrings);
-                    break;
-                case PRISMA:
-                    receipt = new PrismaReceipt(filteredStrings);
-                    break;
-                case RIMI:
-                    receipt = new RimiReceipt(filteredStrings);
-                    break;
-                case KONSUM:
-                    receipt = new KonsumReceipt(filteredStrings);
-                    break;
-                case MAXIMA:
-                    receipt = new MaximaReceipt(filteredStrings);
-                    break;
-                default:
-                    receipt = null;
-            }
-        }
-
+        ReceiptCreator.list = list;
+        setFilteredAndInitialLines();
+        String firstLine = StringManager.clean(filteredLines[0]);
+        setStoreName(firstLine);
+        initializeReceipt();
         if (receipt != null) {
             receipt.setSupermarket(supermarket);
             receipt.setInitialLines(initialLines);
         }
         return receipt;
     }
+
+    private static void setFilteredAndInitialLines() {
+        Object[] object = StringFilter.filter(list);
+        filteredLines = (String[]) object[0];
+        initialLines = (ArrayList<String>) object[1];
+    }
+
+    private static void initializeReceipt() {
+        if (supermarket != null) {
+            switch (supermarket) {
+                case SELVER:
+                    receipt = new SelverReceipt(filteredLines);
+                    break;
+                case PRISMA:
+                    receipt = new PrismaReceipt(filteredLines);
+                    break;
+                case RIMI:
+                    receipt = new RimiReceipt(filteredLines);
+                    break;
+                case KONSUM:
+                    receipt = new KonsumReceipt(filteredLines);
+                    break;
+                case MAXIMA:
+                    receipt = new MaximaReceipt(filteredLines);
+                    break;
+                default:
+                    receipt = null;
+            }
+        }
+    }
+
 
     /**
      * The method is based on the length of the input string.
@@ -83,7 +90,7 @@ class ReceiptCreator {
      * Prisma   24-40
      * Selver   8-23
      */
-    private static String getStoreName(String input) {
+    private static void setStoreName(String input) {
         ReceiptCreator.input = input;
         int length = input.length();
 
@@ -100,12 +107,11 @@ class ReceiptCreator {
                 checkForSelver();
         } else if(length > 7)
             checkForSelver();
-        return name;
     }
 
-    private static boolean checkFor(String supermarketString, String name) {
+    private static boolean checkFor(String supermarketString, String supermarket) {
         if (identical(input, supermarketString)) {
-            ReceiptCreator.name = name;
+            ReceiptCreator.supermarket = supermarket;
             return true;
         } else
             return false;
@@ -114,13 +120,22 @@ class ReceiptCreator {
         String prismaString = "prismaperemarketas";
         String inputCut = input.substring(0, 18);
         if (identical(inputCut, prismaString))
-            name = "Prisma";
+            supermarket = "Prisma";
     }
     private static void checkForSelver() {
         String selverString = "selver";
         int length = input.length();
         String inputCut = input.substring(length - 6, length);
         if (similar(inputCut, selverString))
-            name = "Selver";
+            supermarket = "Selver";
+    }
+
+    static Receipt createReceipt(ArrayList<String> list, String supermarket) {
+        ReceiptCreator.supermarket = supermarket;
+        setFilteredAndInitialLines();
+        initializeReceipt();
+        receipt.setSupermarket(supermarket);
+        receipt.setInitialLines(initialLines);
+        return receipt;
     }
 }
