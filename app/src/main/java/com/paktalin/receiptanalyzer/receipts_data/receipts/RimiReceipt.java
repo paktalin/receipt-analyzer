@@ -19,13 +19,11 @@ public class RimiReceipt extends Receipt {
     public RimiReceipt(String[] lines) {
         super(lines);
         Log.d(TAG, "lines:\n" + Arrays.toString(lines));
-        purchasesStart = startLine("klient", 6);
+        purchasesStart = 6;
         purchasesEnd = endLine("kaardimakse", false);
 
         String[] priceFlags = new String[]
                 {"kaardimakse", "kokku", "eur", "summa", "kokkueur", "kaardimakseeur", "kokkukaardimakseeur"};
-        String[] startLines = new String[]
-                {"rimieestifoodas. reg. nr. 10263574", "kmknree100062786", "porguvaljatee 3. pildikula. harjumaa", null, null, "www.rim.ee", "klient"};
 
         for (String flag : priceFlags) {
             if (finalPrice == -1) {
@@ -35,15 +33,6 @@ public class RimiReceipt extends Receipt {
         }
         if (finalPrice == -1)
             finalPrice = 0;
-    }
-
-    @Override
-    int startLine(String startString, int number) {
-        String string = StringManager.clean(lines[number]);
-        string = string.substring(0, startString.length());
-        if (StringManager.similar(string, startString))
-            return number + 1;
-        return -1;
     }
 
     @Override
@@ -74,9 +63,15 @@ public class RimiReceipt extends Receipt {
     public void extractPurchases(Context context) {
         ArrayList<Purchase> purchases = new ArrayList<>();
         int beginning = -1;
+        String[] notPurchases = new String[] {"allah.", "www.rimi.ee", "klient944038XXXXXXXXX4461"};
         for (int i = purchasesStart; i <= purchasesEnd; i++) {
             String[] split = lines[i].split(" ");
-            if (Purchase.purchase(split[0], "allah.")) {
+            boolean isPurchase = true;
+
+            for (String notPurchase : notPurchases)
+                if (!Purchase.purchase(split[0], notPurchase))
+                    isPurchase = false;
+            if (isPurchase) {
                 if (!containsPrice(split))
                     beginning = i;
                 else {
