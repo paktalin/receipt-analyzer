@@ -68,41 +68,48 @@
         android:layout_alignParentBottom="true"
         android:gravity="bottom">
 
-        <TextView
-            android:id="@+id/kokku"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kokku"
-            android:visibility="invisible"
-            android:layout_marginTop="10dp"
-            android:textSize="30sp" />
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
 
-        <EditText
-            android:id="@+id/final_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/kokku"
-            android:background="@android:color/transparent"
-            android:textSize="30sp" />
+            <EditText
+                android:id="@+id/final_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textSize="30sp"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/final_price"
+                android:text=" €"
+                android:textSize="30dp"
+                android:textColor="@android:color/white"/>
+        </RelativeLayout>
 
         <Button
             android:id="@+id/button_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentEnd="true"
-            android:layout_below="@+id/kokku"
             android:layout_marginTop="10dp"
-            android:text="OK"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_ok"
             android:visibility="invisible" />
 
         <Button
             android:id="@+id/button_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/kokku"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:text="Cancel"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/button_cancel"
             android:visibility="invisible" />
 
     </RelativeLayout>

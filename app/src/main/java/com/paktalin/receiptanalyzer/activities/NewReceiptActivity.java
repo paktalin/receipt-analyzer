@@ -87,7 +87,6 @@ public class NewReceiptActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.supermarket)).setText(supermarket);
                 ((TextView) findViewById(R.id.retailer)).setText(receipt.getRetailer());
                 ((TextView) findViewById(R.id.address)).setText(receipt.getAddress());
-                (findViewById(R.id.kokku)).setVisibility(View.VISIBLE);
                 String finalPrice = String.valueOf(receipt.getFinalPrice());
                 editTextFinalPrice.setText(finalPrice);
 
