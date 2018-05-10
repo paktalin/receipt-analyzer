@@ -93,6 +93,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 adapter = new PurchasesAdapter(NewReceiptActivity.this, purchases);
                 listView = findViewById(R.id.list_view);
                 listView.setAdapter(adapter);
+                findViewById(R.id.euro_sign).setVisibility(View.VISIBLE);
 
                 Button buttonOk = findViewById(R.id.button_ok);
                 buttonOk.setVisibility(View.VISIBLE);
@@ -107,7 +108,9 @@ public class NewReceiptActivity extends AppCompatActivity {
                 });
             } else {
                 (Toast.makeText(NewReceiptActivity.this,
-                        "Sorry, we couldn't scan the item_receipt. Please, try again", Toast.LENGTH_SHORT)).show();
+                        "Unfortunately, we couldn't scan the receipt. Please, try again", Toast.LENGTH_SHORT)).show();
+                Intent intent = new Intent(NewReceiptActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         }
     }

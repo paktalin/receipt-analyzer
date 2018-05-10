@@ -38,6 +38,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
         setContentView(R.layout.activity_receipt);
         extractReceipt(getIntent().getLongExtra("id", 1));
         findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
+        findViewById(R.id.euro_sign).setVisibility(View.VISIBLE);
 
         adapter = new PurchasesAdapter(ViewReceiptActivity.this, purchases);
         listView = findViewById(R.id.list_view);

@@ -36,12 +36,9 @@ public class EditActivity extends AppCompatActivity{
         image = findViewById(R.id.image);
         findViewById(R.id.button_rotate).setOnClickListener(buttonRotateListener);
         findViewById(R.id.button_ok).setOnClickListener(buttonOkListener);
-        findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EditActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+        findViewById(R.id.button_cancel).setOnClickListener(v -> {
+            Intent intent = new Intent(EditActivity.this, MainActivity.class);
+            startActivity(intent);
         });
 
         try {

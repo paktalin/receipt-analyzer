@@ -22,7 +22,8 @@ public class ReceiptRecognizer {
         if (bitmap != null) {
             ArrayList<String> lines = recognize(context, bitmap);
             Receipt receipt = ReceiptCreator.createReceipt(lines);
-            receipt = SupermarketInfo.setInfo(receipt, context);
+            if (receipt != null)
+                receipt = SupermarketInfo.setInfo(receipt, context);
             return receipt;
         }
         return null;

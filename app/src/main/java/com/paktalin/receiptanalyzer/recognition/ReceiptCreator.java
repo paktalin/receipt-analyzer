@@ -1,5 +1,7 @@
 package com.paktalin.receiptanalyzer.recognition;
 
+import android.util.Log;
+
 import com.paktalin.receiptanalyzer.StringFilter;
 import com.paktalin.receiptanalyzer.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.*;
@@ -31,27 +33,30 @@ class ReceiptCreator {
         ArrayList<String> initialLines = (ArrayList<String>) object[1];
         String firstLine = StringManager.clean(filteredStrings[0]);
         String supermarket = getStoreName(firstLine);
-
-        Receipt receipt;
-        switch (supermarket) {
-            case SELVER:
-                receipt = new SelverReceipt(filteredStrings);
-                break;
-            case PRISMA:
-                receipt = new PrismaReceipt(filteredStrings);
-                break;
-            case RIMI:
-                receipt = new RimiReceipt(filteredStrings);
-                break;
-            case KONSUM:
-                receipt = new KonsumReceipt(filteredStrings);
-                break;
-            case MAXIMA:
-                receipt = new MaximaReceipt(filteredStrings);
-                break;
-            default:
-                receipt = null;
+        Log.d(TAG, "supermarket: " + supermarket);
+        Receipt receipt = null;
+        if (supermarket != null) {
+            switch (supermarket) {
+                case SELVER:
+                    receipt = new SelverReceipt(filteredStrings);
+                    break;
+                case PRISMA:
+                    receipt = new PrismaReceipt(filteredStrings);
+                    break;
+                case RIMI:
+                    receipt = new RimiReceipt(filteredStrings);
+                    break;
+                case KONSUM:
+                    receipt = new KonsumReceipt(filteredStrings);
+                    break;
+                case MAXIMA:
+                    receipt = new MaximaReceipt(filteredStrings);
+                    break;
+                default:
+                    receipt = null;
+            }
         }
+
         if (receipt != null) {
             receipt.setSupermarket(supermarket);
             receipt.setInitialLines(initialLines);
