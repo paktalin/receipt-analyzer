@@ -42,6 +42,7 @@ public class Receipt {
             return number + 1;
         return -1;
     }
+
     int endLine(String endLine, boolean removeNumbers) {
         for (int i = purchasesStart + 1; i < lines.length; i++) {
             String line = lines[i];
@@ -51,6 +52,19 @@ public class Receipt {
             if (StringManager.similar(line, endLine))
                 return i - 1;
         }
+        return lines.length - 1;
+    }
+
+    int endLine(String[] endLines, boolean removeNumbers) {
+        for (String endLine : endLines)
+            for (int i = purchasesStart + 1; i < lines.length; i++) {
+                String line = lines[i];
+                if (removeNumbers)
+                    line = StringManager.clean(line);
+                line = StringManager.removeNumbers(line);
+                if (StringManager.similar(line, endLine))
+                    return i - 1;
+            }
         return -1;
     }
 

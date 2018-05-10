@@ -20,17 +20,16 @@ public class RimiReceipt extends Receipt {
         super(lines);
         Log.d(TAG, "lines:\n" + Arrays.toString(lines));
         purchasesStart = 6;
-        purchasesEnd = endLine("kaardimakse", false);
+        purchasesEnd = endLine(new String[]{"sinusoodustused", "kaardimakse"}, false);
 
         String[] priceFlags = new String[]
                 {"kaardimakse", "kokku", "eur", "summa", "kokkueur", "kaardimakseeur", "kokkukaardimakseeur"};
 
-        for (String flag : priceFlags) {
+        for (String flag : priceFlags)
             if (finalPrice == -1) {
                 priceFlag = flag;
                 calculateFinalPrice();
             }
-        }
         if (finalPrice == -1)
             finalPrice = 0;
     }
