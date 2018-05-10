@@ -3,13 +3,13 @@ package com.paktalin.receiptanalyzer.recognition;
 import android.util.Log;
 
 import com.paktalin.receiptanalyzer.StringFilter;
-import com.paktalin.receiptanalyzer.StringManager;
+import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.*;
 
 import java.util.ArrayList;
 
-import static com.paktalin.receiptanalyzer.StringManager.identical;
-import static com.paktalin.receiptanalyzer.StringManager.similar;
+import static com.paktalin.receiptanalyzer.managers.StringManager.identical;
+import static com.paktalin.receiptanalyzer.managers.StringManager.similar;
 import static com.paktalin.receiptanalyzer.Supermarkets.*;
 
 /**

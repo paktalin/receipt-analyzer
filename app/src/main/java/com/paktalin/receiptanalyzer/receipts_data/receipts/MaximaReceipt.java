@@ -2,7 +2,7 @@ package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
 import android.util.Log;
 
-import com.paktalin.receiptanalyzer.StringManager;
+import com.paktalin.receiptanalyzer.managers.StringManager;
 
 /**
  * Created by Paktalin on 22-Mar-18.

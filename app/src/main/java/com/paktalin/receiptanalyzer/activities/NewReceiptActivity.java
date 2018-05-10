@@ -19,7 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.paktalin.receiptanalyzer.FileManager;
+import com.paktalin.receiptanalyzer.managers.FileManager;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.recognition.ReceiptRecognizer;
 import com.paktalin.receiptanalyzer.activities.adapters.PurchasesAdapter;

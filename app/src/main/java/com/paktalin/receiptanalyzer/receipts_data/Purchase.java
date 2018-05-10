@@ -3,10 +3,10 @@ package com.paktalin.receiptanalyzer.receipts_data;
 import android.content.Context;
 import android.util.Log;
 
-import com.paktalin.receiptanalyzer.StringManager;
+import com.paktalin.receiptanalyzer.managers.StringManager;
 
-import static com.paktalin.receiptanalyzer.FileManager.getStringFromTextFile;
-import static com.paktalin.receiptanalyzer.StringManager.similar;
+import static com.paktalin.receiptanalyzer.managers.FileManager.getStringFromTextFile;
+import static com.paktalin.receiptanalyzer.managers.StringManager.similar;
 
 /**
  * Created by Paktalin on 23/04/2018.

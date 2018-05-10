@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer;
+package com.paktalin.receiptanalyzer.managers;
 
 import com.paktalin.receiptanalyzer.recognition.similarity.JaroWinkler;
 

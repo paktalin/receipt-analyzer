@@ -1,10 +1,9 @@
-package com.paktalin.receiptanalyzer;
+package com.paktalin.receiptanalyzer.managers;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.util.Log;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;

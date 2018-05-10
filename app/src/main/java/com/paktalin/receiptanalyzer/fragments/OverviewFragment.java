@@ -13,9 +13,9 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.paktalin.receiptanalyzer.FileManager;
+import com.paktalin.receiptanalyzer.managers.FileManager;
 import com.paktalin.receiptanalyzer.R;
-import com.paktalin.receiptanalyzer.ChartManager;
+import com.paktalin.receiptanalyzer.managers.ChartManager;
 
 import java.text.SimpleDateFormat;
 

@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer;
+package com.paktalin.receiptanalyzer.managers;
 
 import android.app.Activity;
 import android.content.Context;

@@ -3,7 +3,7 @@ package com.paktalin.receiptanalyzer.receipts_data.receipts;
 import android.content.Context;
 import android.util.Log;
 
-import com.paktalin.receiptanalyzer.StringManager;
+import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import java.util.ArrayList;
