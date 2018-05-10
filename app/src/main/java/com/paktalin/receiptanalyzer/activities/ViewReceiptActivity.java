@@ -42,6 +42,7 @@ public class ViewReceiptActivity extends AppCompatActivity {
         adapter = new PurchasesAdapter(ViewReceiptActivity.this, purchases);
         listView = findViewById(R.id.list_view);
         listView.setAdapter(adapter);
+        (findViewById(R.id.kokku)).setVisibility(View.VISIBLE);
 
         Button buttonOk = findViewById(R.id.button_ok);
         buttonOk.setVisibility(View.VISIBLE);

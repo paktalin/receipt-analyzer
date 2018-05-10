@@ -54,7 +54,7 @@ public class PurchasesAdapter extends BaseAdapter {
         String category = p.getCategory();
         float price = p.getPrice();
 
-        final EditText titleView = convertView.findViewById(R.id.title);
+        final EditText titleView = convertView.findViewById(R.id.et_purchase_title);
         titleView.setTag(position);
         titleView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -75,7 +75,7 @@ public class PurchasesAdapter extends BaseAdapter {
         });
         titleView.setText(p.getTitle());
 
-        final EditText categoryView = convertView.findViewById(R.id.category);
+        final EditText categoryView = convertView.findViewById(R.id.et_purchase_category);
         categoryView.setTag(position);
         categoryView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -100,7 +100,7 @@ public class PurchasesAdapter extends BaseAdapter {
         }
         else categoryView.setText(category);
 
-        final EditText priceView = convertView.findViewById(R.id.price);
+        final EditText priceView = convertView.findViewById(R.id.et_purchase_price);
         priceView.setTag(position);
         priceView.addTextChangedListener(new TextWatcher() {
             @Override

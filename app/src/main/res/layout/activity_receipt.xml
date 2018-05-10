@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="12dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/grey_background">
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -13,74 +13,98 @@
         android:layout_centerVertical="true"
         android:indeterminate="true" />
 
-    <TextView
-        android:id="@+id/supermarket"
+    <RelativeLayout
+        android:id="@+id/rl_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textSize="20sp" />
+        android:background="@color/colorAccent">
 
-    <TextView
-        android:id="@+id/retailer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/supermarket" />
+        <TextView
+            android:id="@+id/supermarket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"/>
 
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/supermarket" />
+        <TextView
+            android:id="@+id/retailer"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/supermarket"
+            android:textColor="@android:color/white"/>
 
-    <Space
-        android:id="@+id/space"
-        android:layout_width="wrap_content"
-        android:layout_height="10dp"
-        android:layout_below="@+id/retailer"/>
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/supermarket"
+            android:gravity="end"
+            android:textColor="@android:color/white"/>
+
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/final_price"
-        android:layout_below="@+id/space"
-        android:layout_marginBottom="10dp" />
-
-    <TextView
-        android:id="@+id/kokku"
+        android:layout_below="@+id/rl_header"
+        android:layout_marginBottom="10dp"
+        android:divider="@android:color/transparent"/>
+    
+    <RelativeLayout
+        android:id="@+id/rl_footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_ok"
-        android:text="Kokku"
-        android:visibility="invisible"
-        android:textSize="30sp" />
-
-    <EditText
-        android:id="@+id/final_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_ok"
-        android:layout_alignParentEnd="true"
-        android:background="@android:color/transparent"
-        android:textSize="30sp" />
-
-    <Button
-        android:id="@+id/button_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:text="OK"
-        android:visibility="invisible" />
+        android:gravity="bottom">
 
-    <Button
-        android:id="@+id/button_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="Cancel"
-        android:visibility="invisible" />
+        <TextView
+            android:id="@+id/kokku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kokku"
+            android:visibility="invisible"
+            android:layout_marginTop="10dp"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/final_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/kokku"
+            android:background="@android:color/transparent"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/kokku"
+            android:layout_marginTop="10dp"
+            android:text="OK"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/kokku"
+            android:layout_marginTop="10dp"
+            android:text="Cancel"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
