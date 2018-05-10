@@ -1,5 +1,7 @@
 package com.paktalin.receiptanalyzer.recognition;
 
+import android.util.Log;
+
 import com.paktalin.receiptanalyzer.StringFilter;
 import com.paktalin.receiptanalyzer.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.*;
@@ -136,6 +138,7 @@ class ReceiptCreator {
         initializeReceipt();
         receipt.setSupermarket(supermarket);
         receipt.setInitialLines(initialLines);
+        Log.d(TAG, String.valueOf(initialLines));
         return receipt;
     }
 }

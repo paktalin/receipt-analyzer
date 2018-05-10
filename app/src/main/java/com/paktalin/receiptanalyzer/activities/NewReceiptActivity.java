@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -80,11 +79,10 @@ public class NewReceiptActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
             editTextFinalPrice = findViewById(R.id.final_price);
-
             if (receipt != null) {
                 showReceipt();
             } else {
-                createDialog();
+                askUserForHelp();
             }
         }
     }
@@ -120,7 +118,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         });
     }
 
-    private void createDialog() {
+    private void askUserForHelp() {
         String[] items = new String[]{MAXIMA, RIMI, SELVER, PRISMA, KONSUM};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(NewReceiptActivity.this);

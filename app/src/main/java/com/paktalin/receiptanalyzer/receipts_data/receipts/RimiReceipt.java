@@ -40,8 +40,11 @@ public class RimiReceipt extends Receipt {
 
     @Override
     public String cutRetailersLine(String line) {
-        Log.d(TAG, line.substring(4, line.length()));
-        return line.substring(4, line.length());
+        try {
+            return line.substring(4, line.length());
+        }catch (Exception e) {
+            return "";
+        }
     }
 
     @Override
