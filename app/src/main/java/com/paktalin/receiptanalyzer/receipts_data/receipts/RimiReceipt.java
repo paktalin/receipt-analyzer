@@ -27,6 +27,8 @@ public class RimiReceipt extends Receipt {
             priceFlag = "kaardimakse";
             calculateFinalPrice();
         }
+        if (finalPrice == -1)
+            finalPrice = 0;
     }
 
     @Override
