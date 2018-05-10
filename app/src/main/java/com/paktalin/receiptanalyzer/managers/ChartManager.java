@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -43,7 +44,6 @@ import static com.paktalin.receiptanalyzer.data.Contracts.ReceiptEntry.*;
 public class ChartManager {
     private static final String TAG = ChartManager.class.getSimpleName();
     private SimpleDateFormat sdf = new SimpleDateFormat("d MMM");
-    private ArrayList<Entry> entries;
 
     private int[] colors = new int[] {
             Color.parseColor("#996699"),
@@ -75,6 +75,7 @@ public class ChartManager {
     private void retrieveReceiptData() {
         supermarkets = new TreeMap<>();
         expenses = new LinkedHashMap<>();
+        overall = 0;
 
         String selection = COLUMN_SUPERMARKET + ", " + COLUMN_FINAL_PRICE + ", " + COLUMN_DATE_RECEIPT;
         String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
@@ -84,13 +85,12 @@ public class ChartManager {
         int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
         int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
         createExpensesInPeriod();
-
         while (cursor.moveToNext()) {
             String keyExpenses = sdf.format(new Date(cursor.getLong(dateIndex)));
             String keySupermarkets = cursor.getString(supermarketIndex);
             Float value = cursor.getFloat(priceIndex);
             expenses.put(keyExpenses, value + expenses.get(keyExpenses));
-
+            overall += value;
             if (supermarkets.containsKey(keySupermarkets))
                 supermarkets.put(keySupermarkets, supermarkets.get(keySupermarkets) + cursor.getFloat(priceIndex));
             else
@@ -118,7 +118,6 @@ public class ChartManager {
     }
 
     private void retrieveCategories() {
-        overall = 0;
         categories = new TreeMap<>();
         String selection = COLUMN_CATEGORY + ", " + COLUMN_PRICE;
         String query = "SELECT " + selection + " FROM " + TABLE_NAME_PURCHASE + " WHERE " + COLUMN_DATE_PURCHASE + " BETWEEN "
@@ -130,7 +129,6 @@ public class ChartManager {
 
         while (cursor.moveToNext()) {
             String key = cursor.getString(categoryIndex);
-            overall += cursor.getFloat(priceIndex);
             if (categories.containsKey(key))
                 categories.put(key, categories.get(key) + cursor.getFloat(priceIndex));
             else
@@ -210,7 +208,7 @@ public class ChartManager {
     }
 
     public LineChart setLineChart(LineChart lineChart) {
-        entries = new ArrayList<>();
+        ArrayList<Entry> entries = new ArrayList<>();
         String[] labels = new String[expenses.size()];
 
         int i = 0;
