@@ -41,7 +41,7 @@ public class EditActivity extends AppCompatActivity{
         });
 
         try {
-            bitmap = FileManager.decodeBitmapUri(EditActivity.this, imageUri);
+            bitmap = FileManager.decodeBitmapUriLight(EditActivity.this, imageUri);
             if (bitmap != null)
                 image.setImageBitmap(bitmap);
             else {

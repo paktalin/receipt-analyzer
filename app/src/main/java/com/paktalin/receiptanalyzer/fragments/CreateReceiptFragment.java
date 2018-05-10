@@ -27,12 +27,14 @@ public class CreateReceiptFragment extends Fragment {
 
     Uri imageUri;
     private static final int REQUEST_GET_FROM_GALLERY = 40;
+    File photoFile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_receipt, container, false);
         view.findViewById(R.id.button_camera).setOnClickListener(buttonCameraListener);
         view.findViewById(R.id.button_gallery).setOnClickListener(buttonGalleryListener);
+        photoFile = new File(FileManager.getPictureDirPath(), "last.jpg");
         return view;
     }
 
@@ -41,9 +43,8 @@ public class CreateReceiptFragment extends Fragment {
         public void onClick(View v) {
             int REQUEST_GET_FROM_CAMERA = 30;
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File photo = new File(FileManager.getPictureDirPath(), "last.jpg");
             imageUri = FileProvider.getUriForFile(getActivity(),
-                    BuildConfig.APPLICATION_ID + ".provider", photo);
+                    BuildConfig.APPLICATION_ID + ".provider", photoFile);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(intent, REQUEST_GET_FROM_CAMERA);
         }

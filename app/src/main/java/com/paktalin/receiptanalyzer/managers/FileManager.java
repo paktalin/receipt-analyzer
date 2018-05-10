@@ -74,8 +74,20 @@ public class FileManager {
         bmOptions.inSampleSize = scaleFactor;
 
         try {
-            return BitmapFactory.decodeStream(ctx.getContentResolver()
-                    .openInputStream(uri), null, bmOptions);
+            return BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri),
+                    null, bmOptions);
+        } catch (OutOfMemoryError error) {
+            return null;
+        }
+    }
+
+    public static Bitmap decodeBitmapUriLight(Context ctx, Uri uri) throws Exception {
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = 6;
+        try {
+            return BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri),
+                    null, bmOptions);
         } catch (OutOfMemoryError error) {
             return null;
         }
@@ -88,10 +100,12 @@ public class FileManager {
             Matrix matrix = new Matrix();
             matrix.postRotate(rotation);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         return bitmap;
     }
+
 }

@@ -17,7 +17,6 @@ public class StringFilter {
         StringFilter.list = l;
         String string = toString(list);
         string = string.toLowerCase();
-
         builder = new StringBuilder(string);
         filterCharSet();
         removeSpaces();
@@ -28,9 +27,8 @@ public class StringFilter {
 
     private static String toString(ArrayList<String> list) {
         String result = "";
-        for(String string : list) {
+        for(String string : list)
             result += string + "\n";
-        }
         return result;
     }
 

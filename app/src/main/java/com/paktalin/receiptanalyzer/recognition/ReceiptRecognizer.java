@@ -22,14 +22,11 @@ public class ReceiptRecognizer {
     private static Receipt receipt = null;
 
     public static Receipt extract(Context context, Bitmap bitmap) {
-        if (bitmap != null) {
-            lines = recognize(context, bitmap);
-            receipt = ReceiptCreator.createReceipt(lines);
-            if (receipt != null)
-                receipt = SupermarketInfo.setInfo(receipt, context);
-            return receipt;
-        }
-        return null;
+        lines = recognize(context, bitmap);
+        receipt = ReceiptCreator.createReceipt(lines);
+        if (receipt != null)
+            receipt = SupermarketInfo.setInfo(receipt, context);
+        return receipt;
     }
 
 

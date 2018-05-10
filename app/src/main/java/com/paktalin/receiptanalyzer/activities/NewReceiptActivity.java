@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -71,7 +72,12 @@ public class NewReceiptActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(context, "An error occured. Please, try again", Toast.LENGTH_SHORT);
                 toast.show();
             }
-            receipt = ReceiptRecognizer.extract(context, bitmap);
+            if (bitmap != null)
+                receipt = ReceiptRecognizer.extract(context, bitmap);
+            else {
+                Toast toast = Toast.makeText(NewReceiptActivity.this, "We couldn't load the image. Please, try again", Toast.LENGTH_LONG);
+                toast.show();
+            }
             return null;
         }
 
