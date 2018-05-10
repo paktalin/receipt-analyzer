@@ -2,23 +2,17 @@ package com.paktalin.receiptanalyzer.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.paktalin.receiptanalyzer.FileManager;
 import com.paktalin.receiptanalyzer.R;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 
 /**
  * Created by Paktalin on 12/04/2018.
@@ -28,7 +22,6 @@ public class EditActivity extends AppCompatActivity{
     private static final String TAG = EditActivity.class.getSimpleName();
 
     private ImageView image;
-    Button buttonOk;
     Bitmap bitmap;
     Uri imageUri;
     int rotation = 0;
@@ -40,11 +33,17 @@ public class EditActivity extends AppCompatActivity{
 
         imageUri = getIntent().getParcelableExtra("uri");
 
-        ImageView buttonRotate = findViewById(R.id.button_rotate);
         image = findViewById(R.id.image);
-        buttonOk = findViewById(R.id.button_ok);
-        buttonRotate.setOnClickListener(buttonRotateListener);
-        buttonOk.setOnClickListener(buttonOkListener);
+        findViewById(R.id.button_rotate).setOnClickListener(buttonRotateListener);
+        findViewById(R.id.button_ok).setOnClickListener(buttonOkListener);
+        findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
         try {
             bitmap = FileManager.decodeBitmapUri(EditActivity.this, imageUri);
             image.setImageBitmap(bitmap);
