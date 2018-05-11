@@ -1,5 +1,9 @@
 package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
+import android.util.Log;
+
+import java.util.Arrays;
+
 /**
  * Created by Paktalin on 22-Mar-18.
  */
@@ -9,9 +13,10 @@ public class KonsumReceipt extends Receipt {
 
     public KonsumReceipt(String[] lines) {
         super(lines);
-        purchasesStart = startLine("kaubanimetuskogushindsumma", 8) + 1;
-        purchasesEnd = endLine("maksta", true);
+        Log.d(TAG, Arrays.toString(lines));
+        purchasesStart = 10;
+        purchasesEnd = endLine(new String[]{"maksta"}, true);
         priceFlag = "maksta";
-        calculateFinalPrice();
+        setPrice(new String[]{"makstudkaardimakse", "maksta"});
     }
 }

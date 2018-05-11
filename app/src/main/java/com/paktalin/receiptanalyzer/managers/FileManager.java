@@ -102,9 +102,9 @@ public class FileManager {
         Bitmap bitmap = FileManager.decodeBitmapUri(context, uri);
         Matrix matrix = new Matrix();
         matrix.postRotate(rotation);
-        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-
-        if (bitmap == null)
+        if (bitmap != null)
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        else
             bitmap = decodeBitmapUri(context, uri, 4);
         return bitmap;
     }

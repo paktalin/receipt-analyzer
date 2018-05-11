@@ -76,6 +76,16 @@ public class Receipt {
         this.purchases = purchases.toArray(new Purchase[purchases.size()]);
     }
 
+    void setPrice(String[] priceFlags) {
+        for (String flag : priceFlags)
+            if (finalPrice == -1) {
+                priceFlag = flag;
+                calculateFinalPrice();
+            }
+        if (finalPrice == -1)
+            finalPrice = 0;
+    }
+
     void calculateFinalPrice() {
         for (String line : lines) {
             try {
@@ -83,8 +93,7 @@ public class Receipt {
                     finalPrice = StringManager.extractFloat(line, priceFlag.length());
                     break;
                 }
-            } catch (StringIndexOutOfBoundsException ignored) {
-            }
+            } catch (StringIndexOutOfBoundsException ignored) {}
         }
     }
 

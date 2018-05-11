@@ -7,7 +7,6 @@ import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Paktalin on 22-Mar-18.
@@ -18,20 +17,9 @@ public class RimiReceipt extends Receipt {
 
     public RimiReceipt(String[] lines) {
         super(lines);
-        Log.d(TAG, "lines:\n" + Arrays.toString(lines));
         purchasesStart = 6;
         purchasesEnd = endLine(new String[]{"sinusoodustused", "kaardimakse"}, false);
-
-        String[] priceFlags = new String[]
-                {"kaardimakse", "kokku", "eur", "summa", "kokkueur", "kaardimakseeur", "kokkukaardimakseeur"};
-
-        for (String flag : priceFlags)
-            if (finalPrice == -1) {
-                priceFlag = flag;
-                calculateFinalPrice();
-            }
-        if (finalPrice == -1)
-            finalPrice = 0;
+        setPrice(new String[]{"kaardimakse", "kokku", "eur", "summa", "kokkueur", "kaardimakseeur", "kokkukaardimakseeur"});
     }
 
     @Override
@@ -52,8 +40,7 @@ public class RimiReceipt extends Receipt {
                     finalPrice = StringManager.extractFloat(line, priceFlag.length());
                     break;
                 }
-            } catch (StringIndexOutOfBoundsException ignored) {
-            }
+            } catch (StringIndexOutOfBoundsException ignored) {}
         }
     }
 
