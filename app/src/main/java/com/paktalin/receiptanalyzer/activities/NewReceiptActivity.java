@@ -59,36 +59,37 @@ public class NewReceiptActivity extends AppCompatActivity {
         task.execute();
     }
 
-    class MyAsyncTask extends AsyncTask<Void, Void, Void> {
+    class MyAsyncTask extends AsyncTask<Void, Void, String> {
+
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected String doInBackground(Void... voids) {
             int rotation = getIntent().getIntExtra("rotation", 0);
             Uri imageUri = getIntent().getParcelableExtra("uri");
-            Context context = NewReceiptActivity.this;
             try {
-                bitmap = FileManager.decodeBitmapUri_Rotate(rotation, imageUri, context);
+                bitmap = FileManager.decodeBitmapUri_Rotate(rotation, imageUri, NewReceiptActivity.this);
             } catch (OutOfMemoryError e) {
-                e.printStackTrace();
-                Toast toast = Toast.makeText(context, "An error occured. Please, try again", Toast.LENGTH_SHORT);
-                toast.show();
+                return "An error occured. Please, try again";
             }
-            if (bitmap != null)
-                receipt = ReceiptRecognizer.extract(context, bitmap);
+            if (bitmap == null)
+                return "We couldn't load the image. Please, try again";
             else {
-                Toast toast = Toast.makeText(NewReceiptActivity.this, "We couldn't load the image. Please, try again", Toast.LENGTH_LONG);
-                toast.show();
+                receipt = ReceiptRecognizer.extract(NewReceiptActivity.this, bitmap);
+                return null;
             }
-            return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
-            editTextFinalPrice = findViewById(R.id.final_price);
-            if (receipt != null) {
-                showReceipt();
+        protected void onPostExecute(String errorMessage) {
+            if (errorMessage == null) {
+                findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
+                editTextFinalPrice = findViewById(R.id.final_price);
+                if (receipt != null)
+                    showReceipt();
+                else
+                    askUserForHelp();
             } else {
-                askUserForHelp();
+                Toast toast = Toast.makeText(NewReceiptActivity.this, errorMessage, Toast.LENGTH_LONG);
+                toast.show();
             }
         }
     }
@@ -137,8 +138,6 @@ public class NewReceiptActivity extends AppCompatActivity {
         dialog.show();
 
     }
-
-
 
     View.OnClickListener buttonOkListener = v -> {
         currentDate = System.currentTimeMillis();
