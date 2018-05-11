@@ -33,7 +33,6 @@ public class Purchase {
 
     private void extractPrice(String[] items) {
         for (int i = items.length - 1; i >= 0; i--) {
-            Log.d(TAG, "what we're trying to cast: " + items[i]);
             price = tryCastToFloat(items[i]);
             if (price != 0) {
                 if (tooBig(price) && isInt(price)) {
@@ -68,7 +67,7 @@ public class Purchase {
         try {
             return Float.parseFloat(string);
         } catch (NumberFormatException e) {
-            replaceSimilarLettersWithNumbers(string);
+            string = replaceSimilarLettersWithNumbers(string);
             try {
                 return Float.parseFloat(string);
             } catch (NumberFormatException ignored){}
@@ -80,6 +79,7 @@ public class Purchase {
         string = string.replaceAll("o", "0");
         string = string.replaceAll("g", "9");
         string = string.replaceAll(" ", "");
+        string = string.replaceAll("c", "");
         return StringManager.removeLetters(string);
     }
 

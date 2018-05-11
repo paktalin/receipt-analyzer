@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -60,19 +61,26 @@ public class FileManager {
         return picturesDirPath;
     }
 
-    public static Bitmap decodeBitmapUri(Context ctx, Uri uri) throws Exception {
+    private static int calculateScaleFactor(Context context, Uri uri) {
         int targetW = 600;
         int targetH = 600;
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri), null, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
+        try {
+            BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, bmOptions);
+            int photoW = bmOptions.outWidth;
+            int photoH = bmOptions.outHeight;
+            return Math.min(photoW / targetW, photoH / targetH);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return 3;
+        }
+    }
 
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+    private static Bitmap decodeBitmapUri(Context ctx, Uri uri, int scaleFactor) throws Exception {
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
-
         try {
             return BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri),
                     null, bmOptions);
@@ -82,15 +90,11 @@ public class FileManager {
     }
 
     public static Bitmap decodeBitmapUriLight(Context ctx, Uri uri) throws Exception {
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = 6;
-        try {
-            return BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri),
-                    null, bmOptions);
-        } catch (OutOfMemoryError error) {
-            return null;
-        }
+        return decodeBitmapUri(ctx, uri, 6);
+    }
+
+    private static Bitmap decodeBitmapUri(Context context, Uri uri) throws Exception {
+        return decodeBitmapUri(context, uri, calculateScaleFactor(context, uri));
     }
 
     public static Bitmap decodeBitmapUri_Rotate(int rotation, Uri uri, Context context) {

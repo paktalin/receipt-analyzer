@@ -80,8 +80,8 @@ public class NewReceiptActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String errorMessage) {
+            findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
             if (errorMessage == null) {
-                findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
                 editTextFinalPrice = findViewById(R.id.final_price);
                 if (receipt != null)
                     showReceipt();
@@ -90,6 +90,8 @@ public class NewReceiptActivity extends AppCompatActivity {
             } else {
                 Toast toast = Toast.makeText(NewReceiptActivity.this, errorMessage, Toast.LENGTH_LONG);
                 toast.show();
+                Intent intent = new Intent(NewReceiptActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         }
     }
