@@ -97,25 +97,39 @@ public class NewReceiptActivity extends AppCompatActivity {
     }
 
     private void showReceipt() {
-        String supermarket = receipt.getSupermarket();
+        extractReceiptData();
+        setTextInTextViews();
+        findViewById(R.id.euro_sign).setVisibility(View.VISIBLE);
+        setPurchasesListView();
+        setButtonOk();
+        setButtonCancel();
+    }
+
+    private void extractReceiptData() {
         receipt.extractPurchases(NewReceiptActivity.this);
         purchases = receipt.getPurchases();
+    }
 
-        ((TextView) findViewById(R.id.supermarket)).setText(supermarket);
+    private void setTextInTextViews() {
+        ((TextView) findViewById(R.id.supermarket)).setText(receipt.getSupermarket());
         ((TextView) findViewById(R.id.retailer)).setText(receipt.getRetailer());
         ((TextView) findViewById(R.id.address)).setText(receipt.getAddress());
-        String finalPrice = String.valueOf(receipt.getFinalPrice());
-        editTextFinalPrice.setText(finalPrice);
+        editTextFinalPrice.setText(String.valueOf(receipt.getFinalPrice()));
+    }
 
+    private void setPurchasesListView() {
         adapter = new PurchasesAdapter(NewReceiptActivity.this, purchases);
         listView = findViewById(R.id.list_view);
         listView.setAdapter(adapter);
-        findViewById(R.id.euro_sign).setVisibility(View.VISIBLE);
+    }
 
+    private void setButtonOk() {
         Button buttonOk = findViewById(R.id.button_ok);
         buttonOk.setVisibility(View.VISIBLE);
         buttonOk.setOnClickListener(buttonOkListener);
+    }
 
+    private void setButtonCancel() {
         Button buttonCancel = findViewById(R.id.button_cancel);
         buttonCancel.setVisibility(View.VISIBLE);
         buttonCancel.setOnClickListener(v -> {
@@ -124,6 +138,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             startActivity(mainActivityIntent);
         });
     }
+
 
     private void askUserForHelp() {
         String[] items = new String[]{MAXIMA, RIMI, SELVER, PRISMA, KONSUM};
