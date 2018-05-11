@@ -28,7 +28,14 @@ public class Purchase {
     }
 
     public static boolean purchase(String string, String notPurchase){
+        if (percentOfLetters(string) < 0.7)
+            return false;
         return !similar(string, notPurchase, MAKE_EQUAL);
+    }
+
+    private static float percentOfLetters(String string) {
+        int letters = string.replaceAll("\\d", "").length();
+        return letters/string.length();
     }
 
     private void extractPrice(String[] items) {

@@ -16,20 +16,26 @@ public class StringFilter {
     public static Object[] filter(ArrayList<String> l) {
         StringFilter.list = l;
         String string = toString(list);
-        string = string.toLowerCase();
-        builder = new StringBuilder(string);
-        filterCharSet();
-        removeSpaces();
-        removeWrecks();
-        string = builder.toString();
-        return new Object[]{string.split("\\n"), list};
+        if (string != null) {
+            string = string.toLowerCase();
+            builder = new StringBuilder(string);
+            filterCharSet();
+            removeSpaces();
+            removeWrecks();
+            string = builder.toString();
+            return new Object[]{string.split("\\n"), list};
+        }
+        return null;
     }
 
     private static String toString(ArrayList<String> list) {
-        String result = "";
-        for(String string : list)
-            result += string + "\n";
-        return result;
+        if (list != null) {
+            String result = "";
+            for(String string : list)
+                result += string + "\n";
+            return result;
+        }
+        return null;
     }
 
     private static void filterCharSet() {

@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
@@ -18,6 +19,7 @@ public class RimiReceipt extends Receipt {
         super(lines);
         purchasesStart = 6;
         purchasesEnd = endLine(new String[]{"sinusoodustused", "kaardimakse"}, false);
+        Log.d(TAG, "purchases end: " + purchasesEnd);
         setPrice(new String[]{"kaardimakse", "kokku", "eur", "summa", "kokkueur", "kaardimakseeur", "kokkukaardimakseeur"});
     }
 

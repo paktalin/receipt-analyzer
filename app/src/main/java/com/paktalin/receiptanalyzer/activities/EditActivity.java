@@ -45,14 +45,24 @@ public class EditActivity extends AppCompatActivity{
             if (bitmap != null)
                 image.setImageBitmap(bitmap);
             else {
-                Toast toast = Toast.makeText(EditActivity.this, "Sorry, we faced a memory error. Please, try again", Toast.LENGTH_LONG);
-                toast.show();
+                showToast("Sorry, we faced a memory error. Please, try again");
+                startMainActivity();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast toast = Toast.makeText(this, "Sorry, an error occured while loading your image. Try again, please", Toast.LENGTH_SHORT);
-            toast.show();
+            showToast("Sorry, an error occured while loading your image.");
+            startMainActivity();
         }
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(EditActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void showToast(String message) {
+        Toast toast = Toast.makeText(EditActivity.this, message, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     View.OnClickListener buttonRotateListener = new View.OnClickListener() {

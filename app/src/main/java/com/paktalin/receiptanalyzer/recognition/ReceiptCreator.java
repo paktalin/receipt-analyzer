@@ -46,8 +46,10 @@ class ReceiptCreator {
 
     private static void setFilteredAndInitialLines() {
         Object[] object = StringFilter.filter(list);
-        filteredLines = (String[]) object[0];
-        initialLines = (ArrayList<String>) object[1];
+        if (object != null) {
+            filteredLines = (String[]) object[0];
+            initialLines = (ArrayList<String>) object[1];
+        }
     }
 
     private static void initializeReceiptWithSupermarket() {
