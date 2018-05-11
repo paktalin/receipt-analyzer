@@ -33,32 +33,39 @@ public class Purchase {
 
     private void extractPrice(String[] items) {
         for (int i = items.length - 1; i >= 0; i--) {
-            price = cast(items[i]);
-            Log.d(TAG, String.valueOf(price));
+            price = tryCastToFloat(items[i]);
             if (price != 0) {
-                if (price >= 100)
-                    price = price/100;
-                else if (price >= 10)
-                    price = price/10;
+                reducePriceIfNecessary();
                 return;
             }
         }
     }
 
-    private static float cast(String string) {
+    private void reducePriceIfNecessary() {
+        if (price >= 100)
+            price = price/100;
+        else if (price >= 10)
+            price = price/10;
+    }
+
+
+    private static float tryCastToFloat(String string) {
         try {
             return Float.parseFloat(string);
         } catch (NumberFormatException e) {
-            string = string.replaceAll("o", "0");
-            string = string.replaceAll("g", "9");
-            string = string.replaceAll(" ", "");
-            string = StringManager.removeLetters(string);
-            Log.d(TAG, "casting results: " + string);
+            replaceSimilarLettersWithNumbers(string);
             try {
                 return Float.parseFloat(string);
             } catch (NumberFormatException ignored){}
         }
         return 0;
+    }
+
+    private static String replaceSimilarLettersWithNumbers(String string) {
+        string = string.replaceAll("o", "0");
+        string = string.replaceAll("g", "9");
+        string = string.replaceAll(" ", "");
+        return StringManager.removeLetters(string);
     }
 
     private void setCategory(Context context, String string) {
@@ -72,12 +79,6 @@ public class Purchase {
                 break;
             }
         }
-    }
-
-    public void purchaseInfo(){
-        Log.d(TAG, "title: " + title +
-                "; price: " + price +
-                "; category: " + category + "\n");
     }
 
     public String getTitle() {
