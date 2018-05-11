@@ -73,7 +73,7 @@ public class StringManager {
         try {
             f = Float.parseFloat(string);
         } catch (NumberFormatException e) {
-            if (string.length() > 2)
+            if (string.length() > flagLength - 2)
                 string = string.substring(flagLength - 2);
             string = string.replaceAll("o", "0");
             string = string.replaceAll(" ", "");

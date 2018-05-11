@@ -22,7 +22,9 @@ class LineSorter {
     static ArrayList<String> toTextLines(SparseArray<TextBlock> textBlocks) {
         lines = extractData(textBlocks);
         lines = sortLines();
-        return gluedLines();
+        if (lines != null)
+            return gluedLines();
+        else return null;
     }
 
     static private ArrayList<Line> extractData(SparseArray<TextBlock> textBlocks) {
@@ -45,12 +47,14 @@ class LineSorter {
             sumHeights += line.getHeight();
             treeMap.put(createKey(line.getTop(), line.getLeft()), line);
         }
-        height = sumHeights/lines.size();
-        lines.clear();
-        for(Map.Entry entry : treeMap.entrySet()) {
-            lines.add((Line)entry.getValue());
-        }
-        return lines;
+        if (lines.size() != 0) {
+            height = sumHeights/lines.size();
+            lines.clear();
+            for(Map.Entry entry : treeMap.entrySet()) {
+                lines.add((Line)entry.getValue());
+            }
+            return lines;
+        } else return null;
     }
 
     static private ArrayList<String> gluedLines() {
