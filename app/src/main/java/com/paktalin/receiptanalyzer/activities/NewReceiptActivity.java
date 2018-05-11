@@ -126,19 +126,14 @@ public class NewReceiptActivity extends AppCompatActivity {
     private void showDialogNoPurchases() {
         AlertDialog.Builder builder = new AlertDialog.Builder(NewReceiptActivity.this);
         builder.setTitle("Unfortunately, we couldn't read the purchases");
-        builder.setMessage("Would you like to add them manually or delete the receipt?");
+        builder.setMessage("Would you like to add them manually or dismiss the receipt?");
         builder.setPositiveButton("Add manually", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-        builder.setNegativeButton("Delete receipt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startMainActivity();
-            }
-        });
+        builder.setNegativeButton("Dismiss receipt", (dialog, which) -> startMainActivity());
         builder.create().show();
     }
 
