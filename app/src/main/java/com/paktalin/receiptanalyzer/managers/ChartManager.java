@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.util.Log;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -81,25 +80,34 @@ public class ChartManager {
         String query = "SELECT " + selection + " FROM " + TABLE_NAME_RECEIPT + " WHERE " + COLUMN_DATE_RECEIPT + " BETWEEN "
                 + from + " AND " + to;
         Cursor cursor = db.rawQuery(query, null);
-        int priceIndex = cursor.getColumnIndex(COLUMN_FINAL_PRICE);
-        int dateIndex = cursor.getColumnIndex(COLUMN_DATE_RECEIPT);
-        int supermarketIndex = cursor.getColumnIndex(COLUMN_SUPERMARKET);
-        createExpensesInPeriod();
+        createExpensesInSelectedPeriod();
         while (cursor.moveToNext()) {
-            String keyExpenses = sdf.format(new Date(cursor.getLong(dateIndex)));
-            String keySupermarkets = cursor.getString(supermarketIndex);
-            Float value = cursor.getFloat(priceIndex);
-            expenses.put(keyExpenses, value + expenses.get(keyExpenses));
-            overall += value;
-            if (supermarkets.containsKey(keySupermarkets))
-                supermarkets.put(keySupermarkets, supermarkets.get(keySupermarkets) + cursor.getFloat(priceIndex));
-            else
-                supermarkets.put(keySupermarkets, cursor.getFloat(priceIndex));
+            Float price = cursor.getFloat(cursor.getColumnIndex(COLUMN_FINAL_PRICE));
+            addToOverall(price);
+            addToSupermarkets(cursor, cursor.getColumnIndex(COLUMN_SUPERMARKET), cursor.getColumnIndex(COLUMN_FINAL_PRICE));
+            addToExpenses(cursor, cursor.getColumnIndex(COLUMN_DATE_RECEIPT), price);
         }
         cursor.close();
     }
 
-    private void createExpensesInPeriod() {
+    private void addToSupermarkets(Cursor cursor, int supermarketIndex, float value) {
+        String keySupermarkets = cursor.getString(supermarketIndex);
+        if (supermarkets.containsKey(keySupermarkets))
+            supermarkets.put(keySupermarkets, supermarkets.get(keySupermarkets) + value);
+        else
+            supermarkets.put(keySupermarkets, value);
+    }
+
+    private void addToOverall(float value) {
+        overall += value;
+    }
+
+    private void addToExpenses(Cursor cursor, int dateIndex, float value) {
+        String keyExpenses = sdf.format(new Date(cursor.getLong(dateIndex)));
+        expenses.put(keyExpenses, value + expenses.get(keyExpenses));
+    }
+
+    private void createExpensesInSelectedPeriod() {
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
 
