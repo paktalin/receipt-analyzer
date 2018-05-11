@@ -77,38 +77,35 @@ public class FileManager {
         }
     }
 
-    private static Bitmap decodeBitmapUri(Context ctx, Uri uri, int scaleFactor) throws Exception {
+    private static Bitmap decodeBitmapUri(Context ctx, Uri uri, int scaleFactor) {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         try {
             return BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(uri),
                     null, bmOptions);
-        } catch (OutOfMemoryError error) {
+        } catch (OutOfMemoryError | FileNotFoundException error) {
+            error.printStackTrace();
             return null;
         }
     }
 
-    public static Bitmap decodeBitmapUriLight(Context ctx, Uri uri) throws Exception {
+    public static Bitmap decodeBitmapUriLight(Context ctx, Uri uri) {
         return decodeBitmapUri(ctx, uri, 6);
     }
 
-    private static Bitmap decodeBitmapUri(Context context, Uri uri) throws Exception {
+    private static Bitmap decodeBitmapUri(Context context, Uri uri) {
         return decodeBitmapUri(context, uri, calculateScaleFactor(context, uri));
     }
 
     public static Bitmap decodeBitmapUri_Rotate(int rotation, Uri uri, Context context) {
-        Bitmap bitmap;
-        try {
-            bitmap = FileManager.decodeBitmapUri(context, uri);
-            Matrix matrix = new Matrix();
-            matrix.postRotate(rotation);
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        Bitmap bitmap = FileManager.decodeBitmapUri(context, uri);
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        if (bitmap == null)
+            bitmap = decodeBitmapUri(context, uri, 4);
         return bitmap;
     }
 
