@@ -45,8 +45,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     EditText editTextFinalPrice;
     SQLiteDatabase db;
     Purchase[] purchases;
-    long firstPurchaseID;
-    long currentDate;
+    long firstPurchaseID, currentDate;
     Bitmap bitmap = null;
 
     @Override
@@ -89,8 +88,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             } else {
                 Toast toast = Toast.makeText(NewReceiptActivity.this, errorMessage, Toast.LENGTH_LONG);
                 toast.show();
-                Intent intent = new Intent(NewReceiptActivity.this, MainActivity.class);
-                startActivity(intent);
+                startMainActivity();
             }
         }
     }
@@ -139,11 +137,15 @@ public class NewReceiptActivity extends AppCompatActivity {
         builder.setNegativeButton("Delete receipt", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(NewReceiptActivity.this, MainActivity.class);
-                startActivity(intent);
+                startMainActivity();
             }
         });
         builder.create().show();
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(NewReceiptActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void setButtonOk() {
@@ -156,9 +158,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         Button buttonCancel = findViewById(R.id.button_cancel);
         buttonCancel.setVisibility(View.VISIBLE);
         buttonCancel.setOnClickListener(v -> {
-            Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
-            mainActivityIntent.putExtra("position", 1);
-            startActivity(mainActivityIntent);
+            startMainActivity();
         });
     }
 
@@ -185,17 +185,15 @@ public class NewReceiptActivity extends AppCompatActivity {
         db = dbHelper.getWritableDatabase();
         for (int i = 0; i < adapter.getCount(); i++)
             if (!savePurchases(i)) {
-                Toast toast = Toast.makeText(NewReceiptActivity.this, "Something went wrong!", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(NewReceiptActivity.this, "Unfortunately, we couldn't save purchases data.", Toast.LENGTH_LONG);
                 toast.show();
                 return;
             }
         if (!saveReceipt()) {
-            Toast toast = Toast.makeText(NewReceiptActivity.this, "The app's Database has changed. Update your app, please!", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(NewReceiptActivity.this, "Unfortunately, we couldn't save receipt data.", Toast.LENGTH_LONG);
             toast.show();
         }
-        Intent mainActivityIntent = new Intent(NewReceiptActivity.this, MainActivity.class);
-        mainActivityIntent.putExtra("position", 1);
-        startActivity(mainActivityIntent);
+        startMainActivity();
     };
 
     private boolean saveReceipt() {
