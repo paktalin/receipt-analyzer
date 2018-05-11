@@ -6,7 +6,7 @@ import android.util.Log;
 import com.paktalin.receiptanalyzer.managers.StringManager;
 
 import static com.paktalin.receiptanalyzer.managers.FileManager.getStringFromTextFile;
-import static com.paktalin.receiptanalyzer.managers.StringManager.CUT_FIRST;
+import static com.paktalin.receiptanalyzer.managers.StringManager.MAKE_EQUAL;
 import static com.paktalin.receiptanalyzer.managers.StringManager.similar;
 
 /**
@@ -20,16 +20,15 @@ public class Purchase {
     private String category = null;
     private float price = 0;
 
+    public Purchase() {}
     public Purchase(Context context, String line, String initial) {
         title = initial;
         setCategory(context, line);
         extractPrice(line.split(" "));
     }
 
-    public Purchase() {}
-
     public static boolean purchase(String string, String notPurchase){
-        return !similar(string, notPurchase, CUT_FIRST);
+        return !similar(string, notPurchase, MAKE_EQUAL);
     }
 
     private void extractPrice(String[] items) {
@@ -37,19 +36,33 @@ public class Purchase {
             Log.d(TAG, "what we're trying to cast: " + items[i]);
             price = tryCastToFloat(items[i]);
             if (price != 0) {
-                reducePriceIfNecessary();
+                if (tooBig(price) && isInt(price)) {
+                    try {
+                        price = tryToReduce(items[i-1]);
+                    } catch (IndexOutOfBoundsException ignored) {}
+                }
                 return;
             }
         }
     }
 
-    private void reducePriceIfNecessary() {
-        if (price >= 100)
-            price = price/100;
-        else if (price >= 10)
-            price = price/10;
+    private boolean isInt(float f) {
+        return f % 1 == 0;
     }
 
+    private float tryToReduce(String previous) {
+        int intPrice = (int) price;
+        int intPrevious = (int) tryCastToFloat(previous);
+
+        float joined = tryCastToFloat(intPrevious + "." + intPrice);
+        if (!tooBig(joined))
+            return joined;
+        return price;
+    }
+
+    private boolean tooBig(float number) {
+        return number > 10;
+    }
 
     private static float tryCastToFloat(String string) {
         try {
