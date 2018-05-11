@@ -1,7 +1,7 @@
 package com.paktalin.receiptanalyzer.activities;
 
 import android.content.ContentValues;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -86,7 +85,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 if (receipt != null)
                     showReceipt();
                 else
-                    askUserForHelp();
+                    showDialogChooseSupermarket();
             } else {
                 Toast toast = Toast.makeText(NewReceiptActivity.this, errorMessage, Toast.LENGTH_LONG);
                 toast.show();
@@ -118,9 +117,33 @@ public class NewReceiptActivity extends AppCompatActivity {
     }
 
     private void setPurchasesListView() {
-        adapter = new PurchasesAdapter(NewReceiptActivity.this, purchases);
-        listView = findViewById(R.id.list_view);
-        listView.setAdapter(adapter);
+        if (purchases.length != 0) {
+            adapter = new PurchasesAdapter(NewReceiptActivity.this, purchases);
+            listView = findViewById(R.id.list_view);
+            listView.setAdapter(adapter);
+        } else {
+            showDialogNoPurchases();
+        }
+    }
+
+    private void showDialogNoPurchases() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(NewReceiptActivity.this);
+        builder.setTitle("Unfortunately, we couldn't read the purchases");
+        builder.setMessage("Would you like to add them manually or delete the receipt?");
+        builder.setPositiveButton("Add manually", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setNegativeButton("Delete receipt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(NewReceiptActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        builder.create().show();
     }
 
     private void setButtonOk() {
@@ -140,7 +163,7 @@ public class NewReceiptActivity extends AppCompatActivity {
     }
 
 
-    private void askUserForHelp() {
+    private void showDialogChooseSupermarket() {
         String[] items = new String[]{MAXIMA, RIMI, SELVER, PRISMA, KONSUM};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(NewReceiptActivity.this);
