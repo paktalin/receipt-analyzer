@@ -1,7 +1,6 @@
 package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
@@ -32,12 +31,12 @@ public class RimiReceipt extends Receipt {
     }
 
     @Override
-    void calculateFinalPrice() {
+    void calculateFinalPrice(String priceFlag) {
         for (int i = lines.length - 1; i > purchasesEnd; i--) {
-            String line = lines[i];
             try {
+                String line = lines[i];
                 if (StringManager.similar(line, priceFlag, StringManager.MAKE_EQUAL)) {
-                    finalPrice = StringManager.extractFloat(line, priceFlag.length());
+                    finalPrice = StringManager.extractFinalPriceFloat(line, priceFlag.length());
                     break;
                 }
             } catch (StringIndexOutOfBoundsException ignored) {}

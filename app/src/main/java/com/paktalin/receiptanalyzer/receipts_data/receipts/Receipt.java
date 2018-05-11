@@ -20,7 +20,6 @@ public class Receipt {
     private String retailer, address;
     int purchasesStart, purchasesEnd;
     float finalPrice = -1;
-    String priceFlag;
     Purchase[] purchases;
     ArrayList<String> initialLines;
     private long date;
@@ -79,22 +78,18 @@ public class Receipt {
     void setPrice(String[] priceFlags) {
         for (String flag : priceFlags)
             if (finalPrice == -1) {
-                priceFlag = flag;
-                calculateFinalPrice();
+                calculateFinalPrice(flag);
             }
         if (finalPrice == -1)
             finalPrice = 0;
     }
 
-    void calculateFinalPrice() {
-        for (String line : lines) {
-            try {
-                if (StringManager.similar(line, priceFlag, MAKE_EQUAL)) {
-                    finalPrice = StringManager.extractFloat(line, priceFlag.length());
+    void calculateFinalPrice(String priceFlag) {
+        for (String line : lines)
+            if (StringManager.similar(line, priceFlag, MAKE_EQUAL)) {
+                    finalPrice = StringManager.extractFinalPriceFloat(line, priceFlag.length());
                     break;
-                }
-            } catch (StringIndexOutOfBoundsException ignored) {}
-        }
+            }
     }
 
     public void setRetailer(String retailer) {

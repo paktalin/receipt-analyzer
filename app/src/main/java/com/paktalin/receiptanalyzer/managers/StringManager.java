@@ -68,12 +68,13 @@ public class StringManager {
         return similarity(strings[0], strings[1]) < 0.17;
     }
 
-    public static float extractFloat(String string, int flagLength) {
+    public static float extractFinalPriceFloat(String string, int flagLength) {
         float f = -1;
         try {
             f = Float.parseFloat(string);
         } catch (NumberFormatException e) {
-            string = string.substring(flagLength - 2);
+            if (string.length() > 2)
+                string = string.substring(flagLength - 2);
             string = string.replaceAll("o", "0");
             string = string.replaceAll(" ", "");
             string = removeLetters(string);

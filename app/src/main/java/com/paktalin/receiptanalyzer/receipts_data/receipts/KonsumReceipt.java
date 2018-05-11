@@ -16,7 +16,6 @@ public class KonsumReceipt extends Receipt {
         Log.d(TAG, Arrays.toString(lines));
         purchasesStart = 10;
         purchasesEnd = endLine(new String[]{"maksta"}, true);
-        priceFlag = "maksta";
         setPrice(new String[]{"makstudkaardimakse", "maksta"});
     }
 }

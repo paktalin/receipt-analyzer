@@ -24,7 +24,7 @@ public class SelverReceipt extends Receipt {
         Log.d(TAG, "lines:\n" + Arrays.toString(lines));
         purchasesStart = startLine("nimetuskogushindsumma", 7);
         purchasesEnd = endLine("vahesumma", true);
-        calculateFinalPrice();
+        //calculateFinalPrice();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class SelverReceipt extends Receipt {
     }
 
     @Override
-    void calculateFinalPrice() {
+    void calculateFinalPrice(String priceFlag) {
         finalPrice = getPayment("maksekaart", SIMILAR);
         if(finalPrice < 0) {
             finalPrice = getPayment("CASH_PAYMENT", SIMILAR);
@@ -58,7 +58,7 @@ public class SelverReceipt extends Receipt {
                 if (StringManager.similarity(cut, payment) < similarity) {
                     if (cardPayment)
                         byCard = true;
-                    price = StringManager.extractFloat(line, payment.length());
+                    price = StringManager.extractFinalPriceFloat(line, payment.length());
                     break;
                 }
             }catch (StringIndexOutOfBoundsException ignored) {
