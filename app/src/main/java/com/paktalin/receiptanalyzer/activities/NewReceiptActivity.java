@@ -97,8 +97,6 @@ public class NewReceiptActivity extends AppCompatActivity {
         String supermarket = receipt.getSupermarket();
         receipt.extractPurchases(NewReceiptActivity.this);
         purchases = receipt.getPurchases();
-        for (Purchase p : purchases)
-            p.purchaseInfo();
 
         ((TextView) findViewById(R.id.supermarket)).setText(supermarket);
         ((TextView) findViewById(R.id.retailer)).setText(receipt.getRetailer());

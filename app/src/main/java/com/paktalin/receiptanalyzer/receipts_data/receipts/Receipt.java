@@ -6,6 +6,7 @@ import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import java.util.ArrayList;
+import static com.paktalin.receiptanalyzer.managers.StringManager.MAKE_EQUAL;
 
 /**
  * Created by Paktalin on 08/04/2018.
@@ -37,7 +38,7 @@ public class Receipt {
 
     int startLine(String startString, int number) {
         //TODO check other lines if startLine isn't found
-        if (StringManager.similar(lines[number], startString, true))
+        if (StringManager.similar(lines[number], startString, MAKE_EQUAL))
             return number + 1;
         return -1;
     }
@@ -48,7 +49,7 @@ public class Receipt {
             if (removeNumbers)
                 line = StringManager.clean(line);
                 line = StringManager.removeNumbers(line);
-            if (StringManager.similar(line, endLine, true))
+            if (StringManager.similar(line, endLine, MAKE_EQUAL))
                 return i - 1;
         }
         return lines.length - 1;
@@ -60,7 +61,7 @@ public class Receipt {
                 String line = StringManager.clean(lines[i]);
                 if (removeNumbers)
                     line = StringManager.removeNumbers(line);
-                if (StringManager.similar(line, endLine, true))
+                if (StringManager.similar(line, endLine, MAKE_EQUAL))
                     return i - 1;
             }
         return -1;
@@ -78,7 +79,7 @@ public class Receipt {
     void calculateFinalPrice() {
         for (String line : lines) {
             try {
-                if (StringManager.similar(line, priceFlag, true)) {
+                if (StringManager.similar(line, priceFlag, MAKE_EQUAL)) {
                     finalPrice = StringManager.extractFloat(line, priceFlag.length());
                     break;
                 }

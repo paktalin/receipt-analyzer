@@ -44,7 +44,7 @@ public class SupermarketInfo {
 
         for (int i = 0; i < firstLines.length; i++) {
             String fL = firstLines[i];
-            if (StringManager.similar(firstLine, fL, false)){
+            if (StringManager.similar(firstLine, fL, StringManager.NO_CUT)){
                 index = i;
                 return;
             }

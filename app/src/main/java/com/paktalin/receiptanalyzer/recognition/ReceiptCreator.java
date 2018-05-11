@@ -8,6 +8,8 @@ import com.paktalin.receiptanalyzer.receipts_data.receipts.*;
 
 import java.util.ArrayList;
 
+import static com.paktalin.receiptanalyzer.managers.StringManager.MAKE_EQUAL;
+import static com.paktalin.receiptanalyzer.managers.StringManager.NO_CUT;
 import static com.paktalin.receiptanalyzer.managers.StringManager.identical;
 import static com.paktalin.receiptanalyzer.managers.StringManager.similar;
 import static com.paktalin.receiptanalyzer.Supermarkets.*;
@@ -34,7 +36,7 @@ class ReceiptCreator {
         setFilteredAndInitialLines();
         String firstLine = StringManager.clean(filteredLines[0]);
         setStoreName(firstLine);
-        initializeReceipt();
+        initializeReceiptWithSupermarket();
         if (receipt != null) {
             receipt.setSupermarket(supermarket);
             receipt.setInitialLines(initialLines);
@@ -48,7 +50,7 @@ class ReceiptCreator {
         initialLines = (ArrayList<String>) object[1];
     }
 
-    private static void initializeReceipt() {
+    private static void initializeReceiptWithSupermarket() {
         if (supermarket != null) {
             switch (supermarket) {
                 case SELVER:
@@ -112,7 +114,7 @@ class ReceiptCreator {
     }
 
     private static boolean checkFor(String supermarketString, String supermarket) {
-        if (identical(input, supermarketString)) {
+        if (identical(input, supermarketString, StringManager.MAKE_EQUAL)) {
             ReceiptCreator.supermarket = supermarket;
             return true;
         } else
@@ -121,21 +123,22 @@ class ReceiptCreator {
     private static void checkForPrisma() {
         String prismaString = "prismaperemarketas";
         String inputCut = input.substring(0, 18);
-        if (identical(inputCut, prismaString))
+        if (identical(inputCut, prismaString, MAKE_EQUAL))
             supermarket = "Prisma";
     }
     private static void checkForSelver() {
         String selverString = "selver";
         int length = input.length();
         String inputCut = input.substring(length - 6, length);
-        if (similar(inputCut, selverString, false))
+        if (similar(inputCut, selverString, NO_CUT))
             supermarket = "Selver";
     }
 
     static Receipt createReceipt(ArrayList<String> list, String supermarket) {
+        ReceiptCreator.list = list;
         ReceiptCreator.supermarket = supermarket;
         setFilteredAndInitialLines();
-        initializeReceipt();
+        initializeReceiptWithSupermarket();
         receipt.setSupermarket(supermarket);
         receipt.setInitialLines(initialLines);
         Log.d(TAG, String.valueOf(initialLines));

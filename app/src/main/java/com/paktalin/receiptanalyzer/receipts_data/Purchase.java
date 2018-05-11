@@ -6,6 +6,7 @@ import android.util.Log;
 import com.paktalin.receiptanalyzer.managers.StringManager;
 
 import static com.paktalin.receiptanalyzer.managers.FileManager.getStringFromTextFile;
+import static com.paktalin.receiptanalyzer.managers.StringManager.CUT_FIRST;
 import static com.paktalin.receiptanalyzer.managers.StringManager.similar;
 
 /**
@@ -28,11 +29,12 @@ public class Purchase {
     public Purchase() {}
 
     public static boolean purchase(String string, String notPurchase){
-        return !similar(string, notPurchase, true);
+        return !similar(string, notPurchase, CUT_FIRST);
     }
 
     private void extractPrice(String[] items) {
         for (int i = items.length - 1; i >= 0; i--) {
+            Log.d(TAG, "what we're trying to cast: " + items[i]);
             price = tryCastToFloat(items[i]);
             if (price != 0) {
                 reducePriceIfNecessary();

@@ -48,7 +48,7 @@ public class RimiReceipt extends Receipt {
         for (int i = lines.length - 1; i > purchasesEnd; i--) {
             String line = lines[i];
             try {
-                if (StringManager.similar(line, priceFlag, true)) {
+                if (StringManager.similar(line, priceFlag, StringManager.MAKE_EQUAL)) {
                     finalPrice = StringManager.extractFloat(line, priceFlag.length());
                     break;
                 }

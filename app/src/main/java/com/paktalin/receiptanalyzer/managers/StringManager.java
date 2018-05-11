@@ -9,6 +9,10 @@ import com.paktalin.receiptanalyzer.recognition.similarity.JaroWinkler;
 public class StringManager {
     private static final String TAG = StringManager.class.getSimpleName();
 
+    public static final int NO_CUT = 0;
+    public static final int CUT_FIRST = 1;
+    public static final int MAKE_EQUAL = 2;
+
     public static String clean(String string) {
         string = string.replaceAll(" ", "");
         string = string.replaceAll("\\.", "");
@@ -29,15 +33,39 @@ public class StringManager {
         return distance;
     }
 
-    public static boolean identical(String input, String expectedString) {
-        return similarity(input, expectedString) < 0.07;
+    private static String cutFirst(String cutThis, String toLengthOf) {
+        if (cutThis.length() > toLengthOf.length())
+            return cutThis.substring(0, toLengthOf.length());
+        else return cutThis;
     }
 
-    public static boolean similar(String input, String expectedString, boolean toCut) {
-        if (toCut)
-            if (input.length() > expectedString.length())
-                input = input.substring(0, expectedString.length());
-        return similarity(input, expectedString) < 0.17;
+    private static String[] makeEqualLength(String string1, String string2) {
+        if (string1.length() > string2.length())
+            return new String[]{string1.substring(0, string2.length()), string2};
+        if (string2.length() > string1.length())
+            return new String[]{string1, string2.substring(0, string1.length())};
+        else return new String[]{string1, string2};
+    }
+
+    private static String[] cut(String string1, String string2, int cutHowMuch) {
+        switch (cutHowMuch) {
+            case CUT_FIRST:
+                return new String[]{cutFirst(string1, string2), string2};
+            case MAKE_EQUAL:
+                return makeEqualLength(string1, string2);
+            default:
+                return new String[]{string1, string2};
+        }
+    }
+
+    public static boolean identical(String input, String expectedString, int cutHowMuch) {
+        String[] strings = cut(input, expectedString, cutHowMuch);
+        return similarity(strings[0], strings[1]) < 0.07;
+    }
+
+    public static boolean similar(String input, String expectedString, int cutHowMuch) {
+        String[] strings = cut(input, expectedString, cutHowMuch);
+        return similarity(strings[0], strings[1]) < 0.17;
     }
 
     public static float extractFloat(String string, int flagLength) {

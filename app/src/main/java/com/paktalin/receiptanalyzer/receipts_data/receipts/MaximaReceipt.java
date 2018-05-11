@@ -23,8 +23,7 @@ public class MaximaReceipt extends Receipt {
     int startLine(String startString, int number) {
         String string = lines[number];
         string = string.substring(0, 10);
-        Log.d(TAG, "cut string: " + string);
-        if (StringManager.identical(string, startString))
+        if (StringManager.identical(string, startString, StringManager.MAKE_EQUAL))
             return number + 1;
         return -1;
     }
