@@ -33,8 +33,10 @@ public class StringManager {
         return similarity(input, expectedString) < 0.07;
     }
 
-    public static boolean similar(String input, String expectedString) {
-        //Log.d(TAG, input + " " + expectedString + " = " + similarity(input, expectedString));
+    public static boolean similar(String input, String expectedString, boolean toCut) {
+        if (toCut)
+            if (input.length() > expectedString.length())
+                input = input.substring(0, expectedString.length());
         return similarity(input, expectedString) < 0.17;
     }
 

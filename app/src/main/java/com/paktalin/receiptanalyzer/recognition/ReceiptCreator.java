@@ -128,7 +128,7 @@ class ReceiptCreator {
         String selverString = "selver";
         int length = input.length();
         String inputCut = input.substring(length - 6, length);
-        if (similar(inputCut, selverString))
+        if (similar(inputCut, selverString, false))
             supermarket = "Selver";
     }
 

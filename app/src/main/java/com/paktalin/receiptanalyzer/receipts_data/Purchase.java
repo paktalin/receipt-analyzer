@@ -28,10 +28,7 @@ public class Purchase {
     public Purchase() {}
 
     public static boolean purchase(String string, String notPurchase){
-        if (string.length() > notPurchase.length()) {
-            string = string.substring(0, notPurchase.length());
-        }
-        return !similar(string, notPurchase);
+        return !similar(string, notPurchase, true);
     }
 
     private void extractPrice(String[] items) {

@@ -37,7 +37,7 @@ public class Receipt {
 
     int startLine(String startString, int number) {
         //TODO check other lines if startLine isn't found
-        if (StringManager.similar(lines[number], startString))
+        if (StringManager.similar(lines[number], startString, true))
             return number + 1;
         return -1;
     }
@@ -48,7 +48,7 @@ public class Receipt {
             if (removeNumbers)
                 line = StringManager.clean(line);
                 line = StringManager.removeNumbers(line);
-            if (StringManager.similar(line, endLine))
+            if (StringManager.similar(line, endLine, true))
                 return i - 1;
         }
         return lines.length - 1;
@@ -57,11 +57,10 @@ public class Receipt {
     int endLine(String[] endLines, boolean removeNumbers) {
         for (String endLine : endLines)
             for (int i = purchasesStart + 1; i < lines.length; i++) {
-                String line = lines[i];
+                String line = StringManager.clean(lines[i]);
                 if (removeNumbers)
-                    line = StringManager.clean(line);
-                line = StringManager.removeNumbers(line);
-                if (StringManager.similar(line, endLine))
+                    line = StringManager.removeNumbers(line);
+                if (StringManager.similar(line, endLine, true))
                     return i - 1;
             }
         return -1;
@@ -79,8 +78,7 @@ public class Receipt {
     void calculateFinalPrice() {
         for (String line : lines) {
             try {
-                String cut = line.substring(0, priceFlag.length());
-                if (StringManager.similar(cut, priceFlag)) {
+                if (StringManager.similar(line, priceFlag, true)) {
                     finalPrice = StringManager.extractFloat(line, priceFlag.length());
                     break;
                 }
