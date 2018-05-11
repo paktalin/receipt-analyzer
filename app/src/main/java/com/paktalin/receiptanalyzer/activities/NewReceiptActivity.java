@@ -86,8 +86,7 @@ public class NewReceiptActivity extends AppCompatActivity {
                 else
                     showDialogChooseSupermarket();
             } else {
-                Toast toast = Toast.makeText(NewReceiptActivity.this, errorMessage, Toast.LENGTH_LONG);
-                toast.show();
+                showToast(errorMessage);
                 startMainActivity();
             }
         }
@@ -148,6 +147,11 @@ public class NewReceiptActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void showToast(String message) {
+        Toast toast = Toast.makeText(NewReceiptActivity.this, message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
     private void setButtonOk() {
         Button buttonOk = findViewById(R.id.button_ok);
         buttonOk.setVisibility(View.VISIBLE);
@@ -185,14 +189,11 @@ public class NewReceiptActivity extends AppCompatActivity {
         db = dbHelper.getWritableDatabase();
         for (int i = 0; i < adapter.getCount(); i++)
             if (!savePurchases(i)) {
-                Toast toast = Toast.makeText(NewReceiptActivity.this, "Unfortunately, we couldn't save purchases data.", Toast.LENGTH_LONG);
-                toast.show();
+            showToast("Unfortunately, we couldn't save purchases data.");
                 return;
             }
-        if (!saveReceipt()) {
-            Toast toast = Toast.makeText(NewReceiptActivity.this, "Unfortunately, we couldn't save receipt data.", Toast.LENGTH_LONG);
-            toast.show();
-        }
+        if (!saveReceipt())
+            showToast("Unfortunately, we couldn't save receipt data.");
         startMainActivity();
     };
 
@@ -208,8 +209,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             float finalPrice = Float.parseFloat(String.valueOf(editTextFinalPrice.getText()));
             values.put(ReceiptEntry.COLUMN_FINAL_PRICE, finalPrice);
         } catch (Exception e) {
-            Toast toast = Toast.makeText(NewReceiptActivity.this, "Wrong mFormat of the final price!", Toast.LENGTH_LONG);
-            toast.show();
+            showToast("Wrong mFormat of the final price!");
             return false;
         }
         long newRowId = db.insert(ReceiptEntry.TABLE_NAME_RECEIPT, null, values);
