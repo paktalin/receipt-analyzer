@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.paktalin.receiptanalyzer.BuildConfig;
+import com.paktalin.receiptanalyzer.activities.EditActivity;
 import com.paktalin.receiptanalyzer.managers.FileManager;
 import com.paktalin.receiptanalyzer.R;
-import com.paktalin.receiptanalyzer.activities.EditActivity;
 
 import java.io.File;
 

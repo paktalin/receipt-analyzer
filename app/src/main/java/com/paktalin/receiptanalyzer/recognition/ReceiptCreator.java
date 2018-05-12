@@ -6,6 +6,7 @@ import com.paktalin.receiptanalyzer.StringFilter;
 import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.*;
 
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 
 import static com.paktalin.receiptanalyzer.managers.StringManager.MAKE_EQUAL;
@@ -115,12 +116,12 @@ class ReceiptCreator {
             checkForSelver();
     }
 
-    private static boolean checkFor(String supermarketString, String supermarket) {
-        if (identical(input, supermarketString, StringManager.MAKE_EQUAL)) {
+    private static boolean checkFor(String string, String supermarket) {
+        if (identical(input, string, StringManager.MAKE_EQUAL)) {
             ReceiptCreator.supermarket = supermarket;
             return true;
-        } else
-            return false;
+        }
+        return false;
     }
     private static void checkForPrisma() {
         String prismaString = "prismaperemarketas";

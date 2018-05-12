@@ -66,6 +66,7 @@ public class NewReceiptActivity extends AppCompatActivity {
             try {
                 bitmap = FileManager.decodeBitmapUri_Rotate(rotation, imageUri, NewReceiptActivity.this);
             } catch (OutOfMemoryError e) {
+
                 return "An error occured. Please, try again";
             }
             if (bitmap == null)
