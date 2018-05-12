@@ -1,13 +1,11 @@
 package com.paktalin.receiptanalyzer.activities;
 
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -20,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.paktalin.receiptanalyzer.managers.FileManager;
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.recognition.ReceiptRecognizer;
 import com.paktalin.receiptanalyzer.activities.adapters.PurchasesAdapter;
@@ -49,7 +46,6 @@ public class NewReceiptActivity extends AppCompatActivity {
     SQLiteDatabase db;
     Purchase[] purchases;
     long firstPurchaseID, currentDate;
-    Bitmap bitmap = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,44 +53,10 @@ public class NewReceiptActivity extends AppCompatActivity {
         setContentView(R.layout.activity_receipt);
         hideKeyboard();
         loadBitmap();
-        /*MyAsyncTask task = new MyAsyncTask();
-        task.execute();*/
     }
 
-    class MyAsyncTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            int rotation = getIntent().getIntExtra("rotation", 0);
-            Uri imageUri = getIntent().getParcelableExtra("uri");
-            try {
-                bitmap = FileManager.decodeBitmapUri_Rotate(rotation, imageUri, NewReceiptActivity.this);
-            } catch (OutOfMemoryError e) {
-
-                return "An error occured. Please, try again";
-            }
-            if (bitmap == null)
-                return "We couldn't load the image. Please, try again";
-            else {
-                receipt = ReceiptRecognizer.extract(NewReceiptActivity.this, bitmap);
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String errorMessage) {
-            findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
-            if (errorMessage == null) {
-                editTextFinalPrice = findViewById(R.id.final_price);
-                if (receipt != null)
-                    showReceipt();
-                else
-                    showDialogChooseSupermarket();
-            } else {
-                showToast(errorMessage);
-                startMainActivity();
-            }
-        }
+    private void hideKeyboard() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void loadBitmap() {
@@ -112,22 +74,20 @@ public class NewReceiptActivity extends AppCompatActivity {
     Target bitmapToReceiptTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            extractReceipt(bitmap);
+            extractReceiptFromBitmap(bitmap);
             updateViews();
         }
 
         @Override
         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-            showToast("We couldn't load the image.");
+            showToast("Unfortunately, we couldn't load the image.");
         }
 
         @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-        }
+        public void onPrepareLoad(Drawable placeHolderDrawable) { }
     };
 
-    private void extractReceipt(Bitmap bitmap) {
+    private void extractReceiptFromBitmap(Bitmap bitmap) {
         receipt = ReceiptRecognizer.extract(NewReceiptActivity.this, bitmap);
     }
 
@@ -139,20 +99,15 @@ public class NewReceiptActivity extends AppCompatActivity {
         else showDialogChooseSupermarket();
     }
 
-    private void hideKeyboard() {
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-    }
-
     private void showReceipt() {
-        extractReceiptData();
+        extractPurchases();
         setTextInTextViews();
-        findViewById(R.id.euro_sign).setVisibility(View.VISIBLE);
         setPurchasesListView();
         setButtonOk();
         setButtonCancel();
     }
 
-    private void extractReceiptData() {
+    private void extractPurchases() {
         receipt.extractPurchases(NewReceiptActivity.this);
         purchases = receipt.getPurchases();
     }
@@ -162,6 +117,7 @@ public class NewReceiptActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.retailer)).setText(receipt.getRetailer());
         ((TextView) findViewById(R.id.address)).setText(receipt.getAddress());
         editTextFinalPrice.setText(String.valueOf(receipt.getFinalPrice()));
+        findViewById(R.id.euro_sign).setVisibility(View.VISIBLE);
     }
 
     private void setPurchasesListView() {
@@ -172,20 +128,6 @@ public class NewReceiptActivity extends AppCompatActivity {
         } else {
             showDialogNoPurchases();
         }
-    }
-
-    private void showDialogNoPurchases() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(NewReceiptActivity.this);
-        builder.setTitle("Unfortunately, we couldn't read the purchases");
-        builder.setMessage("Would you like to add them manually or dismiss the receipt?");
-        builder.setPositiveButton("Add manually", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        builder.setNegativeButton("Dismiss receipt", (dialog, which) -> startMainActivity());
-        builder.create().show();
     }
 
     private void startMainActivity() {
@@ -212,6 +154,14 @@ public class NewReceiptActivity extends AppCompatActivity {
         });
     }
 
+    private void showDialogNoPurchases() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(NewReceiptActivity.this);
+        builder.setTitle("Unfortunately, we couldn't read the purchases");
+        builder.setMessage("Would you like to add them manually or dismiss the receipt?");
+        builder.setPositiveButton("Add manually", (dialog, which) -> {});
+        builder.setNegativeButton("Dismiss receipt", (dialog, which) -> startMainActivity());
+        builder.create().show();
+    }
 
     private void showDialogChooseSupermarket() {
         String[] items = new String[]{MAXIMA, RIMI, SELVER, PRISMA, KONSUM};
@@ -220,18 +170,18 @@ public class NewReceiptActivity extends AppCompatActivity {
         builder.setTitle("We couldn't identify the supermarket. Could you help us?");
         builder.setCancelable(true);
         builder.setSingleChoiceItems(items, -1, (dialog, which) -> {
-            receipt = ReceiptRecognizer.extract(NewReceiptActivity.this, items[which]);
+            tryToExtractReceipt(items[which]);
             dialog.dismiss();
-            if (receipt != null)
-                showReceipt();
-            else {
-                showToast("Unfortunately, we couldn't get any data. ");
-                showDialogNoPurchases();
-            }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
 
+    private void tryToExtractReceipt(String supermarket) {
+        receipt = ReceiptRecognizer.extract(NewReceiptActivity.this, supermarket);
+        if (receipt != null)
+            showReceipt();
+        else showDialogNoPurchases();
     }
 
     View.OnClickListener buttonOkListener = v -> {
