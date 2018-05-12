@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 import com.paktalin.receiptanalyzer.data.Contracts.*;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import static com.paktalin.receiptanalyzer.Supermarkets.*;
 
@@ -52,9 +55,10 @@ public class NewReceiptActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receipt);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        MyAsyncTask task = new MyAsyncTask();
-        task.execute();
+        hideKeyboard();
+        loadBitmap();
+        /*MyAsyncTask task = new MyAsyncTask();
+        task.execute();*/
     }
 
     class MyAsyncTask extends AsyncTask<Void, Void, String> {
@@ -91,6 +95,52 @@ public class NewReceiptActivity extends AppCompatActivity {
                 startMainActivity();
             }
         }
+    }
+
+    private void loadBitmap() {
+        int rotation = getIntent().getIntExtra("rotation", 0);
+        Uri imageUri = getIntent().getParcelableExtra("uri");
+        Picasso.get()
+                .load(imageUri)
+                .rotate(rotation)
+                .resize(1024, 1024)
+                .centerInside()
+                .onlyScaleDown()
+                .into(bitmapToReceiptTarget);
+    }
+
+    Target bitmapToReceiptTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            extractReceipt(bitmap);
+            updateViews();
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+            showToast("We couldn't load the image.");
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    };
+
+    private void extractReceipt(Bitmap bitmap) {
+        receipt = ReceiptRecognizer.extract(NewReceiptActivity.this, bitmap);
+    }
+
+    private void updateViews() {
+        findViewById(R.id.progress_bar).setVisibility(View.INVISIBLE);
+        editTextFinalPrice = findViewById(R.id.final_price);
+        if (receipt != null)
+            showReceipt();
+        else showDialogChooseSupermarket();
+    }
+
+    private void hideKeyboard() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void showReceipt() {
@@ -172,7 +222,12 @@ public class NewReceiptActivity extends AppCompatActivity {
         builder.setSingleChoiceItems(items, -1, (dialog, which) -> {
             receipt = ReceiptRecognizer.extract(NewReceiptActivity.this, items[which]);
             dialog.dismiss();
-            showReceipt();
+            if (receipt != null)
+                showReceipt();
+            else {
+                showToast("Unfortunately, we couldn't get any data. ");
+                showDialogNoPurchases();
+            }
         });
         AlertDialog dialog = builder.create();
         dialog.show();

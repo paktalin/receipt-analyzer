@@ -45,8 +45,12 @@ public class EditActivity extends AppCompatActivity{
     private void showImageView() {
         imageUri = getIntent().getParcelableExtra("uri");
         imageView = findViewById(R.id.image);
+
         Picasso.get()
                 .load(imageUri)
+                .resize(600, 600)
+                .centerInside()
+                .onlyScaleDown()
                 .into(imageView, callback);
     }
 

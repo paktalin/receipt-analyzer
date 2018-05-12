@@ -28,7 +28,8 @@ public class ReceiptRecognizer {
             if (receipt != null)
                 receipt = SupermarketInfo.setInfo(receipt, context);
             return receipt;
-        } else return null;
+        }
+        return null;
     }
 
 
@@ -48,9 +49,12 @@ public class ReceiptRecognizer {
     }
 
     public static Receipt extract(Context context, String supermarket) {
-        receipt = ReceiptCreator.createReceipt(lines, supermarket);
-        if (receipt != null)
-            receipt = SupermarketInfo.setInfo(receipt, context);
-        return receipt;
+        if (lines != null) {
+            receipt = ReceiptCreator.createReceipt(lines, supermarket);
+            if (receipt != null)
+                receipt = SupermarketInfo.setInfo(receipt, context);
+            return receipt;
+        }
+        return null;
     }
 }
