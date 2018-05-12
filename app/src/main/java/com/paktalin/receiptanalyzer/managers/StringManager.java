@@ -1,5 +1,7 @@
 package com.paktalin.receiptanalyzer.managers;
 
+import android.util.Log;
+
 import com.paktalin.receiptanalyzer.recognition.similarity.JaroWinkler;
 
 /**

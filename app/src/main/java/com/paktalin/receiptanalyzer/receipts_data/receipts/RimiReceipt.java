@@ -7,6 +7,7 @@ import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Paktalin on 22-Mar-18.
@@ -17,6 +18,7 @@ public class RimiReceipt extends Receipt {
 
     public RimiReceipt(String[] lines) {
         super(lines);
+        Log.d(TAG, Arrays.toString(lines));
         purchasesStart = 6;
         purchasesEnd = endLine(new String[]{"sinusoodustused", "kaardimakse"}, false);
         Log.d(TAG, "purchases end: " + purchasesEnd);
@@ -49,15 +51,9 @@ public class RimiReceipt extends Receipt {
     public void extractPurchases(Context context) {
         ArrayList<Purchase> purchases = new ArrayList<>();
         int beginning = -1;
-        String[] notPurchases = new String[] {"allah.", "www.rimi.ee", "klient944038XXXXXXXXX4461", "klient", "sinusoodustused", "oledsaastnud"};
         for (int i = purchasesStart; i <= purchasesEnd; i++) {
             String[] split = lines[i].split(" ");
-            boolean isPurchase = true;
-
-            for (String notPurchase : notPurchases)
-                if (!Purchase.purchase(split[0], notPurchase))
-                    isPurchase = false;
-            if (isPurchase) {
+            if (isPurchase(split[0])) {
                 if (!containsPrice(split))
                     beginning = i;
                 else {
@@ -71,6 +67,16 @@ public class RimiReceipt extends Receipt {
             }
         }
         this.purchases = purchases.toArray(new Purchase[purchases.size()]);
+    }
+
+    private boolean isPurchase(String string) {
+        String[] notPurchases = new String[]
+                {"allah.", "www.rimi.ee", "klient944038XXXXXXXXX4461", "klient", "sinusoodustused",
+                        "oledsaastnud", "muuk", "kviitung", "terminal"};
+        for (String notPurchase : notPurchases)
+            if (!Purchase.purchase(string, notPurchase))
+                return false;
+        return true;
     }
 
     private boolean containsPrice(String[] split) {

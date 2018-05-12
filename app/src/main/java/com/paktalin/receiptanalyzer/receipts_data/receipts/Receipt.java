@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer.receipts_data.receipts;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
@@ -63,7 +64,7 @@ public class Receipt {
                 if (StringManager.similar(line, endLine, MAKE_EQUAL))
                     return i - 1;
             }
-        return -1;
+        return lines.length - 1;
     }
 
     public void extractPurchases(Context context) {
@@ -138,4 +139,6 @@ public class Receipt {
     public long getID() {
         return ID;
     }
+
+
 }
