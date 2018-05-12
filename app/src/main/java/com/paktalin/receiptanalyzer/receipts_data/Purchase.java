@@ -1,7 +1,6 @@
 package com.paktalin.receiptanalyzer.receipts_data;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.paktalin.receiptanalyzer.managers.StringManager;
 
@@ -44,7 +43,7 @@ public class Purchase {
             if (price != 0) {
                 if (tooBig(price) && isInt(price)) {
                     try {
-                        price = tryToReduce(items[i-1]);
+                        price = tryToReducePrice(items[i-1]);
                     } catch (IndexOutOfBoundsException ignored) {}
                 }
                 return;
@@ -56,7 +55,7 @@ public class Purchase {
         return f % 1 == 0;
     }
 
-    private float tryToReduce(String previous) {
+    private float tryToReducePrice(String previous) {
         int intPrice = (int) price;
         int intPrevious = (int) tryCastToFloat(previous);
 

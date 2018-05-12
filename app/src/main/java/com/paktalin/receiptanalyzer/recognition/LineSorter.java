@@ -20,14 +20,14 @@ class LineSorter {
     private static int height;
 
     static ArrayList<String> toTextLines(SparseArray<TextBlock> textBlocks) {
-        lines = extractData(textBlocks);
+        lines = toLineArrayList(textBlocks);
         lines = sortLines();
         if (lines != null)
-            return gluedLines();
+            return glueLines();
         else return null;
     }
 
-    static private ArrayList<Line> extractData(SparseArray<TextBlock> textBlocks) {
+    static private ArrayList<Line> toLineArrayList(SparseArray<TextBlock> textBlocks) {
         TextBlock textBlock;
         ArrayList<Line> lines = new ArrayList<>();
         int size = textBlocks.size();
@@ -57,7 +57,7 @@ class LineSorter {
         } else return null;
     }
 
-    static private ArrayList<String> gluedLines() {
+    static private ArrayList<String> glueLines() {
         ArrayList<Line> toOneLine = new ArrayList<>();
         ArrayList<String> stringLines = new ArrayList<>();
         toOneLine.add(lines.get(0));
