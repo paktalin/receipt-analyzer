@@ -22,9 +22,9 @@ public class SelverReceipt extends Receipt {
     public SelverReceipt(String[] lines) {
         super(lines);
         Log.d(TAG, "lines:\n" + Arrays.toString(lines));
-        purchasesStart = startLine("nimetuskogushindsumma", 7);
+        purchasesStart = 8;
         purchasesEnd = endLine("vahesumma", true);
-        //calculateFinalPrice();
+        setPrice(new String[]{"maksekaart", "summa", "vahesumma"});
     }
 
     @Override
@@ -80,11 +80,20 @@ public class SelverReceipt extends Receipt {
         ArrayList<Purchase> purchases = new ArrayList<>();
         for (int i = purchasesStart; i <= purchasesEnd; i++) {
             String[] split = lines[i].split(" ");
-            if (Purchase.purchase(split[0], "pusikliendivoit")) {
+            if (isPurchase(split[0])) {
                 Purchase purchase = new Purchase(context, lines[i], initialLines.get(i));
                 purchases.add(purchase);
             }
         }
         this.purchases = purchases.toArray(new Purchase[purchases.size()]);
+    }
+
+    private boolean isPurchase(String string) {
+        String[] notPurchases = new String[]
+                {"nimetuskogushindsumma.", "pusikliendivoit"};
+        for (String notPurchase : notPurchases)
+            if (!Purchase.purchase(string, notPurchase))
+                return false;
+        return true;
     }
 }

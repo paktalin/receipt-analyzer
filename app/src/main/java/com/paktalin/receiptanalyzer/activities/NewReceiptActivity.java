@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -115,6 +116,8 @@ public class NewReceiptActivity extends AppCompatActivity {
     private void extractPurchases() {
         receipt.extractPurchases(NewReceiptActivity.this);
         purchases = receipt.getPurchases();
+        for (Purchase purchase : purchases)
+            purchase.logPurchase();
     }
 
     private void setTextInTextViews() {
