@@ -22,7 +22,7 @@ public class SelverReceipt extends Receipt {
     public SelverReceipt(String[] lines) {
         super(lines);
         Log.d(TAG, "lines:\n" + Arrays.toString(lines));
-        purchasesStart = 8;
+        purchasesStart = 7;
         purchasesEnd = endLine("vahesumma", true);
         setPrice(new String[]{"maksekaart", "summa", "vahesumma"});
     }
