@@ -25,7 +25,9 @@ public class PrismaReceipt extends Receipt {
 
     @Override
     public String cutRetailersLine(String line) {
-        return line.substring(18, line.length() - 6);
+        if (line.length() - 6 > 18)
+            return line.substring(18, line.length() - 6);
+        return line;
     }
 
     @Override

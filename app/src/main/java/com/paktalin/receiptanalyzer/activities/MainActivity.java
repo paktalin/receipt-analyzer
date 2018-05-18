@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.paktalin.receiptanalyzer.R;
 import com.paktalin.receiptanalyzer.activities.adapters.PagerAdapter;
+import com.paktalin.receiptanalyzer.tests.BitmapLoadingTest;
 
 /**
  * Created by Paktalin on 05/05/2018.
@@ -14,6 +15,7 @@ import com.paktalin.receiptanalyzer.activities.adapters.PagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+    TabLayout tabLayout;
 
     ViewPager viewPager;
 
@@ -22,12 +24,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TabLayout tabLayout = findViewById(R.id.tablayout);
+        setTabLayout();
+        setViewPager();
+
+        BitmapLoadingTest.testBitmapLoads(MainActivity.this);
+    }
+
+    private void setTabLayout() {
+        tabLayout = findViewById(R.id.tablayout);
         tabLayout.addTab(tabLayout.newTab().setText("Add receipt"));
         tabLayout.addTab(tabLayout.newTab().setText("Overview"));
         tabLayout.addTab(tabLayout.newTab().setText("Receipts"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+    }
 
+    private void setViewPager() {
         viewPager = findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
@@ -50,6 +61,5 @@ public class MainActivity extends AppCompatActivity {
         });
         int position = getIntent().getIntExtra("position", 1);
         viewPager.setCurrentItem(position);
-
     }
 }

@@ -26,6 +26,7 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
+    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/2'] } }
 }
 
 dependencies {

@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer.receipts_data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.paktalin.receiptanalyzer.managers.StringManager;
 
@@ -120,5 +121,12 @@ public class Purchase {
     }
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public void logPurchase() {
+        Log.d(TAG,
+                "title: " + title + "\n" +
+                        "price: " + price + "\n" +
+                        "category: " + category + "\n");
     }
 }

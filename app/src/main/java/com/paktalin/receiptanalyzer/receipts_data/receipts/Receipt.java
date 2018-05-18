@@ -7,6 +7,8 @@ import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import static com.paktalin.receiptanalyzer.managers.StringManager.MAKE_EQUAL;
 
 /**
@@ -138,6 +140,12 @@ public class Receipt {
     }
     public long getID() {
         return ID;
+    }
+    public String getInitialLines() {
+        return String.valueOf(initialLines);
+    }
+    public String getLines() {
+        return Arrays.toString(lines);
     }
 
 
