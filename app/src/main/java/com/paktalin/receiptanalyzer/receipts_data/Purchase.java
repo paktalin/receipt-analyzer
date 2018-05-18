@@ -34,7 +34,7 @@ public class Purchase {
     }
 
     private static float percentOfLetters(String string) {
-        int letters = string.replaceAll("\\d", "").length();
+        float letters = string.replaceAll("\\d", "").length();
         return letters/string.length();
     }
 
