@@ -49,7 +49,8 @@ public class ChartManager {
             Color.parseColor("#6161A8"),
             Color.parseColor("#1F1F54"),
             Color.parseColor("#006699"),
-            Color.parseColor("#56A3A6")};
+            Color.parseColor("#56A3A6"),
+            Color.parseColor("#00BFFF")};
 
     private TreeMap<String, Float> supermarkets, categories;
     private LinkedHashMap<String, Float> expenses;
