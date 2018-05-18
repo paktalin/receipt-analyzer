@@ -77,43 +77,14 @@ class ReceiptCreator {
         }
     }
 
-
-    /**
-     * The method is based on the length of the input string.
-     * The length of supermarkets' first line vary like this:
-     *
-     * Maxima   26
-     * Rimi     28
-     * Konsum   20
-     * Prisma   29-35
-     * Selver   10-20
-     *
-     * Let the recognition error be 15%,
-     * so the length of supermarkets' fist line should be in such limits:
-     *
-     * Maxima   22-30
-     * Rimi     24-32
-     * Konsum   17-23
-     * Prisma   24-40
-     * Selver   8-23
-     */
     private static void setStoreName(String input) {
         ReceiptCreator.input = input;
-        int length = input.length();
 
-        if (length > 23) {
-            if(!checkFor(rimiString, "Rimi"))
-                if(!checkFor(maximaString, "Maxima"))
-                    checkForPrisma();
-        } else if (length > 21) {
+        if (!checkFor(rimiString, "Rimi"))
             if(!checkFor(maximaString, "Maxima"))
                 if(!checkFor(konsumString, "Konsum"))
-                    checkForSelver();
-        } else if(length > 16) {
-            if(!checkFor(konsumString, "Konsum"))
-                checkForSelver();
-        } else if(length > 7)
-            checkForSelver();
+                    if(!checkForPrisma())
+                        checkForSelver();
     }
 
     private static boolean checkFor(String string, String supermarket) {
@@ -123,18 +94,24 @@ class ReceiptCreator {
         }
         return false;
     }
-    private static void checkForPrisma() {
+    private static boolean checkForPrisma() {
         String prismaString = "prismaperemarketas";
         String inputCut = input.substring(0, 18);
-        if (identical(inputCut, prismaString, MAKE_EQUAL))
+        if (identical(inputCut, prismaString, MAKE_EQUAL)) {
             supermarket = "Prisma";
+            return true;
+        }
+        return false;
     }
-    private static void checkForSelver() {
+    private static boolean checkForSelver() {
         String selverString = "selver";
         int length = input.length();
         String inputCut = input.substring(length - 6, length);
-        if (similar(inputCut, selverString, NO_CUT))
+        if (similar(inputCut, selverString, NO_CUT)) {
             supermarket = "Selver";
+            return true;
+        }
+        return false;
     }
 
     static Receipt createReceipt(ArrayList<String> list, String supermarket) {
