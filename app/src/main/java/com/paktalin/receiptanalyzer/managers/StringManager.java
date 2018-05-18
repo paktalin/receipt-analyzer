@@ -49,7 +49,7 @@ public class StringManager {
         else return new String[]{string1, string2};
     }
 
-    private static String[] cut(String string1, String string2, int cutHowMuch) {
+    public static String[] cut(String string1, String string2, int cutHowMuch) {
         switch (cutHowMuch) {
             case CUT_FIRST:
                 return new String[]{cutFirst(string1, string2), string2};

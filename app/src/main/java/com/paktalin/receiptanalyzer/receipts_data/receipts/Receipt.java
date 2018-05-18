@@ -79,10 +79,10 @@ public class Receipt {
     }
 
     void setPrice(String[] priceFlags) {
-        for (String flag : priceFlags)
-            if (finalPrice == -1) {
+        for (String flag : priceFlags) {
+            if (finalPrice == -1)
                 calculateFinalPrice(flag);
-            }
+        }
         if (finalPrice == -1)
             finalPrice = 0;
     }

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.paktalin.receiptanalyzer.managers.StringManager;
 import com.paktalin.receiptanalyzer.receipts_data.Purchase;
+import com.paktalin.receiptanalyzer.tests.ReceiptTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,11 +40,26 @@ public class RimiReceipt extends Receipt {
         for (int i = lines.length - 1; i > purchasesEnd; i--) {
             try {
                 String line = lines[i];
+                ReceiptTest.logLineAndFlag(line, priceFlag);
                 if (StringManager.similar(line, priceFlag, StringManager.MAKE_EQUAL)) {
-                    finalPrice = StringManager.extractFinalPriceFloat(line, priceFlag.length());
+                    /*Log.d(TAG, "Similar!");
+                    finalPrice = StringManager.extractFinalPriceFloat(line, priceFlag.length());*/
+                    cutForExtraction(line, priceFlag);
                     break;
                 }
             } catch (StringIndexOutOfBoundsException ignored) {}
+        }
+    }
+
+
+    void cutForExtraction(String string, String flag) {
+        switch (flag) {
+            case "summa" :
+                break;
+            default:
+                String[] equalLength = StringManager.cut(string, flag, StringManager.MAKE_EQUAL);
+                finalPrice = StringManager.extractFinalPriceFloat(equalLength[0], equalLength[1].length());
+                break;
         }
     }
 

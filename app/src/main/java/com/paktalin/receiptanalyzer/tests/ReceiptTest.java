@@ -42,10 +42,14 @@ public class ReceiptTest {
     }
 
 
-    private void log(String text) {
+    private static void log(String text) {
         Log.d(TAG, text);
     }
     private void log(int text) {
         Log.d(TAG, String.valueOf(text));
+    }
+
+    public static void logLineAndFlag(String line, String flag) {
+        log(line + " VS " + flag);
     }
 }

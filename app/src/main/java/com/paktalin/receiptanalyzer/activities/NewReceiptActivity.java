@@ -121,8 +121,15 @@ public class NewReceiptActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.supermarket)).setText(receipt.getSupermarket());
         ((TextView) findViewById(R.id.retailer)).setText(receipt.getRetailer());
         ((TextView) findViewById(R.id.address)).setText(receipt.getAddress());
-        editTextFinalPrice.setText(String.valueOf(receipt.getFinalPrice()));
+        setFinalPrice();
         findViewById(R.id.euro_sign).setVisibility(View.VISIBLE);
+    }
+
+    private void setFinalPrice() {
+        float finalPrice = receipt.getFinalPrice();
+        if (finalPrice == 0)
+            finalPrice = sumUpPrices();
+        editTextFinalPrice.setText(String.valueOf(finalPrice));
     }
 
     private void setPurchasesListView() {
@@ -235,5 +242,12 @@ public class NewReceiptActivity extends AppCompatActivity {
         if (i == 0)
             firstPurchaseID = newRowId;
         return newRowId != -1;
+    }
+
+    private float sumUpPrices() {
+        float sum = 0;
+        for (Purchase purchase : purchases)
+            sum += purchase.getPrice();
+        return sum;
     }
 }
