@@ -144,9 +144,13 @@ public class Receipt {
     public String getInitialLines() {
         return String.valueOf(initialLines);
     }
-    public String getLines() {
-        return Arrays.toString(lines);
+    public String[] getLines() {
+        return lines;
     }
-
-
+    public int getPurchasesStart() {
+        return purchasesStart;
+    }
+    public int getPurchasesEnd() {
+        return purchasesEnd;
+    }
 }

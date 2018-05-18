@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
         setTabLayout();
         setViewPager();
-
-        BitmapLoadingTest.testBitmapLoads(MainActivity.this);
     }
 
     private void setTabLayout() {

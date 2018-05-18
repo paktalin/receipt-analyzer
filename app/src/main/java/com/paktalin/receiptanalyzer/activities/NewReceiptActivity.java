@@ -26,6 +26,7 @@ import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
 
 import com.paktalin.receiptanalyzer.data.Contracts.*;
+import com.paktalin.receiptanalyzer.tests.ReceiptTest;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -101,10 +102,14 @@ public class NewReceiptActivity extends AppCompatActivity {
 
     private void showReceipt() {
         extractPurchases();
+
+        new ReceiptTest().test(receipt);
+
         setTextInTextViews();
         setPurchasesListView();
         setButtonOk();
         setButtonCancel();
+
     }
 
     private void extractPurchases() {
