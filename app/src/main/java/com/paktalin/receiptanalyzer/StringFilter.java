@@ -98,12 +98,14 @@ public class StringFilter {
         boolean firstLinePassed = false;
         while (!firstLinePassed) {
             int endIndex = builder.indexOf("\n");
-            String first = builder.substring(0, endIndex);
-            if((first.length() > 5) && !rimiLogo(first)) {
-                firstLinePassed = true;
-            } else {
-                builder.delete(0, endIndex + 1);
-                list.remove(list.get(0));
+            if (builder.length() > endIndex && endIndex > 0) {
+                String first = builder.substring(0, endIndex);
+                if((first.length() > 5) && !rimiLogo(first)) {
+                    firstLinePassed = true;
+                } else {
+                    builder.delete(0, endIndex + 1);
+                    list.remove(list.get(0));
+                }
             }
         }
     }

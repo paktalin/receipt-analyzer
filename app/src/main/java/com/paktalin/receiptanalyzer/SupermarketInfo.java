@@ -1,6 +1,7 @@
 package com.paktalin.receiptanalyzer;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.paktalin.receiptanalyzer.managers.FileManager;
 import com.paktalin.receiptanalyzer.managers.StringManager;
@@ -40,6 +41,7 @@ public class SupermarketInfo {
 
     private static void setIndex(String firstLine, Context context) {
         String firstLinesPath = supermarket + "/first_lines";
+        Log.d(TAG, supermarket);
         String[] firstLines = FileManager.getStringFromTextFile(context, firstLinesPath);
 
         for (int i = 0; i < firstLines.length; i++) {

@@ -50,6 +50,6 @@ public class ReceiptTest {
     }
 
     public static void logLineAndFlag(String line, String flag) {
-        log(line + " VS " + flag);
+        //log(line + " VS " + flag);
     }
 }

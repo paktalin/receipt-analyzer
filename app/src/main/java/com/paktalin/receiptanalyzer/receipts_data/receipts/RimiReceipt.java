@@ -22,7 +22,6 @@ public class RimiReceipt extends Receipt {
         Log.d(TAG, Arrays.toString(lines));
         purchasesStart = 6;
         purchasesEnd = endLine(new String[]{"sinusoodustused", "kaardimakse"}, false);
-        Log.d(TAG, "purchases end: " + purchasesEnd);
         setPrice(new String[]{"kaardimakse", "kokku", "eur", "summa", "kokkueur", "kaardimakseeur", "kokkukaardimakseeur"});
     }
 
@@ -42,8 +41,6 @@ public class RimiReceipt extends Receipt {
                 String line = lines[i];
                 ReceiptTest.logLineAndFlag(line, priceFlag);
                 if (StringManager.similar(line, priceFlag, StringManager.MAKE_EQUAL)) {
-                    /*Log.d(TAG, "Similar!");
-                    finalPrice = StringManager.extractFinalPriceFloat(line, priceFlag.length());*/
                     cutForExtraction(line, priceFlag);
                     break;
                 }

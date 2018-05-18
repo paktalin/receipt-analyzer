@@ -9,6 +9,7 @@ import com.paktalin.receiptanalyzer.receipts_data.Purchase;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.paktalin.receiptanalyzer.managers.StringManager.CUT_FIRST;
 import static com.paktalin.receiptanalyzer.managers.StringManager.MAKE_EQUAL;
 
 /**
@@ -63,9 +64,9 @@ public class Receipt {
                 String line = StringManager.clean(lines[i]);
                 if (removeNumbers)
                     line = StringManager.removeNumbers(line);
-                if (StringManager.similar(line, endLine, MAKE_EQUAL))
+                if (StringManager.similar(line, endLine, CUT_FIRST))
                     return i - 1;
-            }
+        }
         return lines.length - 1;
     }
 

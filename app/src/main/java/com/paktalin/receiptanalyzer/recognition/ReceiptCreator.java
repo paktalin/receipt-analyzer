@@ -96,20 +96,24 @@ class ReceiptCreator {
     }
     private static boolean checkForPrisma() {
         String prismaString = "prismaperemarketas";
-        String inputCut = input.substring(0, 18);
-        if (identical(inputCut, prismaString, MAKE_EQUAL)) {
-            supermarket = "Prisma";
-            return true;
+        if (input.length() > 18) {
+            String inputCut = input.substring(0, 18);
+            if (identical(inputCut, prismaString, MAKE_EQUAL)) {
+                supermarket = "Prisma";
+                return true;
+            }
         }
         return false;
     }
     private static boolean checkForSelver() {
         String selverString = "selver";
         int length = input.length();
-        String inputCut = input.substring(length - 6, length);
-        if (similar(inputCut, selverString, NO_CUT)) {
-            supermarket = "Selver";
-            return true;
+        if (length > 5) {
+            String inputCut = input.substring(length - 6, length);
+            if (similar(inputCut, selverString, NO_CUT)) {
+                supermarket = "Selver";
+                return true;
+            }
         }
         return false;
     }
@@ -121,7 +125,6 @@ class ReceiptCreator {
         initializeReceiptWithSupermarket();
         receipt.setSupermarket(supermarket);
         receipt.setInitialLines(initialLines);
-        Log.d(TAG, String.valueOf(initialLines));
         return receipt;
     }
 }
