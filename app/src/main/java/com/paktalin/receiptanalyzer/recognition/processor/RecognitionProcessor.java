@@ -9,12 +9,8 @@ import com.google.firebase.ml.vision.cloud.text.FirebaseVisionCloudDocumentTextD
 import com.google.firebase.ml.vision.cloud.text.FirebaseVisionCloudText;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 
-import java.util.List;
-
 public class RecognitionProcessor extends VisionProcessorBase<FirebaseVisionCloudText> {
-
-    private static final String TAG = "CloudDocTextRecProc";
-
+    private static final String TAG = RecognitionProcessor.class.getSimpleName();
     private final FirebaseVisionCloudDocumentTextDetector detector;
 
     public RecognitionProcessor() {
@@ -28,17 +24,8 @@ public class RecognitionProcessor extends VisionProcessorBase<FirebaseVisionClou
     }
 
     @Override
-    protected void onSuccess(
-            @NonNull FirebaseVisionCloudText text,
-            @NonNull FrameMetadata frameMetadata) {
+    protected void onSuccess(@NonNull FirebaseVisionCloudText text) {
         Log.d(TAG, "detected text is: " + text.getText());
-        for (FirebaseVisionCloudText.Page page: text.getPages()){
-            List<FirebaseVisionCloudText.DetectedLanguage> languages = page.getTextProperty().getDetectedLanguages();
-            for (FirebaseVisionCloudText.DetectedLanguage language : languages) {
-                Log.d(TAG, "confidence: " + language.getConfidence());
-                Log.d(TAG, "code: " + language.getLanguageCode());
-            }
-        }
     }
 
     @Override

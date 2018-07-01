@@ -53,6 +53,7 @@ public class ReceiptRecognizer {
     private static void process(Bitmap bitmap) {
         RecognitionProcessor processor = new RecognitionProcessor();
         processor.process(bitmap);
+
     }
 
     public static Receipt extract(Context context, String supermarket) {

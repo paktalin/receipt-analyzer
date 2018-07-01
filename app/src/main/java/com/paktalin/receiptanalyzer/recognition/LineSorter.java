@@ -3,8 +3,10 @@ package com.paktalin.receiptanalyzer.recognition;
 import android.util.SparseArray;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
+import com.google.firebase.ml.vision.cloud.text.FirebaseVisionCloudText;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -28,17 +30,26 @@ class LineSorter {
     }
 
     static private ArrayList<Line> toLineArrayList(SparseArray<TextBlock> textBlocks) {
-        TextBlock textBlock;
         ArrayList<Line> lines = new ArrayList<>();
         int size = textBlocks.size();
         for (int i = 0; i < size; i++) {
-            textBlock = textBlocks.valueAt(i);
+            TextBlock textBlock = textBlocks.valueAt(i);
             for (Text line : textBlock.getComponents()) {
                 lines.add(new Line(line));
             }
         }
         return lines;
     }
+
+    /*static private ArrayList<Line> toLineArrayList(List<FirebaseVisionCloudText.Block> blocks) {
+        ArrayList<Line> lines = new ArrayList<>();
+        for (FirebaseVisionCloudText.Block block : blocks) {
+            for (Text line : block.getComponents()) {
+                lines.add(new Line(line));
+            }
+        }
+        return lines;
+    }*/
 
     static private ArrayList<Line> sortLines() {
         TreeMap<Float, Line> treeMap = new TreeMap<>();

@@ -19,29 +19,20 @@ public abstract class VisionProcessorBase<T> {
 
     VisionProcessorBase() { }
 
-    public void process(
-            ByteBuffer data, final FrameMetadata frameMetadata) {
-        if (shouldThrottle.get()) {
+    public void process(ByteBuffer data) {
+        if (shouldThrottle.get())
             return;
-        }
         FirebaseVisionImageMetadata metadata =
                 new FirebaseVisionImageMetadata.Builder()
                         .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-                        .setWidth(frameMetadata.getWidth())
-                        .setHeight(frameMetadata.getHeight())
-                        .setRotation(frameMetadata.getRotation())
                         .build();
-
-        detectInVisionImage(
-                FirebaseVisionImage.fromByteBuffer(data, metadata), frameMetadata);
+        detectInVisionImage(FirebaseVisionImage.fromByteBuffer(data, metadata));
     }
 
-    // Bitmap version
     public void process(Bitmap bitmap) {
-        if (shouldThrottle.get()) {
+        if (shouldThrottle.get())
             return;
-        }
-        detectInVisionImage(FirebaseVisionImage.fromBitmap(bitmap), null);
+        detectInVisionImage(FirebaseVisionImage.fromBitmap(bitmap));
     }
 
     /**
@@ -50,26 +41,18 @@ public abstract class VisionProcessorBase<T> {
      * @return created FirebaseVisionImage
      */
     public void process(Image image, int rotation) {
-        if (shouldThrottle.get()) {
+        if (shouldThrottle.get())
             return;
-        }
-        // This is for overlay display's usage
-        FrameMetadata frameMetadata =
-                new FrameMetadata.Builder().setWidth(image.getWidth()).setHeight(image.getHeight
-                        ()).build();
-        FirebaseVisionImage fbVisionImage =
-                FirebaseVisionImage.fromMediaImage(image, rotation);
-        detectInVisionImage(fbVisionImage, frameMetadata);
+        FirebaseVisionImage fbVisionImage = FirebaseVisionImage.fromMediaImage(image, rotation);
+        detectInVisionImage(fbVisionImage);
     }
 
-    private void detectInVisionImage(
-            FirebaseVisionImage image,
-            final FrameMetadata metadata) {
+    private void detectInVisionImage(FirebaseVisionImage image) {
         detectInImage(image)
                 .addOnSuccessListener(
                         results -> {
                             shouldThrottle.set(false);
-                            VisionProcessorBase.this.onSuccess(results, metadata);
+                            VisionProcessorBase.this.onSuccess(results);
                         })
                 .addOnFailureListener(
                         e -> {
@@ -81,14 +64,9 @@ public abstract class VisionProcessorBase<T> {
         shouldThrottle.set(true);
     }
 
-    public void stop() {
-    }
-
     protected abstract Task<T> detectInImage(FirebaseVisionImage image);
 
-    protected abstract void onSuccess(
-            @NonNull T results,
-            @NonNull FrameMetadata frameMetadata);
+    abstract void onSuccess(@NonNull T results);
 
     protected abstract void onFailure(@NonNull Exception e);
 }
