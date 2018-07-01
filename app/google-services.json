@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "403093216939",
+    "firebase_url": "https://receipt-analyzer.firebaseio.com",
+    "project_id": "receipt-analyzer",
+    "storage_bucket": "receipt-analyzer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:403093216939:android:518cc1fa6b87e3cf",
+        "android_client_info": {
+          "package_name": "com.paktalin.receiptanalyzer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "403093216939-tmlqph0ccnnsgij8d9p6o785ghdj83g6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd0PNAtiYYoapyikTvR77TaAt0fpLxY_M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
