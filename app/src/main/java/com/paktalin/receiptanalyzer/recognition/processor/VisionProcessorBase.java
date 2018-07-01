@@ -1,11 +1,9 @@
-package com.paktalin.receiptanalyzer.recognition;
+package com.paktalin.receiptanalyzer.recognition.processor;
 
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.support.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
@@ -13,16 +11,14 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
+public abstract class VisionProcessorBase<T> {
 
     // Whether we should ignore process(). This is usually caused by feeding input data faster than
     // the model can handle.
     private final AtomicBoolean shouldThrottle = new AtomicBoolean(false);
 
-    public VisionProcessorBase() {
-    }
+    VisionProcessorBase() { }
 
-    @Override
     public void process(
             ByteBuffer data, final FrameMetadata frameMetadata) {
         if (shouldThrottle.get()) {
@@ -41,7 +37,6 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
     }
 
     // Bitmap version
-    @Override
     public void process(Bitmap bitmap) {
         if (shouldThrottle.get()) {
             return;
@@ -54,7 +49,6 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
      *
      * @return created FirebaseVisionImage
      */
-    @Override
     public void process(Image image, int rotation) {
         if (shouldThrottle.get()) {
             return;
@@ -73,27 +67,20 @@ public abstract class VisionProcessorBase<T> implements VisionImageProcessor {
             final FrameMetadata metadata) {
         detectInImage(image)
                 .addOnSuccessListener(
-                        new OnSuccessListener<T>() {
-                            @Override
-                            public void onSuccess(T results) {
-                                shouldThrottle.set(false);
-                                VisionProcessorBase.this.onSuccess(results, metadata);
-                            }
+                        results -> {
+                            shouldThrottle.set(false);
+                            VisionProcessorBase.this.onSuccess(results, metadata);
                         })
                 .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                shouldThrottle.set(false);
-                                VisionProcessorBase.this.onFailure(e);
-                            }
+                        e -> {
+                            shouldThrottle.set(false);
+                            VisionProcessorBase.this.onFailure(e);
                         });
         // Begin throttling until this frame of input has been processed, either in onSuccess or
         // onFailure.
         shouldThrottle.set(true);
     }
 
-    @Override
     public void stop() {
     }
 

@@ -8,6 +8,7 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.paktalin.receiptanalyzer.SupermarketInfo;
 import com.paktalin.receiptanalyzer.receipts_data.receipts.Receipt;
+import com.paktalin.receiptanalyzer.recognition.processor.RecognitionProcessor;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class ReceiptRecognizer {
 
 
     private static ArrayList<String> recognize(Context context, Bitmap bitmap) {
+        process(bitmap);
         TextRecognizer detector = new TextRecognizer.Builder(context).build();
         if (detector.isOperational() && bitmap != null) {
             Frame frame = new Frame.Builder()
@@ -46,6 +48,11 @@ public class ReceiptRecognizer {
             Log.d(TAG, "Could not set up the detector!");
             return null;
         }
+    }
+
+    private static void process(Bitmap bitmap) {
+        RecognitionProcessor processor = new RecognitionProcessor();
+        processor.process(bitmap);
     }
 
     public static Receipt extract(Context context, String supermarket) {

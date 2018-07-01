@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.recognition;
+package com.paktalin.receiptanalyzer.recognition.processor;
 
 import android.support.annotation.NonNull;
 import android.util.Log;

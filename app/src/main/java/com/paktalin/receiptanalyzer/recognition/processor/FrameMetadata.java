@@ -1,4 +1,4 @@
-package com.paktalin.receiptanalyzer.recognition;
+package com.paktalin.receiptanalyzer.recognition.processor;
 
 /** Describing a frame info. */
 public class FrameMetadata {
